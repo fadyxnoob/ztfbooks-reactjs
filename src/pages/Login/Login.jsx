@@ -25,11 +25,11 @@ const Login = () => {
 
   return (
     <div className="bg-[#F6F7F8F9] lg:px-[80px] md:px-8 px-4 flex items-start">
-      <div className="hidden md:block md:w-[40%] h-[100vh]">
-        <img src={image} alt="Login" className="w-full h-full object-cover" />
-      </div>
+        <div className="hidden md:block md:w-[40%] h-screen sticky top-0">
+           <img src={image} alt="Signup" className="w-full min-h-screen object-cover" />
+         </div>
 
-      <div className="bg-white px-4 py-8 md:px-8 lg:px-[130px] lg:py-[150px] w-full md:w-[60%] h-[100vh] flex justify-center items-center flex-col">
+      <div className="bg-white px-4 py-8 md:px-8 lg:px-[130px] lg:py-[150px] w-full md:w-[60%] min-h-screen flex justify-center items-center flex-col">
         <h1 className="text-[#01447E] text-2xl lg:text-3xl font-extralight text-center">
           WELCOME TO
         </h1>
@@ -90,12 +90,12 @@ const Login = () => {
 
         <div className="text-2xl lg:text-3xl text-[#043133] font-medium mt-6 lg:mt-8 mb-4">OR</div>
         <div className="mt-6 lg:mt-8 w-full mb-2">
-          <div className="flex flex-col md:flex-row sm:flex-col gap-4 md:gap-6 w-full md:w-[70%] mx-auto">
+          <div className="flex flex-col md:flex-row sm:flex-col gap-4 md:gap-6 w-full mx-auto">
             <div className="flex-1">
-              <GoogleButton />
+              <Link><GoogleButton /></Link>
             </div>
             <div className="flex-1">
-              <AppleButton />
+              <Link><AppleButton /></Link>  
             </div>
           </div>
         </div>
