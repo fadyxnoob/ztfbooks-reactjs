@@ -10,6 +10,7 @@ import CartPage from './pages/CartPage/CartPage';
 import MyFavourite from './pages/MyFavourite/MyFavourite';
 import Faqs from './pages/Faqs/Faqs';
 import Login from './pages/Login/Login';
+import Signup from './pages/Signup/Signup';
 
 const App = () => {
     return (
@@ -27,7 +28,9 @@ const App = () => {
                 {/* 404 Catch-all route */}
                 <Route path="*" element={<div>404 Not Found</div>} />
             </Route>
-            <Route path="/login" element={<Login/>} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+
         </Routes>
     );
 };
