@@ -72,7 +72,7 @@ const Login = () => {
             {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
           </div>
 
-          <Link className="text-base lg:text-[18px] text-[#01447E] leading-relaxed" to={"/"}>
+          <Link className="text-base lg:text-[18px] text-[#01447E] leading-relaxed" to={"/forgot-password"}>
             Forgot Password?
           </Link>
 
