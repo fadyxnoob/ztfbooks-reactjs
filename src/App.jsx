@@ -11,6 +11,8 @@ import MyFavourite from './pages/MyFavourite/MyFavourite';
 import Faqs from './pages/Faqs/Faqs';
 import Login from './pages/Login/Login';
 import Signup from './pages/Signup/Signup';
+import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
+import PhoneVerification from './pages/PhoneVerification/PhoneVerification';
 
 const App = () => {
     return (
@@ -30,6 +32,9 @@ const App = () => {
             </Route>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/phone-verification" element={<PhoneVerification    />} />
+
 
         </Routes>
     );
