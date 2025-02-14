@@ -35,7 +35,7 @@ const App = () => {
             <Route path="/signup" element={<Signup />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/phone-verification" element={<PhoneVerification    />} />
-            <Route path="/verification-success" element={<VerificationSuccess    />} />
+           <Route path="/verification-success" element={<VerificationSuccess />} />
         </Routes>
     );
 };
