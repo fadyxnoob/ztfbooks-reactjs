@@ -1,11 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaHeart, FaStar } from "react-icons/fa";
 import { IoMdHeadset } from "react-icons/io";
 import { MdOutlineAccessTime } from "react-icons/md";
 import Button from "../Button/Button";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 const BookCard = ({ books }) => {
+  // const [products, setProducts] = useState([]);
+  const [images, setImages] = useState({});
+  const dispatch = useDispatch()
+  // const userdata = useSelector((state) => state.auth.userdata);
+  // const cart = useSelector((state) => state.cart.products)
+
+
+
+
   return (
     books?.map((book, i) => (
       <div
@@ -45,7 +55,7 @@ const BookCard = ({ books }) => {
           </div>
 
           {/* Author */}
-          <p className="text-gray-600 text-sm">Author: {book.author}</p>
+          <p className="text-gray-600 text-sm">Author: {book?.publisher?.name}</p>
 
           {/* Time & Category */}
           <div className="flex flex-wrap items-center gap-10 text-black text-sm mt-2 font-[300]">
@@ -53,14 +63,18 @@ const BookCard = ({ books }) => {
               <MdOutlineAccessTime /> {book.duration}
             </span>
             <span className="flex items-center gap-2">
-              <IoMdHeadset /> {book.category}
+              <IoMdHeadset /> {book?.categories?.name}
             </span>
           </div>
         </div>
 
         {/* Add to Cart Button */}
         <div className="mt-4">
-          <Button classNames="bg-[#01447E] text-white w-full py-2 cursor-pointer">
+          <Button
+
+            classNames="bg-[#01447E] text-white w-full py-2 cursor-pointer"
+
+          >
             Add to Cart
           </Button>
         </div>

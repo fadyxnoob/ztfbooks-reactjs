@@ -4,19 +4,25 @@ export class AuthService {
     constructor() { }
 
     async signup(data) {
+        const apiUrl = import.meta.env.VITE_SIGNUP_API_KEY;
+        if (!apiUrl) {
+            console.error('Signup API URL is missing!');
+            return;
+        }
+    
         try {
-            const response = await axios.post(
-                import.meta.env.VITE_SIGNUP_API_KEY,
-                data,
-            );
-
+            const response = await axios.post(apiUrl, data);
             console.log('Signup successful:', response.data);
-            return { status: 200, message: 'Your account has been created' }; // Return the response data (e.g., user details, token, etc.)
+            return { status: 200, message: 'Your account has been created' };
         } catch (error) {
-            console.error('Failed to signup:', error.response ? error.response.data : error.message);
-            throw error; // Re-throw the error to handle it in the calling component
+            console.error('Failed to signup:', error.response?.data || error.message);
+            throw error;
         }
     }
+    
+
+
+
     async login(data) {
         try {
             const response = await axios.post(

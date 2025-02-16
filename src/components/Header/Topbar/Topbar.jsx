@@ -46,7 +46,13 @@ const Topbar = () => {
 
       <div className="flex items-center justify-between w-fit gap-10">
         <Link to='my-favourite' ><CiHeart className="text-gray-600 text-3xl cursor-pointer hidden md:block" /></Link>
-        <Link to='my-cart' ><BsCart3 className="text-gray-600 text-3xl cursor-pointer hidden md:block" /></Link>
+        <Link to='my-cart' >
+          <div className='relative hidden md:block'>
+            <BsCart3 className="text-gray-600 text-3xl cursor-pointer" />
+            <div className="size-[23px] bg-[#BE5C5C] text-white text-sm font-normal text-center align-middle rounded-full absolute top-0 -right-2">1</div>
+          </div>
+
+        </Link>
         {
           isLogin ? (
             <UserLogin />

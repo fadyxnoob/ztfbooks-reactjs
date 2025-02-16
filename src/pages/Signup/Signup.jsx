@@ -114,11 +114,10 @@ const Signup = () => {
             />
             {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
           </div>
-
-
-          <Link className="text-base lg:text-[18px] text-[#01447E] leading-relaxed" to={"/signin"}>
-            Forgot Password?
-          </Link>
+          <p>
+            <b>Note</b>:
+              Your username will be your name in lowercase and 
+          </p>
 
           <PrimaryButton classes="border-2 mt-6 lg:mt-8 text-lg lg:text-[20px]" type="submit">
             Submit

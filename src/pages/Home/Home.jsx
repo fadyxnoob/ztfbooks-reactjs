@@ -1,14 +1,24 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Banner from '../../components/Banner/Banner'
 import BookCard from '../../components/BookCard/BookCard'
 import BookCoverImage from '../../assets/images/BookCoverImage.png'
 import Tabs from '../../components/Tabs/Tabs'
 import { useSelector } from 'react-redux'
 import { getLocalStorage } from '../../LocalStorage/LocalStorage'
-
+import service from '../../API/DBService'
 const Home = () => {
     const loggedInUser = useSelector((state) => state.auth.userdata) || getLocalStorage('userdata')
-    
+    const [approvedEBooks, setApprovedEBooks] = useState([])
+    // get all approved e-books
+    const getBooks = async () => {
+        const res = await service.getApprovedBooks()
+        console.log(res)
+        setApprovedEBooks(res.content)
+    }   
+    useEffect(() => {
+        getBooks()
+    }, []);
+
     const books = [
         {
             image: BookCoverImage,
@@ -43,7 +53,7 @@ const Home = () => {
             category: "Audiobook",
         },
     ];
-    
+
     return (
         <div className='bg-[#f4f3f4]'>
             <Banner />
@@ -51,7 +61,7 @@ const Home = () => {
             <section className='my-10 px-5 md:px-20'>
                 <h4 className='text-black text-lg text-center md:text-start font-medium'>Recent Ebooks</h4>
                 <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-5">
-                    <BookCard books={books} />
+                    <BookCard books={approvedEBooks} />
                 </div>
             </section>
 
