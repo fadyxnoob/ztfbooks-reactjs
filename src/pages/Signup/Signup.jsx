@@ -1,19 +1,15 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-
-// React Router
-import { Link } from "react-router-dom";
-
-// Images
+import { Link, useNavigate } from "react-router-dom";
 import image from "../../assets/images/login.png";
-
-// Components
 import Input from "../../components/Input/Input";
 import PrimaryButton from "../../components/PrimaryButton/PrimaryButton";
 import GoogleButton from "../../components/GoogleButton/GoogleButton";
 import AppleButton from "../../components/AppleButton/AppleButton";
+import authService from "../../API/authService";
 
 const Signup = () => {
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -22,27 +18,36 @@ const Signup = () => {
   } = useForm();
 
 
-  const onSubmit = (data) => {
-    console.log("Form Data:", data); 
+  const onSubmit = async (data) => {
+    const newData = {
+      ...data,
+      subscribeToNewsletter: true,
+      username: `${data.name.replace(/\s+/g, '').toLowerCase()}123`, // Remove all whitespaces and convert to lowercase
+    };
+    const res = await authService.signup(newData)
+    if (res) {
+      navigate('/login')
+    }
+
   };
 
   return (
     <div className="bg-[#F6F7F8F9] lg:px-[80px] md:px-8 px-4 flex items-start min-h-screen">
-            <div className="hidden md:block md:w-[40%] h-screen sticky top-0">
-            <img src={image} alt="Signup" className="w-full h-full object-cover" />
-             </div>
-    
-          <div className="bg-white px-4 py-8 md:px-8 lg:px-[130px] lg:py-[150px] w-full md:w-[60%] min-h-screen flex justify-center items-center flex-col">
-            <h1 className="text-[#01447E] text-2xl lg:text-3xl font-extralight text-center">
-              WELCOME TO
-            </h1>
-            <span className="text-[#01447E] mt-4 font-semibold text-4xl lg:text-5xl">
-              ZTF Books
-            </span>
-    
+      <div className="hidden md:block md:w-[40%] h-screen sticky top-0">
+        <img src={image} alt="Signup" className="w-full h-full object-cover" />
+      </div>
+
+      <div className="bg-white px-4 py-8 md:px-8 lg:px-[130px] lg:py-[150px] w-full md:w-[60%] min-h-screen flex justify-center items-center flex-col">
+        <h1 className="text-[#01447E] text-2xl lg:text-3xl font-extralight text-center">
+          WELCOME TO
+        </h1>
+        <span className="text-[#01447E] mt-4 font-semibold text-4xl lg:text-5xl">
+          ZTF Books
+        </span>
+
 
         <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-[570px] mt-8 lg:mt-16">
-        <div className="mb-6 lg:mb-8">
+          <div className="mb-6 lg:mb-8">
             <label className="text-[#4D5959] text-lg lg:text-[20px] font-medium">Name</label>
             <Input
               type="text"
@@ -56,7 +61,7 @@ const Signup = () => {
                 },
               })}
             />
-            {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+            {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
           </div>
           <div className="mb-6 lg:mb-8">
             <label className="text-[#4D5959] text-lg lg:text-[20px] font-medium">Email</label>
@@ -85,7 +90,7 @@ const Signup = () => {
                 required: "Password is required",
                 minLength: {
                   value: 6,
-                  message: "Password must be at least 6 characters",
+                  message: "Password must be at least 8 characters",
                 },
               })}
             />
@@ -98,7 +103,7 @@ const Signup = () => {
               type="password"
               placeholder="Enter your Password"
               classes="bg-[#EFF0F2] w-full mt-2 p-4 lg:p-[22px] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#01447E] placeholder:text-base lg:placeholder:text-xl"
-              inputRegister={register("confirmPassword", { 
+              inputRegister={register("confirmPassword", {
                 required: "Please confirm your password",
                 validate: (val) => {
                   if (watch('password') != val) {

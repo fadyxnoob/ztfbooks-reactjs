@@ -1,12 +1,14 @@
-import React from 'react'
-import Header from '../../components/Header/Header'
-import Footer from '../../components/Footer/Footer'
+import React, { useEffect } from 'react'
 import Banner from '../../components/Banner/Banner'
 import BookCard from '../../components/BookCard/BookCard'
 import BookCoverImage from '../../assets/images/BookCoverImage.png'
 import Tabs from '../../components/Tabs/Tabs'
+import { useSelector } from 'react-redux'
+import { getLocalStorage } from '../../LocalStorage/LocalStorage'
 
 const Home = () => {
+    const loggedInUser = useSelector((state) => state.auth.userdata) || getLocalStorage('userdata')
+    
     const books = [
         {
             image: BookCoverImage,
@@ -41,8 +43,7 @@ const Home = () => {
             category: "Audiobook",
         },
     ];
-
-
+    
     return (
         <div className='bg-[#f4f3f4]'>
             <Banner />

@@ -1,17 +1,19 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-
-// Images
+import { useDispatch } from "react-redux"; // Import useDispatch
+import { authLogin } from "../../Store/authSlice"; // Import the login action
 import image from "../../assets/images/login.png";
-
-// Components
 import Input from "../../components/Input/Input";
 import PrimaryButton from "../../components/PrimaryButton/PrimaryButton";
 import GoogleButton from "../../components/GoogleButton/GoogleButton";
 import AppleButton from "../../components/AppleButton/AppleButton";
+import authService from "../../API/authService";
+import { setLocalStorage } from "../../LocalStorage/LocalStorage";
 
 const Login = () => {
+  const dispatch = useDispatch(); // Initialize useDispatch
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -19,15 +21,42 @@ const Login = () => {
   } = useForm();
 
 
-  const onSubmit = (data) => {
-    console.log("Form Data:", data); 
+  
+  const onSubmit = async (data) => {
+    try {
+      // Attempt to log in the user
+      const session = await authService.login(data);
+
+      // Ensure the session data is valid
+      if (!session?.data) {
+        throw new Error('Invalid session data received from the server.');
+      }
+
+      // Dispatch the login action with serializable data
+      dispatch(authLogin({ userdata: session.data }));
+
+      // Store authentication status and user data in localStorage
+      setLocalStorage('authUserStatus', true);
+      setLocalStorage('userdata', session.data);
+
+      // Redirect to the home page
+      navigate('/');
+    } catch (error) {
+      console.error('Login failed:', error);
+
+      // Display a user-friendly error message (optional)
+      alert('Login failed. Please check your credentials and try again.');
+    }
   };
+
+
+
 
   return (
     <div className="bg-[#F6F7F8F9] lg:px-[80px] md:px-8 px-4 flex items-start">
-        <div className="hidden md:block md:w-[40%] h-screen sticky top-0">
-           <img src={image} alt="Signup" className="w-full min-h-screen object-cover" />
-         </div>
+      <div className="hidden md:block md:w-[40%] h-screen sticky top-0">
+        <img src={image} alt="Signup" className="w-full min-h-screen object-cover" />
+      </div>
 
       <div className="bg-white px-4 py-8 md:px-8 lg:px-[130px] lg:py-[150px] w-full md:w-[60%] min-h-screen flex justify-center items-center flex-col">
         <h1 className="text-[#01447E] text-2xl lg:text-3xl font-extralight text-center">
@@ -39,20 +68,16 @@ const Login = () => {
 
         <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-[570px] mt-8 lg:mt-16">
           <div className="mb-6 lg:mb-8">
-            <label className="text-[#4D5959] text-lg lg:text-[20px] font-medium">Email</label>
+            <label className="text-[#4D5959] text-lg lg:text-[20px] font-medium">Username</label>
             <Input
-              type="email"
-              placeholder="Enter your Email here"
+              type="text"
+              placeholder="Enter username here"
               classes="bg-[#EFF0F2] w-full mt-2 p-4 lg:p-[22px] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#01447E] placeholder:text-base lg:placeholder:text-xl"
-              inputRegister={register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /\S+@\S+\.\S+/,
-                  message: "Invalid email address",
-                },
+              inputRegister={register("username", {
+                required: "Username is required",
               })}
             />
-            {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+            {errors.username && <p className="text-red-500 text-sm">{errors.username.message}</p>}
           </div>
 
           <div className="mb-6 lg:mb-8">
@@ -65,7 +90,7 @@ const Login = () => {
                 required: "Password is required",
                 minLength: {
                   value: 6,
-                  message: "Password must be at least 6 characters",
+                  message: "Password must be at least 8 characters",
                 },
               })}
             />
@@ -95,7 +120,7 @@ const Login = () => {
               <Link><GoogleButton /></Link>
             </div>
             <div className="flex-1">
-              <Link><AppleButton /></Link>  
+              <Link><AppleButton /></Link>
             </div>
           </div>
         </div>

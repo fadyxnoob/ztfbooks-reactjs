@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { CiSearch } from 'react-icons/ci';
 import { CiHeart } from "react-icons/ci";
@@ -6,9 +6,19 @@ import { BsCart3 } from "react-icons/bs";
 import { Link } from 'react-router-dom';
 import Input from '../../Input/Input';
 import Button from '../../Button/Button';
-
+import UserLogin from '../../UserLogin/UserLogin';
+import { useSelector, useDispatch } from 'react-redux'
+import { getLocalStorage } from '../../../LocalStorage/LocalStorage'
 const Topbar = () => {
+
   const { register, handleSubmit } = useForm();
+  const [isLogin, setIsLogin] = useState(
+    useSelector((state) => state.auth.status) || getLocalStorage('authUserStatus')
+  )
+
+
+
+
 
   const onSubmit = (data) => {
     console.log(data); // Check if form data is being captured properly
@@ -37,8 +47,15 @@ const Topbar = () => {
       <div className="flex items-center justify-between w-fit gap-10">
         <Link to='my-favourite' ><CiHeart className="text-gray-600 text-3xl cursor-pointer hidden md:block" /></Link>
         <Link to='my-cart' ><BsCart3 className="text-gray-600 text-3xl cursor-pointer hidden md:block" /></Link>
-        <Link to='/login' ><Button classNames="bg-[#0B457F] text-white px-4 py-2 rounded-md cursor-pointer">Login</Button></Link>
-        
+        {
+          isLogin ? (
+            <UserLogin />
+          ) : (
+            <Link to='/login' ><Button classNames="bg-[#0B457F] text-white px-4 py-2 rounded-md cursor-pointer">Login</Button></Link>
+          )
+        }
+
+
       </div>
     </div>
   );
