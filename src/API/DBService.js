@@ -22,6 +22,16 @@ export class DBService {
             console.error('Failed to Get Approved Books ::', error)
         }
     }
+
+    async getBestSalesBooks(){
+        try {
+            const res = await axios.get(import.meta.env.VITE_GET_BEST_SALES_BOOKS_API_KEY)
+            return res.data;
+        } catch (error) {   
+            console.error('Failed to Get Approved Books ::', error)
+        }
+    }
+
 }
 
 const service = new DBService();

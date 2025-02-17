@@ -114,9 +114,9 @@ const Signup = () => {
             />
             {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
           </div>
-          <p>
+          <p className="text-sm">
             <b>Note</b>:
-              Your username will be your name in lowercase and 
+              Your username will be your name in lowercase and includes(123) 
           </p>
 
           <PrimaryButton classes="border-2 mt-6 lg:mt-8 text-lg lg:text-[20px]" type="submit">

@@ -1,49 +1,60 @@
-import React, { useState } from 'react';
-import HorizontalCard from '../HorizontalCard/HorizontalCard'
-import BookCoverImage from '../../assets/images/BookCoverImage.png'
-const Tabs = () => {
-    const [activeTab, setActiveTab] = useState('bestSelling');
+import React, { useEffect, useState } from 'react';
+import HorizontalCard from '../HorizontalCard/HorizontalCard';
+import BookCoverImage from '../../assets/images/BookCoverImage.png';
+import service from '../../API/DBService';
 
-    const books = [
-        {
-            image: BookCoverImage,
-            title: "Human Soul",
-            rating: "5.0",
-            author: "James Hook",
-            duration: "45 min",
-            category: "Audiobook",
-        },
-        {
-            image: BookCoverImage,
-            title: "Human Soul",
-            rating: "5.0",
-            author: "James Hook",
-            duration: "45 min",
-            category: "Audiobook",
-        },
-        {
-            image: BookCoverImage,
-            title: "Human Soul",
-            rating: "5.0",
-            author: "James Hook",
-            duration: "45 min",
-            category: "Audiobook",
-        },
-        {
-            image: BookCoverImage,
-            title: "Human Soul",
-            rating: "5.0",
-            author: "James Hook",
-            duration: "45 min",
-            category: "Audiobook",
-        },
-    ];
+const Tabs = ({ bestSales }) => {
+    const [activeTab, setActiveTab] = useState('bestSelling');
+    const [bestSalesBooks, setBestSalesBooks] = useState([]);
+    const [favorites, setFavorites] = useState([]);
+
+    const getBestSellingBooks = async () => {
+        try {
+            const res = await service.getBestSalesBooks();
+            console.log('API Response:', res);
+
+            if (res && res.length > 0) {
+                const formattedBooks = res.map((book) => ({
+                    title: book.ebookTitle,
+                    image: `https://yourdomain.com/images/${book.ebookThumbNail}`, // Adjust image URL as needed
+                    author: 'Unknown Author', // Placeholder for author if missing
+                    duration: 'N/A', // Placeholder for duration if missing
+                    category: 'N/A', // Placeholder for category if missing
+                    id: book.ebookId
+                }));
+
+                setBestSalesBooks(formattedBooks);
+            } else {
+                console.warn('No books found in API response.');
+            }
+        } catch (error) {
+            console.error('Failed to fetch best-selling books:', error);
+        }
+    };
+
+    // Add or remove book from favorites
+    const toggleFavorite = (book) => {
+        setFavorites((prevFavorites) => {
+            if (prevFavorites.some((fav) => fav.id === book.id)) {
+                // If book is already in favorites, remove it
+                return prevFavorites.filter((fav) => fav.id !== book.id);
+            } else {
+                // If book is not in favorites, add it
+                return [...prevFavorites, book];
+            }
+        });
+    };
+
 
     const tabs = [
-        { id: 'bestSelling', label: 'Best Selling ' },
+        { id: 'bestSelling', label: 'Best Selling' },
         { id: 'freeBooks', label: 'Free Books' },
         { id: 'topFree', label: 'Top Free' },
     ];
+
+    useEffect(() => {
+        getBestSellingBooks();
+    }, []);
 
     return (
         <div className="w-full mx-auto">
@@ -62,19 +73,27 @@ const Tabs = () => {
 
             <div className={`p-4 ${activeTab === 'bestSelling' ? 'block' : 'hidden'}`}>
                 <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-3">
-                    <HorizontalCard books={books} />
+                    {bestSalesBooks.length > 0 ? (
+                        <HorizontalCard
+                            books={bestSalesBooks}
+                            toggleFavorite={toggleFavorite} // Pass the toggleFavorite function
+                            favorites={favorites} // Pass the favorites list
+                        />
+                    ) : (
+                        <p className="text-gray-600">No books found</p>
+                    )}
                 </div>
             </div>
 
             <div className={`p-4 ${activeTab === 'freeBooks' ? 'block' : 'hidden'}`}>
                 <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-3">
-                    <HorizontalCard books={books} />
+                    <HorizontalCard books={[]} /> {/* Placeholder for free books */}
                 </div>
             </div>
 
             <div className={`p-4 ${activeTab === 'topFree' ? 'block' : 'hidden'}`}>
                 <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-3">
-                   <h1>No Products Found</h1>
+                    <h1>No Products Found</h1>
                 </div>
             </div>
         </div>

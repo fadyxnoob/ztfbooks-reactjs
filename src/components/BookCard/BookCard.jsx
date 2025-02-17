@@ -4,66 +4,68 @@ import { IoMdHeadset } from "react-icons/io";
 import { MdOutlineAccessTime } from "react-icons/md";
 import Button from "../Button/Button";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import RandomFileThumbnail from '../../assets/images/BookCoverImage.png'
 
 const BookCard = ({ books }) => {
-  // const [products, setProducts] = useState([]);
-  const [images, setImages] = useState({});
-  const dispatch = useDispatch()
-  // const userdata = useSelector((state) => state.auth.userdata);
-  // const cart = useSelector((state) => state.cart.products)
+  const dispatch = useDispatch();
 
-
-
+  // Function to add book to the cart
+  const handleAddToCart = (book) => {
+    dispatch({ type: 'ADD_TO_CART', payload: book.id });
+    console.log(`${book.id} added to cart!`);
+  };
 
   return (
     books?.map((book, i) => (
       <div
         key={i}
-        className="bg-[#EBEBEB] shadow-lg rounded p-4 w-full max-w-[280px]"
+        className="bg-[#EBEBEB] shadow-lg rounded-xl p-4 w-full max-w-[280px] transition hover:scale-105"
       >
         {/* Book Image & Favorite Icon */}
         <div className="relative">
-          <Link to={'/book-detail'}>
+          <Link to={`/book-detail/${book.id}`}>
             <div className="w-[240px] h-[240px] mx-auto">
               <img
-                src={book.image}
-                alt={book.title}
+                src={RandomFileThumbnail}
+                alt={book.ebookTitle}
                 className="w-full h-full object-cover rounded-md"
               />
             </div>
           </Link>
-          <button className="absolute top-2 right-2 bg-white p-1 rounded-full shadow-md cursor-pointer">
-            <FaHeart className="text-gray-500 hover:text-red-500" />
+          <button className="absolute top-2 right-2 bg-white p-1 rounded-full shadow-md cursor-pointer hover:bg-red-100">
+            <FaHeart className={`text-${book.liked ? 'red' : 'gray'}-500`} />
           </button>
         </div>
 
         {/* Book Details */}
         <div className="mt-3">
           <div className="flex items-start justify-between">
-            <h3 className="text-lg font-semibold">
-              <Link to='/book-detail' className="hover:underline">
-                {book.title}
+            <h3 className="text-lg font-semibold truncate">
+              <Link to={`/book-detail/${book.id}`} className="hover:underline">
+                {book.ebookTitle}
               </Link>
             </h3>
 
             {/* Rating */}
             <div className="flex items-center gap-1 text-yellow-500 bg-[#1D2C41] px-3 py-1 rounded-2xl">
               <FaStar />
-              <span className="text-sm font-medium text-white">{book.rating}</span>
+              <span className="text-sm font-medium text-white">{book?.rating}</span>
             </div>
           </div>
 
           {/* Author */}
-          <p className="text-gray-600 text-sm">Author: {book?.publisher?.name}</p>
+          <p className="text-gray-700 text-sm">
+            Author: {book?.author?.name || 'Unknown'}
+          </p>
 
           {/* Time & Category */}
-          <div className="flex flex-wrap items-center gap-10 text-black text-sm mt-2 font-[300]">
+          <div className="flex flex-wrap items-center gap-4 text-black text-sm mt-2 font-light">
             <span className="flex items-center gap-2">
-              <MdOutlineAccessTime /> {book.duration}
+              <MdOutlineAccessTime className="text-blue-500" /> {book.timeToRead ? `${book.timeToRead} mins` : 'N/A'}
             </span>
             <span className="flex items-center gap-2">
-              <IoMdHeadset /> {book?.categories?.name}
+              <IoMdHeadset className="text-green-600" /> {book?.categories?.[0]?.name || 'Uncategorized'}
             </span>
           </div>
         </div>
@@ -71,9 +73,8 @@ const BookCard = ({ books }) => {
         {/* Add to Cart Button */}
         <div className="mt-4">
           <Button
-
-            classNames="bg-[#01447E] text-white w-full py-2 cursor-pointer"
-
+            classNames="bg-[#01447E] text-white w-full py-2 cursor-pointer hover:bg-[#013366]"
+            onClick={() => handleAddToCart(book)}
           >
             Add to Cart
           </Button>

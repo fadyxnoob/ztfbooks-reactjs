@@ -9,14 +9,17 @@ import service from '../../API/DBService'
 const Home = () => {
     const loggedInUser = useSelector((state) => state.auth.userdata) || getLocalStorage('userdata')
     const [approvedEBooks, setApprovedEBooks] = useState([])
+   
     // get all approved e-books
-    const getBooks = async () => {
+    const getApprovedBooks = async () => {
         const res = await service.getApprovedBooks()
-        console.log(res)
+        // console.log(res.content[0])
         setApprovedEBooks(res.content)
-    }   
+    } 
+
+    
     useEffect(() => {
-        getBooks()
+        getApprovedBooks()
     }, []);
 
     const books = [
