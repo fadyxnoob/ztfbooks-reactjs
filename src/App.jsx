@@ -41,7 +41,6 @@ const App = () => {
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/phone-verification" element={<PhoneVerification />} />
             </Routes>
-            <Route path="*" element={<div>404 Not Found</div>} />
         </BrowserRouter>
     );
 };
