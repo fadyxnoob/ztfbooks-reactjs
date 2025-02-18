@@ -29,7 +29,7 @@ export class DBService {
     // get best Sales books from the backend using api
     async getBestSalesBooks(limit) {
         try {
-            const res = await axios.get(`${import.meta.env.VITE_GET_BEST_SALES_BOOKS_API_KEY}${limit}`)
+            const res = await axios.get(`${import.meta.env.VITE_GET_BEST_SALES_BOOKS_API_KEY}${limit || 4}`)
             return res.data;
         } catch (error) {
             console.error('Failed to Get Approved Books ::', error)
