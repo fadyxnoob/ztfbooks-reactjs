@@ -29,25 +29,33 @@ export class DBService {
     async getBestSalesBooks() {
         try {
             const res = await axios.get(import.meta.env.VITE_GET_BEST_SALES_BOOKS_API_KEY)
+            // console.log('service response ::',{res})
             return res.data;
         } catch (error) {
             console.error('Failed to Get Approved Books ::', error)
         }
     }
 
-    // get a file from the backend using api
+    // get a file from the backend using API
     async getFileByName(fileName) {
-        console.log({ fileName })
+        if (!fileName) {
+            console.warn('File name is undefined');
+            return null;
+        }
+
         try {
-            if (!fileName) {
-                console.warn('Invalid file name:', fileName);
-                return null;
-            }
-            return `${import.meta.env.VITE_GET_FILE_BY_NAME_API_KEY}${fileName}`;
+            const response = await axios.get(`${import.meta.env.VITE_GET_FILE_BY_NAME_API_KEY}${fileName}`, {
+                responseType: 'blob', // Important for image display
+            });
+            return response;
         } catch (error) {
-            console.error('Failed to Get File by name::', error)
+            console.error('Failed to get file by name:', error);
+            return null;
         }
     }
+
+
+
 
     // upload file using api
     async uploadFile(file) {

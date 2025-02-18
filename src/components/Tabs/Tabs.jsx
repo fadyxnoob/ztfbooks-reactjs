@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import HorizontalCard from '../HorizontalCard/HorizontalCard';
-import BookCoverImage from '../../assets/images/BookCoverImage.png';
 import service from '../../API/DBService';
 
 const Tabs = ({ bestSales }) => {
@@ -16,11 +15,11 @@ const Tabs = ({ bestSales }) => {
             if (res && res.length > 0) {
                 const formattedBooks = res.map((book) => ({
                     title: book.ebookTitle,
-                    image: `https://yourdomain.com/images/${book.ebookThumbNail}`, // Adjust image URL as needed
-                    author: 'Unknown Author', // Placeholder for author if missing
-                    duration: 'N/A', // Placeholder for duration if missing
-                    category: 'N/A', // Placeholder for category if missing
-                    id: book.ebookId
+                    image: book.ebookThumbNail,
+                    author: book.author?.createdBy || 'Unknown Author',
+                    duration: book.timeToRead || 'N/A',
+                    category: book.categories?.[0]?.name || 'N/A',
+                    id: book.id
                 }));
 
                 setBestSalesBooks(formattedBooks);
@@ -32,19 +31,16 @@ const Tabs = ({ bestSales }) => {
         }
     };
 
-    // Add or remove book from favorites
+
     const toggleFavorite = (book) => {
         setFavorites((prevFavorites) => {
             if (prevFavorites.some((fav) => fav.id === book.id)) {
-                // If book is already in favorites, remove it
                 return prevFavorites.filter((fav) => fav.id !== book.id);
             } else {
-                // If book is not in favorites, add it
                 return [...prevFavorites, book];
             }
         });
     };
-
 
     const tabs = [
         { id: 'bestSelling', label: 'Best Selling' },
@@ -54,6 +50,7 @@ const Tabs = ({ bestSales }) => {
 
     useEffect(() => {
         getBestSellingBooks();
+        console.log({bestSalesBooks})
     }, []);
 
     return (
@@ -62,8 +59,8 @@ const Tabs = ({ bestSales }) => {
                 {tabs.map((tab) => (
                     <button
                         key={tab.id}
-                        className={`w-1/2 py-4 text-center font-medium text-gray-700 cursor-pointer ${activeTab === tab.id ? 'bg-gray-200' : 'border rounded-full'
-                            } ${tab.id === 'bestSelling' ? 'rounded-full' : 'rounded-full'} focus:outline-none`}
+                        className={`w-1/2 py-4 text-center font-medium text-gray-700 cursor-pointer ${activeTab === tab.id ? 'bg-gray-200' : 'border rounded-full'}
+                            focus:outline-none`}
                         onClick={() => setActiveTab(tab.id)}
                     >
                         {tab.label}
@@ -76,8 +73,8 @@ const Tabs = ({ bestSales }) => {
                     {bestSalesBooks.length > 0 ? (
                         <HorizontalCard
                             books={bestSalesBooks}
-                            toggleFavorite={toggleFavorite} // Pass the toggleFavorite function
-                            favorites={favorites} // Pass the favorites list
+                            toggleFavorite={toggleFavorite}
+                            favorites={favorites}
                         />
                     ) : (
                         <p className="text-gray-600">No books found</p>
@@ -87,7 +84,7 @@ const Tabs = ({ bestSales }) => {
 
             <div className={`p-4 ${activeTab === 'freeBooks' ? 'block' : 'hidden'}`}>
                 <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-3">
-                    <HorizontalCard books={[]} /> {/* Placeholder for free books */}
+                    <HorizontalCard books={[]} />
                 </div>
             </div>
 
@@ -100,4 +97,4 @@ const Tabs = ({ bestSales }) => {
     );
 };
 
-export default Tabs;
+export default React.memo(Tabs);

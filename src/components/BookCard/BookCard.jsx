@@ -1,21 +1,48 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaHeart, FaStar } from "react-icons/fa";
 import { IoMdHeadset } from "react-icons/io";
 import { MdOutlineAccessTime } from "react-icons/md";
 import Button from "../Button/Button";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import RandomFileThumbnail from '../../assets/images/BookCoverImage.png'
+import StaticImage from '../../assets/images/BookCoverImage.png';
 import service from "../../API/DBService";
 
 const BookCard = ({ books }) => {
   const dispatch = useDispatch();
+  const [images, setImages] = useState({});
 
   // Function to add book to the cart
   const handleAddToCart = (book) => {
     dispatch({ type: 'ADD_TO_CART', payload: book.id });
     console.log(`${book.id} added to cart!`);
   };
+
+  // Fetch images for all books
+  useEffect(() => {
+    const fetchImages = async () => {
+      const imageMap = {};
+
+      for (const book of books) {
+        if (book.thumbnailFileName) {
+          try {
+            const response = await service.getFileByName(book.thumbnailFileName);
+            if (response && response.data) {
+              const url = URL.createObjectURL(response.data);
+              imageMap[book.id] = url;
+            }
+          } catch (error) {
+            console.error(`Failed to fetch image for ${book.ebookTitle}:`, error);
+          }
+        } else {
+          imageMap[book.id] = StaticImage;
+        }
+      }
+      setImages(imageMap);
+    };
+
+    fetchImages();
+  }, [books]);
 
   return (
     books?.map((book, i) => (
@@ -28,10 +55,9 @@ const BookCard = ({ books }) => {
           <Link to={`/book-detail/${book.id}`}>
             <div className="w-[240px] h-[240px] mx-auto">
               <img
-                src={service.getFileByName(book.thumbnailFileName) || RandomFileThumbnail}
-                alt={book.ebookTitle || 'Book cover'}
+                src={images[book.id] || StaticImage}
+                alt={book.ebookTitle}
                 className="w-full h-full object-cover rounded-md"
-                onError={(e) => e.target.src = RandomFileThumbnail} // Fallback if the image fails to load
               />
             </div>
           </Link>
