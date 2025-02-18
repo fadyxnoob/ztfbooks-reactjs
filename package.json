@@ -15,6 +15,7 @@
     "axios": "^1.7.9",
     "dompurify": "^3.2.4",
     "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",

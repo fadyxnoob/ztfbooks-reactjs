@@ -142,20 +142,13 @@ const Home = () => {
 
 // Define filter conditions
 const filterDiscount = {
-    minAmount: 0, // Only books with amount greater than or equal to 1.50
-    currency: 'EUR', // Only books in EUR currency
-    // categories: ['God Loves You'], // Only books in the "God Loves You" category
-    // tags: ['healing'], // Only books with the "healing" tag
-    status: 'APPROVED', // Only books with the status "APPROVED"
-    // publisher: { name: 'CPH' }, // Only books published by "CPH"
-    // freeBook: false, // Only books that are not free
-    // authorNationality: 'Cameroon', // Only books by authors from Cameroon
-    // minLikes: 0, // Books with at least 0 likes
-    // minDownloads: 0, // Books with at least 0 downloads
+    minAmount: 0, 
+    currency: 'EUR',
+    status: 'APPROVED', 
+
 };
 
   const specialDiscountBooks = filterBooks(approvedEBooks, filterDiscount);
-//   console.log({ specialDiscountBooks });
 
   useEffect(() => {
     getApprovedBooks();
