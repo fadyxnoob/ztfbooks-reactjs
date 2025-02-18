@@ -44,6 +44,7 @@ const BookCard = ({ books }) => {
     fetchImages();
   }, [books]);
 
+  
   return (
     books?.map((book, i) => (
       <div

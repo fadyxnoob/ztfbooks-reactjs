@@ -4,14 +4,14 @@ import { MdOutlineAccessTime } from "react-icons/md";
 import { FaHeart } from "react-icons/fa";
 import StaticImage from '../../assets/images/BookCoverImage.png';
 import service from "../../API/DBService";
+import { Link } from "react-router-dom";
 
 const HorizontalCard = ({ books, toggleFavorite, favorites }) => {
   const [images, setImages] = useState({});
-  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchImages = async () => {
       const imageMap = {};
-      setLoading(true); 
 
       for (const book of books) {
         if (book?.image) {
@@ -28,25 +28,17 @@ const HorizontalCard = ({ books, toggleFavorite, favorites }) => {
       }
 
       setImages(imageMap);
-      setLoading(false); 
     };
 
     fetchImages();
   }, [books]);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
 
-  if (!books || books.length === 0) {
-    return <p className="text-red-500">No books available.</p>;
-  }
 
   return (
     books.map((book, i) => {
       const isFavorite = favorites.some((fav) => fav.id === book.id);
       const imageUrl = images[book.id] || StaticImage;
-
       return (
         <div
           key={i}
@@ -54,21 +46,30 @@ const HorizontalCard = ({ books, toggleFavorite, favorites }) => {
         >
           <div className="relative flex">
             <div className="w-1/2 h-[260px] mx-auto">
+            <Link
+             to={`book-detail/${book.id}`}
+             >
               <img
                 src={imageUrl}
                 alt={book.title}
                 className="w-full h-full object-cover rounded-md"
               />
+             </Link>
+              
             </div>
             <div className="px-5 w-1/2">
-              <h3 className="text-lg font-semibold">{book.title}</h3>
-              <p className="text-gray-600 text-sm">Author: {book.author}</p>
+             <Link
+             to={`book-detail/${book.id}`}
+             >
+               <h3 className="text-lg font-semibold">{book.title}</h3>
+             </Link>
+              <p className="text-gray-600 text-sm">Author: {book?.detailedInfo.author.name}</p>
               <div className="flex flex-wrap items-center gap-2 text-black text-sm mt-2 font-[300]">
                 <span className="flex items-center gap-2">
                   <MdOutlineAccessTime /> {book.duration}
                 </span>
                 <span className="flex items-center gap-2">
-                  <IoMdHeadset /> {book.category}
+                  <IoMdHeadset /> {book.detailedInfo?.categories?.[0].name}
                 </span>
               </div>
               <button

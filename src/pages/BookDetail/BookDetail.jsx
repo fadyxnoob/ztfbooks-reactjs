@@ -23,9 +23,7 @@ const BookDetail = () => {
         const res = await service.getBookByID(bookID);
         // console.log(res.data)
         setBookDetail(res.data)
-        const imageRes = await service.getFileByName(res?.data?.thumbnailFileName)
-        // console.log({ imageRes })
-        const url = URL.createObjectURL(imageRes.data);
+        const url = await service.getFileByName(res?.data?.thumbnailFileName)
         setBookImage(url)
     }
 

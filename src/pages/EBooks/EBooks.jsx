@@ -1,43 +1,24 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import BookCard from '../../components/BookCard/BookCard'
-import BookCoverImage from '../../assets/images/BookCoverImage.png'
+import service from '../../API/DBService';
 
 const EBooks = () => {
+    const [approvedEBooks, setApprovedEBooks] = useState([])
 
-    const books = [
-        {
-            image: BookCoverImage,
-            title: "Human Soul",
-            rating: "5.0",
-            author: "James Hook",
-            duration: "45 min",
-            category: "Audiobook",
-        },
-        {
-            image: BookCoverImage,
-            title: "Human Soul",
-            rating: "5.0",
-            author: "James Hook",
-            duration: "45 min",
-            category: "Audiobook",
-        },
-        {
-            image: BookCoverImage,
-            title: "Human Soul",
-            rating: "5.0",
-            author: "James Hook",
-            duration: "45 min",
-            category: "Audiobook",
-        },
-        {
-            image: BookCoverImage,
-            title: "Human Soul",
-            rating: "5.0",
-            author: "James Hook",
-            duration: "45 min",
-            category: "Audiobook",
-        },
-    ];
+    // get all approved e-books
+    const getApprovedBooks = async () => {
+        try {
+            const apiKey = import.meta.env.VITE_GET_ALL_APPROVED_BOOKS_API_KEY
+            const res = await service.getApprovedBooks(apiKey); 
+            setApprovedEBooks(res.content);
+        } catch (err) {
+            console.error('Failed to fetch approved books:', err);
+        }
+    };
+
+    useEffect(() => {
+        getApprovedBooks()
+    }, []);
 
   return (
     <div className='px-5 md:px-20 py-5 bg-[#f4f3f4]'>
@@ -47,7 +28,7 @@ const EBooks = () => {
             <section className='mt-5'>
                 <h4 className='text-[#203949] text-xl text-center md:text-start font-semibold'>PDF Books</h4>
                 <div className="flex mt-5 flex-wrap items-center justify-center md:justify-start gap-5">
-                    <BookCard books={books} />
+                    <BookCard books={approvedEBooks} />
                 </div>
             </section>
            

@@ -16,9 +16,9 @@ export class DBService {
     }
 
     // get all approved books from the backend using api
-    async getApprovedBooks() {
+    async getApprovedBooks(apiKey) {
         try {
-            const res = await axios.get(import.meta.env.VITE_GET_APPROVED_BOOKS_API_KEY)
+            const res = await axios.get(apiKey)
             return res.data;
         } catch (error) {
             console.error('Failed to Get Approved Books ::', error)
@@ -26,10 +26,9 @@ export class DBService {
     }
 
     // get best Sales books from the backend using api
-    async getBestSalesBooks() {
+    async getBestSalesBooks(limit) {
         try {
-            const res = await axios.get(import.meta.env.VITE_GET_BEST_SALES_BOOKS_API_KEY)
-            // console.log('service response ::',{res})
+            const res = await axios.get(`${import.meta.env.VITE_GET_BEST_SALES_BOOKS_API_KEY}${limit}`)
             return res.data;
         } catch (error) {
             console.error('Failed to Get Approved Books ::', error)
