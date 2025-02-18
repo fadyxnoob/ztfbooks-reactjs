@@ -50,7 +50,7 @@ const Tabs = ({ bestSales }) => {
 
     useEffect(() => {
         getBestSellingBooks();
-        console.log({bestSalesBooks})
+        // console.log({bestSalesBooks})
     }, []);
 
     return (

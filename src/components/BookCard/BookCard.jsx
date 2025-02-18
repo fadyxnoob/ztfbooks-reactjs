@@ -27,9 +27,9 @@ const BookCard = ({ books }) => {
         if (book.thumbnailFileName) {
           try {
             const response = await service.getFileByName(book.thumbnailFileName);
-            if (response && response.data) {
-              const url = URL.createObjectURL(response.data);
-              imageMap[book.id] = url;
+            if (response) {
+              
+              imageMap[book.id] = response;
             }
           } catch (error) {
             console.error(`Failed to fetch image for ${book.ebookTitle}:`, error);

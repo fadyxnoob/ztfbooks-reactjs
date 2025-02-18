@@ -14,6 +14,7 @@ import Signup from './pages/Signup/Signup';
 import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import PhoneVerification from './pages/PhoneVerification/PhoneVerification';
 import VerificationSuccess from './pages/VerificationSuccess/VerificationSuccess';
+import AccountInfo from './components/AccountInfo/AccountInfo'
 
 const App = () => {
     return (
@@ -30,7 +31,9 @@ const App = () => {
                     <Route path="audio-books" element={<AudioBooks />} />
                     <Route path="my-cart" element={<CartPage />} />
                     <Route path="my-favourite" element={<MyFavourite />} />
+                    <Route path="myProfile" element={<AccountInfo />} />
                     <Route path="faqs" element={<Faqs />} />
+                    <Route path="about-us" element={<Faqs />} />
 
                     {/* 404 Catch-all route */}
                     <Route path="*" element={<div>404 Not Found</div>} />

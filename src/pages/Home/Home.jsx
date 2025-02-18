@@ -35,7 +35,7 @@ const Home = () => {
                 const formattedBooks = await Promise.all(res.map(async (book) => {
                     // Fetch detailed book info by ID
                     const singleBook = await service.getBookByID(book.ebookId); // Assuming `book.id` is the correct ID to fetch the book details.
-                    console.log(singleBook.data)
+                    // console.log(singleBook.data)
                     return {
                         title: book.ebookTitle,
                         thumbnailFileName: book.ebookThumbNail,

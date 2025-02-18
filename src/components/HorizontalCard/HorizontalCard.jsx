@@ -7,40 +7,35 @@ import service from "../../API/DBService";
 
 const HorizontalCard = ({ books, toggleFavorite, favorites }) => {
   const [images, setImages] = useState({});
-  const [loading, setLoading] = useState(true); // Add loading state
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchImages = async () => {
       const imageMap = {};
-      setLoading(true); // Set loading to true before fetching
+      setLoading(true); 
 
       for (const book of books) {
         if (book?.image) {
           try {
-            const response = await service.getFileByName(book.image);
-            // console.log('HC Res::', response);
-            if (response && response.data) {
-              const url = URL.createObjectURL(response.data);
+            const url = await service.getFileByName(book.image);
               imageMap[book.id] = url;
-            }
           } catch (error) {
             console.error(`Failed to fetch image for ${book.title}:`, error);
-            imageMap[book.id] = StaticImage; // Fallback to static image
+            imageMap[book.id] = StaticImage;
           }
         } else {
-          imageMap[book.id] = StaticImage; // Fallback to static image if no image
+          imageMap[book.id] = StaticImage;
         }
       }
 
       setImages(imageMap);
-      setLoading(false); // Set loading to false after fetching
+      setLoading(false); 
     };
 
     fetchImages();
   }, [books]);
 
   if (loading) {
-    return <p>Loading...</p>; // Show loading message while images are being fetched
+    return <p>Loading...</p>;
   }
 
   if (!books || books.length === 0) {

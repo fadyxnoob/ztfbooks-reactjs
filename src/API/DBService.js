@@ -47,7 +47,17 @@ export class DBService {
             const response = await axios.get(`${import.meta.env.VITE_GET_FILE_BY_NAME_API_KEY}${fileName}`, {
                 responseType: 'blob', // Important for image display
             });
-            return response;
+
+             // Check if imageRes.data is a Blob before creating object URL
+             if (response.data && response.data instanceof Blob) {
+                const imageUrl = URL.createObjectURL(response.data); // Create a URL for the Blob
+               return imageUrl
+                
+            } else {
+                console.error("Image data is not a valid Blob or file.");
+            }
+
+            return imageUrl;
         } catch (error) {
             console.error('Failed to get file by name:', error);
             return null;
@@ -57,10 +67,24 @@ export class DBService {
     // upload file using api
     async uploadFile(file) {
         try {
-            const file = await axios.post(import.meta.env.VITE_GET_FILE_BY_NAME_API_KEY)
-            return file;
+            const formData = new FormData();
+            formData.append('file', file); 
+    
+            const response = await axios.post(
+                import.meta.env.VITE_Upload_FILE_BY_NAME_API_KEY,
+                formData,
+                {
+                    headers: {
+                        'accept': '*/*', 
+                        'Content-Type': 'multipart/form-data', 
+                    },
+                }
+            );
+    
+            console.log('File uploaded res:::', response.data)
+            return response.data; 
         } catch (error) {
-            console.error('Failed to Get File by name::', error)
+            console.error('Failed to upload file:', error);
         }
     }
 
