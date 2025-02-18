@@ -37,7 +37,6 @@ const HorizontalCard = ({ books, toggleFavorite, favorites }) => {
     const isFavorite =
       Array.isArray(favorites) && favorites.some((fav) => fav.id === book.id);
     const imageUrl = images[book.id] || StaticImage;
-    console.log({ book });
     return (
       <div
         key={i}

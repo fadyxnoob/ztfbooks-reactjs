@@ -65,76 +65,12 @@ const Home = () => {
       ) {
         isMatch = false;
       }
-
-      // Filter by currency (only books with a specific currency)
-      if (
-        filterConditions.currency &&
-        book.currency.code !== filterConditions.currency
-      ) {
-        isMatch = false;
-      }
-
-      // Filter by category (only books from specific categories)
-      if (
-        filterConditions.categories &&
-        !book.categories.some((category) =>
-          filterConditions.categories.includes(category.name)
-        )
-      ) {
-        isMatch = false;
-      }
-
-      // Filter by tags (only books with specific tags)
-      if (
-        filterConditions.tags &&
-        !book.tags.some((tag) => filterConditions.tags.includes(tag.name))
-      ) {
-        isMatch = false;
-      }
-
       // Filter by status (only books that are "APPROVED")
       if (filterConditions.status && book.status !== filterConditions.status) {
         isMatch = false;
       }
 
-      // Filter by publisher (only books from a specific publisher)
-      if (
-        filterConditions.publisher &&
-        book.publisher.name !== filterConditions.publisher.name
-      ) {
-        isMatch = false;
-      }
 
-      // Filter by freeBook (only non-free books)
-      if (
-        filterConditions.freeBook !== undefined &&
-        book.freeBook !== filterConditions.freeBook
-      ) {
-        isMatch = false;
-      }
-
-      // Filter by author's nationality (if specified)
-      if (
-        filterConditions.authorNationality &&
-        book.author.nationality !== filterConditions.authorNationality
-      ) {
-        isMatch = false;
-      }
-
-      // Filter by number of likes and downloads
-      if (
-        filterConditions.minLikes &&
-        book.numberOfLikes < filterConditions.minLikes
-      ) {
-        isMatch = false;
-      }
-
-      if (
-        filterConditions.minDownloads &&
-        book.numberOfDownloads < filterConditions.minDownloads
-      ) {
-        isMatch = false;
-      }
 
       return isMatch;
     });
@@ -143,7 +79,6 @@ const Home = () => {
 // Define filter conditions
 const filterDiscount = {
     minAmount: 0, 
-    currency: 'EUR',
     status: 'APPROVED', 
 
 };
