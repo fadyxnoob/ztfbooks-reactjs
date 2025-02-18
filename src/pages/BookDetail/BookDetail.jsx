@@ -29,7 +29,7 @@ const BookDetail = () => {
 
   useEffect(() => {
     fetchBook();
-  }, []);
+  }, [bookID]);
 
   // get all approved e-books
   const getApprovedBooks = async () => {
@@ -78,11 +78,11 @@ const BookDetail = () => {
       </h1>
       <div className="my-5 flex flex-col md:flex-row gap-5 items-start">
         {/* product image */}
-        <div className="md:w-[700px] md:h-[540px] md:mt-3">
+        <div className="md:w-[700px] md:h-[500px] md:mt-3 mx-auto">
           <img
             src={bookImage ? bookImage : null}
             alt={bookImage}
-            className="size-full object-fill"
+            className="size-full object-contain"
           />
         </div>
         <div className="md:w-1/3">

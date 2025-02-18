@@ -1,8 +1,8 @@
 import React, { Suspense } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Layout from "./pages/Layout/Layout";
-import Loader from './components/Loader/Loader.jsx'
-
+import Loader from "./components/Loader/Loader.jsx";
+import ScrollToTop from "./components/ScrollToTop/ScrollToTop.jsx";
 // Lazy loading components
 const Home = React.lazy(() => import("./pages/Home/Home"));
 const BookDetail = React.lazy(() => import("./pages/BookDetail/BookDetail"));
@@ -13,20 +13,30 @@ const MyFavourite = React.lazy(() => import("./pages/MyFavourite/MyFavourite"));
 const Faqs = React.lazy(() => import("./pages/Faqs/Faqs"));
 const Login = React.lazy(() => import("./pages/Login/Login"));
 const Signup = React.lazy(() => import("./pages/Signup/Signup"));
-const ForgotPassword = React.lazy(() => import("./pages/ForgotPassword/ForgotPassword"));
-const PhoneVerification = React.lazy(() => import("./pages/PhoneVerification/PhoneVerification"));
-const VerificationSuccess = React.lazy(() => import("./pages/VerificationSuccess/VerificationSuccess"));
-const AccountInfo = React.lazy(() => import("./components/AccountInfo/AccountInfo"));
+const ForgotPassword = React.lazy(() =>
+  import("./pages/ForgotPassword/ForgotPassword")
+);
+const PhoneVerification = React.lazy(() =>
+  import("./pages/PhoneVerification/PhoneVerification")
+);
+const VerificationSuccess = React.lazy(() =>
+  import("./pages/VerificationSuccess/VerificationSuccess")
+);
+const AccountInfo = React.lazy(() =>
+  import("./components/AccountInfo/AccountInfo")
+);
 const SearchPage = React.lazy(() => import("./pages/SearchPage/SearchPage"));
 const About = React.lazy(() => import("./pages/About/About"));
 
 const App = () => {
   return (
     <BrowserRouter>
+      {/* Self-closing ScrollToTop component */}
+      <ScrollToTop />
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<Layout />}>
-            {/* All routes will be nested under the Layout */}
+            {/* All routes nested under Layout */}
             <Route index element={<Home />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="book-detail/:bookID" element={<BookDetail />} />
