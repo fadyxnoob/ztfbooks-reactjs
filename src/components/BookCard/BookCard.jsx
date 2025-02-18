@@ -6,6 +6,7 @@ import Button from "../Button/Button";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import RandomFileThumbnail from '../../assets/images/BookCoverImage.png'
+import service from "../../API/DBService";
 
 const BookCard = ({ books }) => {
   const dispatch = useDispatch();
@@ -27,9 +28,10 @@ const BookCard = ({ books }) => {
           <Link to={`/book-detail/${book.id}`}>
             <div className="w-[240px] h-[240px] mx-auto">
               <img
-                src={RandomFileThumbnail}
-                alt={book.ebookTitle}
+                src={service.getFileByName(book.thumbnailFileName) || RandomFileThumbnail}
+                alt={book.ebookTitle || 'Book cover'}
                 className="w-full h-full object-cover rounded-md"
+                onError={(e) => e.target.src = RandomFileThumbnail} // Fallback if the image fails to load
               />
             </div>
           </Link>

@@ -1,6 +1,5 @@
 import React from 'react'
 import BookCard from '../../components/BookCard/BookCard'
-import Tabs from '../../components/Tabs/Tabs'
 import BookCoverImage from '../../assets/images/BookCoverImage.png'
 import HorizontalCard from '../../components/HorizontalCard/HorizontalCard'
 const MyFavourite = () => {

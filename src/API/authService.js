@@ -3,6 +3,7 @@ import axios from 'axios';
 export class AuthService {
     constructor() { }
 
+    // signup user using api
     async signup(data) {
         const apiUrl = import.meta.env.VITE_SIGNUP_API_KEY;
         if (!apiUrl) {
@@ -22,7 +23,7 @@ export class AuthService {
     
 
 
-
+    // let the user login using api
     async login(data) {
         try {
             const response = await axios.post(
@@ -44,6 +45,7 @@ export class AuthService {
         }
     }
 
+    // get logged in user 
     async getCurrentLoggedIn(){
         try {
             const response = await axios.get(

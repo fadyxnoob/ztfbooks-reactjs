@@ -3,13 +3,19 @@ import { useForm } from 'react-hook-form';
 import { BsSearch } from 'react-icons/bs';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
+import service from '../../API/DBService';
+import { useNavigate } from 'react-router-dom';
 
 const ForgotPassword = () => {
-  const [method, setMethod] = useState('phone'); // Default to 'phone'
+  const navigate = useNavigate();
+  const [method, setMethod] = useState('phone'); 
   const { register, handleSubmit, formState: { errors } } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    const res = await service.resetPassword();
+    console.log(res)
+    navigate('/phone-verification')
+
   };
 
   const baseButtonClass = "py-3 px-8 rounded transition-colors duration-200 text-center cursor-pointer";

@@ -1,12 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
-
-// React Icons
 import { LuSmartphone } from "react-icons/lu";
-
+import { useForm } from "react-hook-form";
+import service from '../../API/DBService';
 
 const PhoneVerification = () => {
   const [otp, setOtp] = useState(['', '', '', '', '']);
   const inputRefs = [useRef(), useRef(), useRef(), useRef(), useRef()];
+
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   formState: { errors },
+  // } = useForm();
+
 
   const handleChange = (index, value) => {
     // Only allow numbers
@@ -29,8 +35,8 @@ const PhoneVerification = () => {
     }
   };
 
-  const handleResend = () => {
-    // Handle resend logic here
+  const handleResend = async () => {
+    const res = await service.resendOTP()
     console.log('Resending OTP...');
   };
 
@@ -65,44 +71,48 @@ const PhoneVerification = () => {
           </p>
         </div>
 
-        {/* OTP Input */}
-        <div className="mt-8">
-          <div className="flex justify-center space-x-4 mb-[2rem]">
-            {otp.map((digit, index) => (
-              <input
-                key={index}
-                ref={inputRefs[index]}
-                type="text"
-                maxLength={1}
-                value={digit}
-                onChange={(e) => handleChange(index, e.target.value)}
-                onKeyDown={(e) => handleKeyDown(index, e)}
-                style={{height: "60px"}}
-                className="w-12 h-12 text-center text-3xl border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-gray-50"
-              />
-            ))}
+        <form
+          // onSubmit={}
+        >
+          {/* OTP Input */}
+          <div className="mt-8">
+            <div className="flex justify-center space-x-4 mb-[2rem]">
+              {otp.map((digit, index) => (
+                <input
+                  key={index}
+                  ref={inputRefs[index]}
+                  type="text"
+                  maxLength={1}
+                  value={digit}
+                  onChange={(e) => handleChange(index, e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(index, e)}
+                  style={{ height: "60px" }}
+                  className="w-12 h-12 text-center text-3xl border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-gray-50"
+                />
+              ))}
+            </div>
+
+            <div className="mt-10 text-sm ml-[5.1rem]">
+              <span className="text-[#000]">Didn't received an OTP?</span>{' '}
+              <button
+                onClick={handleResend}
+                className="ml-2 text-[#01447E] hover:text-blue-800 font-medium"
+              >
+                Resend
+              </button>
+            </div>
           </div>
 
-          <div className="mt-10 text-sm ml-[5.1rem]">
-            <span className="text-[#000]">Didn't received an OTP?</span>{' '}
+          {/* Verify Button */}
+          <div className='w-76 mx-auto' style={{ width: "66%" }}>
             <button
-              onClick={handleResend}
-              className="ml-2 text-[#01447E] hover:text-blue-800 font-medium"
+              onClick={handleVerify}
+              className="mt-12 w-full flex justify-center py-4 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-[#D2D2D2] bg-blue-800 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              Resend
+              Verify
             </button>
           </div>
-        </div>
-
-        {/* Verify Button */}
-        <div className='w-76 mx-auto' style={{width: "66%"}}>
-        <button
-          onClick={handleVerify}
-          className="mt-12 w-full flex justify-center py-4 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-[#D2D2D2] bg-blue-800 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        >
-          Verify
-        </button>
-        </div>
+        </form>
       </div>
     </div>
   );

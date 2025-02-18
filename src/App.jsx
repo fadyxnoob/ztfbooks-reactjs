@@ -19,17 +19,21 @@ const App = () => {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Layout />}>
+
                     {/* All routes will be nested under the Layout */}
                     <Route index element={<Home />} />
+
                     {/* Add more routes here */}
-                    <Route path="book-detail" element={<BookDetail />} />
+                    <Route path="book-detail/:book-id" element={<BookDetail />} />
                     <Route path="e-books" element={<EBooks />} />
                     <Route path="audio-books" element={<AudioBooks />} />
                     <Route path="my-cart" element={<CartPage />} />
                     <Route path="my-favourite" element={<MyFavourite />} />
                     <Route path="faqs" element={<Faqs />} />
+
                     {/* 404 Catch-all route */}
                     <Route path="*" element={<div>404 Not Found</div>} />
+                    
                 </Route>
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />

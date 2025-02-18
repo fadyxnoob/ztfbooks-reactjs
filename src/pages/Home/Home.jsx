@@ -13,7 +13,7 @@ const Home = () => {
     // get all approved e-books
     const getApprovedBooks = async () => {
         const res = await service.getApprovedBooks()
-        // console.log(res.content[0])
+        console.log(res.content[0])
         setApprovedEBooks(res.content)
     } 
 
