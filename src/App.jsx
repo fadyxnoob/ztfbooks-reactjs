@@ -13,6 +13,7 @@ import Login from './pages/Login/Login';
 import Signup from './pages/Signup/Signup';
 import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import PhoneVerification from './pages/PhoneVerification/PhoneVerification';
+import VerificationSuccess from './pages/VerificationSuccess/VerificationSuccess';
 
 const App = () => {
     return (
