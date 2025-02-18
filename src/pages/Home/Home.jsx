@@ -13,7 +13,7 @@ const Home = () => {
   const [bestSalesBooks, setBestSalesBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const apiKey = import.meta.env.VITE_GET_APPROVED_BOOKS_API_KEY;
-
+  console.log({apiKey})
   // Fetch approved e-books
   const getApprovedBooks = async () => {
     try {

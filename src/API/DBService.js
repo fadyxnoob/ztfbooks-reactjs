@@ -17,6 +17,7 @@ export class DBService {
 
     // get all approved books from the backend using api
     async getApprovedBooks(apiKey) {
+        console.log(apiKey)
         try {
             const res = await axios.get(apiKey)
             return res.data;
