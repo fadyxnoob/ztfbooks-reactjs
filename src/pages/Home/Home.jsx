@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Banner from "../../components/Banner/Banner";
 import BookCard from "../../components/BookCard/BookCard";
-import BookCoverImage from "../../assets/images/BookCoverImage.png";
 import Tabs from "../../components/Tabs/Tabs";
 import { useSelector } from "react-redux";
 import { getLocalStorage } from "../../LocalStorage/LocalStorage";
 import service from "../../API/DBService";
+
 const Home = () => {
   const loggedInUser =
     useSelector((state) => state.auth.userdata) || getLocalStorage("userdata");
@@ -13,25 +13,29 @@ const Home = () => {
   const [bestSalesBooks, setBestSalesBooks] = useState([]);
   const apiKey = import.meta.env.VITE_GET_APPROVED_BOOKS_API_KEY;
 
-  // get all approved e-books
+  // Get all approved e-books
   const getApprovedBooks = async () => {
     try {
       const res = await service.getApprovedBooks(apiKey);
-
-      setApprovedEBooks(res.content);
+      if (res && res.content) {
+        setApprovedEBooks(res.content);
+      } else {
+        console.warn("No content found in the API response.");
+        setApprovedEBooks([]);
+      }
     } catch (err) {
       console.error("Failed to fetch approved books:", err);
+      setApprovedEBooks([]);
     }
   };
 
+  // Get best-selling books
   const getBestSellingBooks = async () => {
     try {
       const res = await service.getBestSalesBooks(4);
-
       if (res && res.length > 0) {
         const formattedBooks = await Promise.all(
           res.map(async (book) => {
-            // Fetch detailed book info by ID
             const singleBook = await service.getBookByID(book.ebookId);
             return {
               title: book.ebookTitle,
@@ -44,23 +48,36 @@ const Home = () => {
             };
           })
         );
-
         setBestSalesBooks(formattedBooks);
       } else {
         console.warn("No books found in API response.");
+        setBestSalesBooks([]);
       }
     } catch (error) {
       console.error("Failed to fetch best-selling books:", error);
+      setBestSalesBooks([]);
     }
   };
 
   // Filter books based on conditions
-  const filterBooks = (books, conditions) => {
+  const filterBooks = (books, filterConditions) => {
+    if (!Array.isArray(books)) {
+      console.warn("Expected an array of books, but received:", books);
+      return [];
+    }
+
     return books.filter((book) => {
-      if (conditions.minAmount && book.amount < conditions.minAmount)
-        return false;
-      if (conditions.status && book.status !== conditions.status) return false;
-      return true;
+      let isMatch = true;
+      if (
+        filterConditions.minAmount &&
+        book.amount < filterConditions.minAmount
+      ) {
+        isMatch = false;
+      }
+      if (filterConditions.status && book.status !== filterConditions.status) {
+        isMatch = false;
+      }
+      return isMatch;
     });
   };
 
@@ -80,7 +97,7 @@ const Home = () => {
   return (
     <div className="bg-[#f4f3f4]">
       <Banner />
-      {/* Recen books section */}
+      {/* Recent books section */}
       <section className="my-10 px-5 md:px-20">
         <h4 className="text-black text-lg text-center md:text-start font-medium">
           Recent Ebooks
