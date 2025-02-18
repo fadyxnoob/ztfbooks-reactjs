@@ -29,6 +29,7 @@ const BookDetail = () => {
 
   useEffect(() => {
     fetchBook();
+    window.scrollTo(0, 0);
   }, [bookID]);
 
   // get all approved e-books
