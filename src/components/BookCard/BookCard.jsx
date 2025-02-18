@@ -58,7 +58,7 @@ const BookCard = ({ books }) => {
               <img
                 src={images[book.id] || StaticImage}
                 alt={book.ebookTitle}
-                className="w-full h-full object-cover rounded-md"
+                className="w-full h-full object-fill rounded-md"
               />
             </div>
           </Link>

@@ -147,7 +147,7 @@ const BookDetail = () => {
         <p className="mt-3 text-sm text-black font-normal">
           Meet the beautiful minds
         </p>
-        <div className="flex justify-between items-start flex-wrap mt-5">
+        <div className="flex justify-center md:justify-between items-start flex-wrap mt-5 gap-10 md:gap-0">
           <BookCard books={fromTheSameAuthor} />
         </div>
       </section>
