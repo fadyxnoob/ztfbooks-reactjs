@@ -18,6 +18,7 @@ const Home = () => {
   const getApprovedBooks = async () => {
     try {
       const res = await service.getApprovedBooks(apiKey);
+      console.log('approved res::',{res})
       setApprovedEBooks(res.content || []);
     } catch (err) {
       console.error("Failed to fetch approved books:", err);
