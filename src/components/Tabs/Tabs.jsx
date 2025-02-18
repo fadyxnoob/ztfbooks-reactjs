@@ -10,7 +10,7 @@ const Tabs = ({ bestSales }) => {
     const getBestSellingBooks = async () => {
         try {
             const res = await service.getBestSalesBooks();
-            console.log('API Response:', res);
+            // console.log('API Response:', res);
 
             if (res && res.length > 0) {
                 const formattedBooks = res.map((book) => ({

@@ -9,6 +9,7 @@ import service from '../../API/DBService'
 const Home = () => {
     const loggedInUser = useSelector((state) => state.auth.userdata) || getLocalStorage('userdata')
     const [approvedEBooks, setApprovedEBooks] = useState([])
+    const [bestSalesBooks, setBestSalesBooks] = useState([]);
 
     // get all approved e-books
     const getApprovedBooks = async () => {
@@ -23,6 +24,43 @@ const Home = () => {
 
     useEffect(() => {
         getApprovedBooks()
+    }, []);
+
+    const getBestSellingBooks = async () => {
+        try {
+            const res = await service.getBestSalesBooks();
+            // console.log('API Response:', res);
+    
+            if (res && res.length > 0) {
+                const formattedBooks = await Promise.all(res.map(async (book) => {
+                    // Fetch detailed book info by ID
+                    const singleBook = await service.getBookByID(book.ebookId); // Assuming `book.id` is the correct ID to fetch the book details.
+                    console.log(singleBook.data)
+                    return {
+                        title: book.ebookTitle,
+                        thumbnailFileName: book.ebookThumbNail,
+                        author: book.author?.createdBy || 'Unknown Author',
+                        duration: book.timeToRead || 'N/A',
+                        category: book.categories?.[0]?.name || 'N/A',
+                        id: book.id,
+                        detailedInfo: singleBook?.data 
+                    };
+                }));
+    
+                setBestSalesBooks(formattedBooks);
+            } else {
+                console.warn('No books found in API response.');
+            }
+        } catch (error) {
+            console.error('Failed to fetch best-selling books:', error);
+        }
+    };
+
+
+
+
+    useEffect(() => {
+        getBestSellingBooks()
     }, []);
 
     const books = [
@@ -91,13 +129,13 @@ const Home = () => {
             <section className='my-10 px-5 md:px-20'>
                 <h4 className='text-black text-lg text-center md:text-start font-medium'>Best Selling Books</h4>
                 <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-5">
-                    <BookCard books={books} />
+                    <BookCard books={bestSalesBooks} />
                 </div>
             </section>
 
             {/* Special Discounts section */}
             <section className='my-10 px-5 md:px-20'>
-                <h4 className='text-black text-lg text-center md:text-start font-medium'>Best Selling Books</h4>
+                <h4 className='text-black text-lg text-center md:text-start font-medium'>Special Discount</h4>
                 <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-5">
                     <BookCard books={books} />
                 </div>

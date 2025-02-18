@@ -71,29 +71,29 @@ const BookCard = ({ books }) => {
           <div className="flex items-start justify-between">
             <h3 className="text-lg font-semibold truncate">
               <Link to={`/book-detail/${book.id}`} className="hover:underline">
-                {book.ebookTitle}
+                {book?.ebookTitle || book?.detailedInfo?.ebookTitle}
               </Link>
             </h3>
 
             {/* Rating */}
             <div className="flex items-center gap-1 text-yellow-500 bg-[#1D2C41] px-3 py-1 rounded-2xl">
               <FaStar />
-              <span className="text-sm font-medium text-white">{book?.rating}</span>
+              <span className="text-sm font-medium text-white">{book?.rating || book?.detailedInfo?.rating}</span>
             </div>
           </div>
 
           {/* Author */}
           <p className="text-gray-700 text-sm">
-            Author: {book?.author?.name || 'Unknown'}
+            Author: {book?.author?.name || book?.detailedInfo?.author?.name}
           </p>
 
           {/* Time & Category */}
           <div className="flex flex-wrap items-center gap-4 text-black text-sm mt-2 font-light">
             <span className="flex items-center gap-2">
-              <MdOutlineAccessTime className="text-blue-500" /> {book.timeToRead ? `${book.timeToRead} mins` : 'N/A'}
+              <MdOutlineAccessTime className="text-blue-500" /> {book.timeToRead ? `${book.timeToRead} mins` : book?.detailedInfo?.timeToRead}
             </span>
             <span className="flex items-center gap-2">
-              <IoMdHeadset className="text-green-600" /> {book?.categories?.[0]?.name || 'Uncategorized'}
+              <IoMdHeadset className="text-green-600" /> {book?.categories?.[0]?.name || book?.detailedInfo?.categories?.[0]?.name}
             </span>
           </div>
         </div>

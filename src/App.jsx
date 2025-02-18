@@ -25,7 +25,7 @@ const App = () => {
                     <Route index element={<Home />} />
 
                     {/* Add more routes here */}
-                    <Route path="book-detail/:book-id" element={<BookDetail />} />
+                    <Route path="book-detail/:bookID" element={<BookDetail />} />
                     <Route path="e-books" element={<EBooks />} />
                     <Route path="audio-books" element={<AudioBooks />} />
                     <Route path="my-cart" element={<CartPage />} />
@@ -41,6 +41,7 @@ const App = () => {
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/phone-verification" element={<PhoneVerification />} />
             </Routes>
+            <Route path="*" element={<div>404 Not Found</div>} />
         </BrowserRouter>
     );
 };

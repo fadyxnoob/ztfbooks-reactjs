@@ -18,7 +18,7 @@ const HorizontalCard = ({ books, toggleFavorite, favorites }) => {
         if (book?.image) {
           try {
             const response = await service.getFileByName(book.image);
-            console.log('HC Res::', response);
+            // console.log('HC Res::', response);
             if (response && response.data) {
               const url = URL.createObjectURL(response.data);
               imageMap[book.id] = url;

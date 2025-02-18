@@ -4,7 +4,9 @@ const AuthorCard = ({ authors }) => {
     return (
         authors?.map((author, i) => {
             return (
-                <div className="w-[199px] h-[266px] border border-[#8888883B] rounded-lg p-4 flex flex-col items-center text-center shadow-sm">
+                <div 
+                key={i}
+                className="w-[199px] h-[266px] border border-[#8888883B] rounded-lg p-4 flex flex-col items-center text-center shadow-sm">
                     <img
                         src={author.authorImage}
                         alt={author.name}
