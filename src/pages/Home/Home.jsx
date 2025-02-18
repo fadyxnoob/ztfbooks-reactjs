@@ -11,88 +11,81 @@ const Home = () => {
     useSelector((state) => state.auth.userdata) || getLocalStorage("userdata");
   const [approvedEBooks, setApprovedEBooks] = useState([]);
   const [bestSalesBooks, setBestSalesBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
   const apiKey = import.meta.env.VITE_GET_APPROVED_BOOKS_API_KEY;
 
-  // Get all approved e-books
+  // Fetch approved e-books
   const getApprovedBooks = async () => {
     try {
       const res = await service.getApprovedBooks(apiKey);
-      if (res && res.content) {
-        setApprovedEBooks(res.content);
-      } else {
-        console.warn("No content found in the API response.");
-        setApprovedEBooks([]);
-      }
+      setApprovedEBooks(res.content || []);
     } catch (err) {
       console.error("Failed to fetch approved books:", err);
-      setApprovedEBooks([]);
     }
   };
 
-  // Get best-selling books
+  // Fetch best-selling books
   const getBestSellingBooks = async () => {
     try {
       const res = await service.getBestSalesBooks(4);
       if (res && res.length > 0) {
         const formattedBooks = await Promise.all(
           res.map(async (book) => {
-            const singleBook = await service.getBookByID(book.ebookId);
-            return {
-              title: book.ebookTitle,
-              thumbnailFileName: book.ebookThumbNail,
-              author: book.author?.name || "Unknown Author",
-              duration: book.timeToRead || "N/A",
-              category: book.categories?.[0]?.name || "N/A",
-              id: book.ebookId,
-              detailedInfo: singleBook?.data,
-            };
+            try {
+              const singleBook = await service.getBookByID(book.ebookId);
+              return {
+                title: book.ebookTitle,
+                thumbnailFileName: book.ebookThumbNail,
+                author: book.author?.name || "Unknown Author",
+                duration: book.timeToRead || "N/A",
+                category: book.categories?.[0]?.name || "N/A",
+                id: book.ebookId,
+                detailedInfo: singleBook?.data,
+              };
+            } catch (error) {
+              console.error(
+                `Failed to fetch book details for ID: ${book.ebookId}`,
+                error
+              );
+              return null;
+            }
           })
         );
-        setBestSalesBooks(formattedBooks);
-      } else {
-        console.warn("No books found in API response.");
-        setBestSalesBooks([]);
+        setBestSalesBooks(formattedBooks.filter(Boolean));
       }
     } catch (error) {
       console.error("Failed to fetch best-selling books:", error);
-      setBestSalesBooks([]);
     }
   };
 
   // Filter books based on conditions
-  const filterBooks = (books, filterConditions) => {
-    if (!Array.isArray(books)) {
-      console.warn("Expected an array of books, but received:", books);
-      return [];
-    }
-
+  const filterBooks = (books, conditions) => {
     return books.filter((book) => {
-      let isMatch = true;
-      if (
-        filterConditions.minAmount &&
-        book.amount < filterConditions.minAmount
-      ) {
-        isMatch = false;
-      }
-      if (filterConditions.status && book.status !== filterConditions.status) {
-        isMatch = false;
-      }
-      return isMatch;
+      if (conditions.minAmount && book.amount < conditions.minAmount)
+        return false;
+      if (conditions.status && book.status !== conditions.status) return false;
+      return true;
     });
   };
 
-  // Define filter conditions
-  const filterDiscount = {
+  useEffect(() => {
+    const fetchData = async () => {
+      await Promise.all([getApprovedBooks(), getBestSellingBooks()]);
+      setLoading(false);
+    };
+    fetchData();
+  }, []);
+
+  const specialDiscountBooks = filterBooks(approvedEBooks, {
     minAmount: 0,
     status: "APPROVED",
-  };
+  });
 
-  const specialDiscountBooks = filterBooks(approvedEBooks, filterDiscount);
-
-  useEffect(() => {
-    getApprovedBooks();
-    getBestSellingBooks();
-  }, []);
+  if (loading) {
+    return (
+      <div className="text-center py-20 text-xl">Loading, please wait...</div>
+    );
+  }
 
   return (
     <div className="bg-[#f4f3f4]">
