@@ -4,7 +4,6 @@ import React from "react";
 const About = () => {
   return (
     <div>
-      <Header />
       <div className="w-full min-h-screen bg-[#F5F5F5] px-4 sm:px-8 lg:px-20 py-8 lg:py-8">
         <div className="p-4 border-b border-[#EBEBEB]">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl text-[#014471] font-medium">
