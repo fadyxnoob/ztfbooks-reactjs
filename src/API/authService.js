@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getLocalStorage } from '../LocalStorage/LocalStorage';
 
 export class AuthService {
     constructor() { }
@@ -10,7 +11,7 @@ export class AuthService {
             console.error('Signup API URL is missing!');
             return;
         }
-    
+
         try {
             const response = await axios.post(apiUrl, data);
             console.log('Signup successful:', response.data);
@@ -20,7 +21,7 @@ export class AuthService {
             throw error;
         }
     }
-    
+
 
 
     // let the user login using api
@@ -46,16 +47,81 @@ export class AuthService {
     }
 
     // get logged in user 
-    async getCurrentLoggedIn(){
+    async getCurrentLoggedIn() {
         try {
-            const response = await axios.get(
-                ProcessingInstruction.meta.env.VITE_GET_CURRENT_LOGGEDIN_API_KEY
-            )
-            console.log('The Logged-in Account is ::', response)
+            const userData = JSON.parse(localStorage.getItem('userdata'));
+            const token = userData?.jwtToken;
+            if (!token) {
+                console.error("No token found in localStorage");
+                return;
+            }
+
+            const response = await axios.get(import.meta.env.VITE_GET_CURRENT_LOGGEDIN_API_KEY, {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Send token in the Authorization header
+                }
+            });
+            // console.log('The Logged-in Account is ::', response);
+            return response.data;
         } catch (error) {
-            console.error('Error getting Current LoggedIN::', error)
+            console.error('Error getting Current LoggedIN::', error);
         }
     }
+
+
+    // update user 
+    async updateUser(userId, userData) {
+        try {
+            const token = JSON.parse(localStorage.getItem('userdata'))?.jwtToken;
+            if (!token) {
+                throw new Error('No token found. Please log in again.');
+            }
+
+            const response = await axios.put(
+                `${import.meta.env.VITE_UPDATE_USER_API_KEY}${userId}`,
+                {
+                    image: userData.image,
+                    contactDetails: {
+                        phoneNumber: userData.phoneNumber,
+                        physicalAddress: userData.physicalAddress,
+                        city: userData.city,
+                        country: userData.country
+                    }
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            if (response.status === 200 && (userData.name && userData.email)) {
+                const res = await axios.put(
+                    `${import.meta.env.VITE_UPDATE_EMAIL_AND_NAME_API_KEY}`,
+                    {
+                        name:userData.name,
+                        email:userData.email,
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+                
+                if(res.status === 200){
+                    return res;
+                }
+            }
+
+            return response.data;
+        } catch (error) {
+            console.error('Error updating user:', error.response?.data || error.message);
+        }
+    }
+
+
 }
 
 const authService = new AuthService();
