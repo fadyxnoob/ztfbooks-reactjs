@@ -9,15 +9,17 @@ import service from "../../API/DBService";
 const Home = () => {
   const loggedInUser =
     useSelector((state) => state.auth.userdata) || getLocalStorage("userdata");
+
   const [approvedEBooks, setApprovedEBooks] = useState([]);
   const [bestSalesBooks, setBestSalesBooks] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const apiKey = import.meta.env.VITE_GET_APPROVED_BOOKS_API_KEY;
+
   // Fetch approved e-books
   const getApprovedBooks = async () => {
     try {
       const res = await service.getApprovedBooks(apiKey);
-      // console.log("approved res::", { res });
       setApprovedEBooks(res.content || []);
     } catch (err) {
       console.error("Failed to fetch approved books:", err);
@@ -90,6 +92,7 @@ const Home = () => {
   return (
     <div className="bg-[#f4f3f4]">
       <Banner />
+      
       {/* Recent books section */}
       <section className="my-10 px-5 md:px-20">
         <h4 className="text-black text-lg text-center md:text-start font-medium">
