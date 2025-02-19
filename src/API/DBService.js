@@ -8,7 +8,7 @@ export class DBService {
     async getAllFaqs(apiKey) {
         try {
             const res = await axios.get(apiKey);
-            console.log({res})
+            // console.log({res})
             return res;
         } catch (error) {
             console.error("Error fetching FAQs:", error.response ? error.response.data : error.message);
