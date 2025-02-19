@@ -5,6 +5,7 @@ import { FaPlus } from "react-icons/fa6";
 import Button from "../../components/Button/Button";
 import { LuSmartphone } from "react-icons/lu";
 import { FaPaypal } from "react-icons/fa6";
+import { useSelector } from "react-redux";
 
 const PaymentInformation = () => {
   const [selectedPayment, setSelectedPayment] = useState(null);

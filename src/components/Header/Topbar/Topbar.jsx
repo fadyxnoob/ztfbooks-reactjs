@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { CiSearch } from "react-icons/ci";
-import { CiHeart } from "react-icons/ci";
+import { CiSearch, CiHeart } from "react-icons/ci";
 import { BsCart3 } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../../Input/Input";
@@ -16,31 +15,27 @@ const Topbar = () => {
   const navigate = useNavigate();
 
   const { register } = useForm();
-  const [isLogin, setIsLogin] = useState(
-    useSelector((state) => state.auth.status) ||
-      getLocalStorage("authUserStatus")
-  );
+  const isLogin =
+    useSelector((state) => state.auth.status) || getLocalStorage("authUserStatus");
+
+  const cart = useSelector((state) => state.cart);
+  const totalQuantity = cart?.products?.reduce((sum, product) => sum + product.quantity, 0) || 0;
+
+  // Debounced search function
+  const debouncedSearch = debounce((value) => {
+    setQuery(value);
+    navigate(value.trim() ? `/search?q=${encodeURIComponent(value)}` : "/search");
+  }, 500);
+
+  const handleSearch = (value) => {
+    debouncedSearch(value);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (query.trim()) {
       navigate(`/search?q=${encodeURIComponent(query)}`);
-    } else {
-      navigate("/search");
     }
-  };
-
-  const debouncedSearch = debounce((value) => {
-    setQuery(value);
-    if (value.trim()) {
-      navigate(`/search?q=${encodeURIComponent(value)}`);
-    } else {
-      navigate("/search");
-    }
-  }, 500);
-
-  const handleSearch = (value) => {
-    debouncedSearch(value);
   };
 
   return (
@@ -65,6 +60,7 @@ const Topbar = () => {
         </Input>
       </form>
 
+      {/* Icons & Login */}
       <div className="flex items-center justify-between w-fit gap-10">
         <Link to="my-favourite">
           <CiHeart className="text-gray-600 text-3xl cursor-pointer hidden md:block" />
@@ -72,11 +68,14 @@ const Topbar = () => {
         <Link to="my-cart">
           <div className="relative hidden md:block">
             <BsCart3 className="text-gray-600 text-3xl cursor-pointer" />
-            <div className="size-[23px] bg-[#BE5C5C] text-white text-sm font-normal text-center align-middle rounded-full absolute top-0 -right-2">
-              1
-            </div>
+            {totalQuantity > 0 && (
+              <div className="size-[23px] bg-[#BE5C5C] text-white text-sm font-normal text-center align-middle rounded-full absolute top-0 -right-2">
+                {totalQuantity}
+              </div>
+            )}
           </div>
         </Link>
+
         {isLogin ? (
           <UserLogin />
         ) : (
