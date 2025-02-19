@@ -7,12 +7,13 @@ const Faqs = () => {
   const [openFaqId, setOpenFaqId] = useState(null);
   const [loading, setLoading] = useState(true); 
   const [error, setError] = useState(null); 
+  const apiKey = import.meta.env.VITE_SWAGGER_ALL_FAQS_API
 
   // Fetch FAQs on component mount
   useEffect(() => {
     const fetchFaqs = async () => {
       try {
-        const res = await service.getAllFaqs();
+        const res = await service.getAllFaqs(apiKey);
         console.log("API Response for FAQs:", res); 
         if (Array.isArray(res.data)) {
           setAllFaqs(res.data);

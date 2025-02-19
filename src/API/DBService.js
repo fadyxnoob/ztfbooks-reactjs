@@ -5,9 +5,10 @@ export class DBService {
     constructor() { }
 
     // get all faqs from the backend using api
-    async getAllFaqs() {
+    async getAllFaqs(apiKey) {
         try {
-            const res = await axios.get(import.meta.env.VITE_SWAGGER_ALL_FAQS_API);
+            const res = await axios.get(apiKey);
+            console.log({res})
             return res;
         } catch (error) {
             console.error("Error fetching FAQs:", error.response ? error.response.data : error.message);
