@@ -8,7 +8,7 @@ export class DBService {
     async getAllFaqs() {
         try {
             const res = await axios.get(import.meta.env.VITE_SWAGGER_ALL_FAQS_API);
-            return res.data;
+            return res;
         } catch (error) {
             console.error("Error fetching FAQs:", error.response ? error.response.data : error.message);
             return null;
