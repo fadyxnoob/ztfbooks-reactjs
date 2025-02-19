@@ -5,9 +5,11 @@ import { FaHeart } from "react-icons/fa";
 import StaticImage from "../../assets/images/BookCoverImage.png";
 import service from "../../API/DBService";
 import { Link } from "react-router-dom";
+import useFavorite from "../../Hooks/useFavorite";
 
-const HorizontalCard = ({ books, toggleFavorite, favorites }) => {
+const HorizontalCard = ({ books }) => {
   const [images, setImages] = useState({});
+  const {handleAddToFavorite, handleRemoveFromFavorite, isFavorite} = useFavorite()
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -33,9 +35,8 @@ const HorizontalCard = ({ books, toggleFavorite, favorites }) => {
     fetchImages();
   }, [books]);
 
+
   return books.map((book, i) => {
-    const isFavorite =
-      Array.isArray(favorites) && favorites.some((fav) => fav.id === book.id);
     const imageUrl = images[book.id] || StaticImage;
     return (
       <div
@@ -67,14 +68,11 @@ const HorizontalCard = ({ books, toggleFavorite, favorites }) => {
             </div>
             <button
               className="mt-2 rounded-full cursor-pointer flex gap-2 items-center text-[14px]"
-              onClick={() => toggleFavorite(book)}
+              onClick={() => isFavorite(book.id) ? handleRemoveFromFavorite(book.id) : handleAddToFavorite(book.id, true)}
             >
-              <FaHeart
-                className={`text-lg ${
-                  isFavorite ? "text-red-500" : "text-gray-400"
-                }`}
-              />
-              {isFavorite ? "Remove from Favourite" : "Add to Favourite"}
+
+               <FaHeart className={`text-lg ${isFavorite(book.id) ? "text-red-500" : "text-gray-400"}`} />
+               {isFavorite(book.id) ? "Remove from Favourite" : "Add to Favourite"}
             </button>
           </div>
         </div>

@@ -7,8 +7,7 @@ import { getLocalStorage } from "../../LocalStorage/LocalStorage";
 import service from "../../API/DBService";
 
 const Home = () => {
-  const loggedInUser =
-    useSelector((state) => state.auth.userdata) || getLocalStorage("userdata");
+  const loggedInUser = useSelector((state) => state.auth.userdata) || getLocalStorage("userdata");
 
   const [approvedEBooks, setApprovedEBooks] = useState([]);
   const [bestSalesBooks, setBestSalesBooks] = useState([]);

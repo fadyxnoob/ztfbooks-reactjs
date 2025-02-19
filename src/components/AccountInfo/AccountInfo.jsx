@@ -6,6 +6,8 @@ import { IoIosArrowDown } from "react-icons/io";
 import authService from "../../API/authService";
 import { useForm } from "react-hook-form";
 import service from "../../API/DBService";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Input = ({
   name,
@@ -53,10 +55,13 @@ const PreferenceButton = ({ icon, label, selected, onClick }) => {
 };
 
 const AccountInfo = () => {
+  const navigate = useNavigate()
   const [selectedLanguage, setSelectedLanguage] = React.useState("French");
   const [selectedPayment, setSelectedPayment] = React.useState(
     "Debit / Credit Card"
   );
+  const isLogin = useSelector((state) => state.auth.status)
+
   const [userInfo, setUserInfo] = useState(null);
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
@@ -64,6 +69,9 @@ const AccountInfo = () => {
   const { register, handleSubmit, setValue } = useForm();
 
   useEffect(() => {
+    if(!isLogin){
+      navigate('/login')
+    }
     const getUserInfo = async () => {
       const res = await authService.getCurrentLoggedIn();
       setUserInfo(res);

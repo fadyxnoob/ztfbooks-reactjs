@@ -26,6 +26,7 @@ export class AuthService {
 
     // let the user login using api
     async login(data) {
+        console.log({data})
         try {
             const response = await axios.post(
                 import.meta.env.VITE_LOGIN_API_KEY,

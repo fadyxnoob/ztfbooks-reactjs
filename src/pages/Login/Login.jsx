@@ -30,19 +30,15 @@ const Login = () => {
         throw new Error("Invalid session data received from the server.");
       }
 
-      // Dispatch the login action with serializable data
-      dispatch(authLogin({ userdata: session.data }));
+      console.log('Session Data',session.data)
+      dispatch(authLogin({ userdata: session.data.jwt }));
 
-      // Store authentication status and user data in localStorage
       setLocalStorage("authUserStatus", true);
       setLocalStorage("userdata", session.data);
 
-      // Redirect to the home page
       navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
-
-      // Display a user-friendly error message (optional)
       alert("Login failed. Please check your credentials and try again.");
     }
   };

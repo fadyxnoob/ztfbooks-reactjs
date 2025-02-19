@@ -8,9 +8,8 @@ import { useParams } from "react-router-dom";
 import service from "../../API/DBService";
 import DOMPurify from "dompurify";
 import Alert from "../../components/Alert/Alert";
-import { useDispatch, useSelector } from "react-redux";
-import { addToCart, addToCartAsync } from "../../Store/cartSlice";
-import { getLocalStorage } from "../../LocalStorage/LocalStorage";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../Store/cartSlice";
 
 const BookDetail = () => {
   const { bookID } = useParams();
@@ -19,29 +18,27 @@ const BookDetail = () => {
   const [approvedEBooks, setApprovedEBooks] = useState([]);
   const apiKey = import.meta.env.VITE_GET_ALL_APPROVED_BOOKS_API_KEY;
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(null);
-
-  const loggedInUser =
-    useSelector((state) => state.auth.userdata) || getLocalStorage("userdata");
-
-  // Function to show alert
-  const showAlert = (type, message) => {
-    setAlert({ type, message });
-  };
+  const [loading, setLoading] = useState(false);
 
   // fetching book detail from API using book ID
   const fetchBook = async () => {
     const res = await service.getBookByID(bookID);
+    console.log(res.data);
     setBookDetail(res.data);
     const url = await service.getFileByName(res?.data?.thumbnailFileName);
     setBookImage(url);
   };
-
   useEffect(() => {
     fetchBook();
     window.scrollTo(0, 0);
   }, [bookID]);
+
+  // Function to show alert
+  const showAlert = (type, message) => {
+    setAlert({ type, message });
+    setTimeout(() => setAlert(null), 2000); // Hide after 2 seconds
+  };
 
   // get all approved e-books
   const getApprovedBooks = async () => {
@@ -59,36 +56,18 @@ const BookDetail = () => {
   }, []);
 
   // Function to add book to the cart
-  const handleAddToCart = async () => {
-    if (!bookDetail) return;
+  const handleAddToCart = (ebookId, quantity, name, price) => {
+    if (!ebookId || !quantity || !name || !price) {
+      console.error("Invalid cart item:", { ebookId, quantity, name, price });
+      return;
+    }
     try {
-      setLoading(true);
-
-      const apiPayload = {
-        ebookId: bookDetail.id,
-        token: loggedInUser.jwtToken,
-      };
-
-      await dispatch(addToCartAsync(apiPayload)).unwrap();
-
-      const cartPayload = {
-        id: bookDetail.id,
-        quantity: 1,
-        name: bookDetail.ebookTitle,
-        price: bookDetail.price || 0,
-      };
-
-      dispatch(addToCart(cartPayload));
-      showAlert("success", `${bookDetail.ebookTitle} added to cart!`);
+      dispatch(addToCart({ ebookId, quantity, name, price }));
+      showAlert("success", "Item add to the cart");
     } catch (error) {
-      console.error("Error adding to cart:", error);
-      showAlert("error", "Failed to add book to cart.");
-    } finally {
-      setLoading(false);
+      showAlert("error", "Failed to add item ");
     }
   };
-
-
 
   const reviews = [
     {
@@ -107,8 +86,6 @@ const BookDetail = () => {
     },
   ];
 
-
-  
   return (
     <>
       {alert && (
@@ -175,7 +152,14 @@ const BookDetail = () => {
             <div className="my-5">
               <Button
                 classNames="bg-[#01447E] rounded-full w-full h-[50px] text-white font-medium text-lg cursor-pointer disabled:opacity-50"
-                onClick={handleAddToCart}
+                onClick={() =>
+                  handleAddToCart(
+                    bookDetail?.id,
+                    1,
+                    bookDetail?.ebookTitle,
+                    bookDetail?.amount
+                  )
+                }
                 disabled={loading}
               >
                 {loading ? "Adding..." : "Add to Cart"}
@@ -205,8 +189,8 @@ const BookDetail = () => {
           </div>
         </section>
 
-         {/* reviews section */}
-         <section className="my-10 bg-[#EBEBEB] pt-10 pb-3 px-3">
+        {/* reviews section */}
+        <section className="my-10 bg-[#EBEBEB] pt-10 pb-3 px-3">
           <h2 className="text-[#203949] text-2xl font-semibold">
             Reviews on {bookDetail?.ebookTitle} Ebook
           </h2>

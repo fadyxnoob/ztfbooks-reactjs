@@ -5,11 +5,17 @@ import Button from "../../components/Button/Button";
 import BookCard from "../../components/BookCard/BookCard";
 import { useSelector } from "react-redux";
 import service from "../../API/DBService";
+import axios from "axios";
 
 const CartPage = () => {
+
   const apiKey = import.meta.env.VITE_GET_APPROVED_BOOKS_API_KEY;
   const [approvedEBooks, setApprovedEBooks] = useState([]);
   const [cartBooks, setCartBooks] = useState([]);
+
+  const token = localStorage.getItem("userdata").jwtToken;
+
+
 
   const products = useSelector((state) => state?.cart?.products || []);
   const totalQuantity = products.reduce(
@@ -45,9 +51,10 @@ const CartPage = () => {
         products.map(async (book) => {
           try {
             const bookRes = await service.getBookByID(book.id);
+            
             const file = bookRes.data.thumbnailFileName;
             const fileURL = await service.getFileByName(file);
-            return { ...book, fileURL };
+            return { ...book, fileURL, category:bookRes.data.categories.name, author:bookRes.data.author.name, date:bookRes.data.publishDate };
           } catch (err) {
             console.error(`Failed to fetch book ${book.id}:`, err);
             return { ...book, fileURL: null };
@@ -95,7 +102,7 @@ const CartPage = () => {
                   <div className="w-full p-2 flex flex-wrap items-center justify-between">
                     <div className="hidden md:block">
                       <h3 className="text-xl font-medium text-[#203949]">
-                        {book?.name}
+                        {book.name}
                       </h3>
                       <div className="flex items-center gap-2 mt-2">
                         <p className="text-[#7C7C7C] text-sm font-normal">
@@ -109,7 +116,7 @@ const CartPage = () => {
                         Author
                       </h3>
                       <p className="mt-2 text-[#7C7C7C] text-sm font-normal">
-                        {book.author || "Unknown"}
+                        {book?.author || "Unknown"}
                       </p>
                     </div>
                     <div className="">

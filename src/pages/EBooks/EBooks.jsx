@@ -34,15 +34,6 @@ const EBooks = () => {
                 </div>
             </section>
 
-            {/* Section for products in cart (if applicable) */}
-            {products?.length > 0 && (
-                <section className='mt-10'>
-                    <h4 className='text-[#203949] text-xl text-center md:text-start font-semibold'>Your Cart</h4>
-                    <div className="flex mt-5 flex-wrap items-center justify-center md:justify-start gap-5">
-                        <BookCard books={products} />
-                    </div>
-                </section>
-            )}
         </div>
     );
 };

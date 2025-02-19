@@ -46,12 +46,13 @@ export class DBService {
 
         try {
             const response = await axios.get(`${import.meta.env.VITE_GET_FILE_BY_NAME_API_KEY}${fileName}`, {
-                responseType: 'blob', // Important for image display
+                responseType: 'blob', 
             });
 
              // Check if imageRes.data is a Blob before creating object URL
              if (response.data && response.data instanceof Blob) {
-                const imageUrl = URL.createObjectURL(response.data); // Create a URL for the Blob
+                const imageUrl = URL.createObjectURL(response.data);
+                // console.log({imageUrl})
                return imageUrl
                 
             } else {
