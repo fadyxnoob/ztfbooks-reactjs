@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Button = ({ children, classNames, path, onClick, type = 'button' }) => {
+const Button = ({ children, classNames, path, onClick, type = 'button', disabled }) => {
     if (path) {
         // Render a Link if path is provided
         return (
@@ -17,6 +17,7 @@ const Button = ({ children, classNames, path, onClick, type = 'button' }) => {
             type={type} // Allow specifying the button type (e.g., 'button', 'submit')
             className={classNames}
             onClick={onClick} // Handle onClick
+            disabled={disabled}
         >
             {children}
         </button>

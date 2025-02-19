@@ -7,18 +7,17 @@ import { Link } from 'react-router-dom';
 import Input from '../../Input/Input';
 import Button from '../../Button/Button';
 import UserLogin from '../../UserLogin/UserLogin';
-import { useSelector, useDispatch } from 'react-redux'
-import { getLocalStorage } from '../../../LocalStorage/LocalStorage'
-const Topbar = () => {
+import { useSelector, useDispatch } from 'react-redux';
+import { getLocalStorage } from '../../../LocalStorage/LocalStorage';
 
+const Topbar = () => {
   const { register, handleSubmit } = useForm();
   const [isLogin, setIsLogin] = useState(
     useSelector((state) => state.auth.status) || getLocalStorage('authUserStatus')
-  )
+  );
 
-
-
-
+  const cart = useSelector((state) => state.cart);
+  const totalQuantity = cart.products.reduce((sum, product) => sum + product.quantity, 0);
 
   const onSubmit = (data) => {
     console.log(data); // Check if form data is being captured properly
@@ -49,9 +48,10 @@ const Topbar = () => {
         <Link to='my-cart' >
           <div className='relative hidden md:block'>
             <BsCart3 className="text-gray-600 text-3xl cursor-pointer" />
-            <div className="size-[23px] bg-[#BE5C5C] text-white text-sm font-normal text-center align-middle rounded-full absolute top-0 -right-2">1</div>
+            <div className="size-[23px] bg-[#BE5C5C] text-white text-sm font-normal text-center align-middle rounded-full absolute top-0 -right-2">
+              {totalQuantity} 
+            </div>
           </div>
-
         </Link>
         {
           isLogin ? (
@@ -60,8 +60,6 @@ const Topbar = () => {
             <Link to='/login' ><Button classNames="bg-[#0B457F] text-white px-4 py-2 rounded-md cursor-pointer">Login</Button></Link>
           )
         }
-
-
       </div>
     </div>
   );

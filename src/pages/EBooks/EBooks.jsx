@@ -1,8 +1,11 @@
 import React from 'react'
 import BookCard from '../../components/BookCard/BookCard'
 import BookCoverImage from '../../assets/images/BookCoverImage.png'
+import { useSelector } from 'react-redux'
 
 const EBooks = () => {
+    const products = useSelector((state) => state?.cart?.products);
+
 
     const books = [
         {
@@ -47,7 +50,7 @@ const EBooks = () => {
             <section className='mt-5'>
                 <h4 className='text-[#203949] text-xl text-center md:text-start font-semibold'>PDF Books</h4>
                 <div className="flex mt-5 flex-wrap items-center justify-center md:justify-start gap-5">
-                    <BookCard books={books} />
+                    <BookCard books={products} />
                 </div>
             </section>
            

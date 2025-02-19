@@ -4,112 +4,162 @@ import { IoMdHeadset } from "react-icons/io";
 import { MdOutlineAccessTime } from "react-icons/md";
 import Button from "../Button/Button";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import StaticImage from '../../assets/images/BookCoverImage.png';
 import service from "../../API/DBService";
+import { addToCart, addToCartAsync } from "../../Store/cartSlice";
 
 const BookCard = ({ books }) => {
-  const dispatch = useDispatch();
-  const [images, setImages] = useState({});
+    const dispatch = useDispatch();
+    const [images, setImages] = useState({});
+    const [loading, setLoading] = useState({});
 
-  // Function to add book to the cart
-  const handleAddToCart = (book) => {
-    dispatch({ type: 'ADD_TO_CART', payload: book.id });
-    console.log(`${book.id} added to cart!`);
+    const session = useSelector((state) => state.auth.login);
+    const authUserData = useSelector((state) => state?.auth);
+    const loggedInUser = useSelector((state) => state.auth.userdata) || getLocalStorage('userdata')
+    
+
+    // Function to add book to the cart
+    const handleAddToCart = async (book) => {
+      try {
+          setLoading(prev => ({ ...prev, [book.id]: true }));
+
+          const apiPayload = {
+              ebookId: book.id,
+              token: loggedInUser.jwtToken
+          };
+
+          await dispatch(addToCartAsync(apiPayload)).unwrap();
+
+          const cartPayload = {
+              id: book.id,
+              quantity: 1,
+              name: book.ebookTitle,
+              price: book.price || 0
+          };
+
+          dispatch(addToCart(cartPayload));
+          console.log(`${book.ebookTitle} added to cart!`);
+      } catch (error) {
+          console.error('Error adding to cart:', error);
+          // You could add a toast notification here
+      } finally {
+          setLoading(prev => ({ ...prev, [book.id]: false }));
+      }
   };
 
-  // Fetch images for all books
-  useEffect(() => {
-    const fetchImages = async () => {
-      const imageMap = {};
+    // Fetch images for all books
+    useEffect(() => {
+        const fetchImages = async () => {
+            const imageMap = {};
 
-      for (const book of books) {
-        if (book.thumbnailFileName) {
-          try {
-            const response = await service.getFileByName(book.thumbnailFileName);
-            if (response && response.data) {
-              const url = URL.createObjectURL(response.data);
-              imageMap[book.id] = url;
+            for (const book of books) {
+                if (book.thumbnailFileName) {
+                    try {
+                        const response = await service.getFileByName(book.thumbnailFileName);
+                        if (response && response.data) {
+                            const url = URL.createObjectURL(response.data);
+                            imageMap[book.id] = url;
+                        }
+                    } catch (error) {
+                        console.error(`Failed to fetch image for ${book.ebookTitle}:`, error);
+                        imageMap[book.id] = StaticImage;
+                    }
+                } else {
+                    imageMap[book.id] = StaticImage;
+                }
             }
-          } catch (error) {
-            console.error(`Failed to fetch image for ${book.ebookTitle}:`, error);
-          }
-        } else {
-          imageMap[book.id] = StaticImage;
-        }
-      }
-      setImages(imageMap);
-    };
+            setImages(imageMap);
+        };
 
-    fetchImages();
-  }, [books]);
+        fetchImages();
 
-  return (
-    books?.map((book, i) => (
-      <div
-        key={i}
-        className="bg-[#EBEBEB] shadow-lg rounded-xl p-4 w-full max-w-[280px] transition hover:scale-105"
-      >
-        {/* Book Image & Favorite Icon */}
-        <div className="relative">
-          <Link to={`/book-detail/${book.id}`}>
-            <div className="w-[240px] h-[240px] mx-auto">
-              <img
-                src={images[book.id] || StaticImage}
-                alt={book.ebookTitle}
-                className="w-full h-full object-cover rounded-md"
-              />
+        // Cleanup function
+        return () => {
+            // Revoke all created URLs
+            Object.values(images).forEach(url => {
+                if (url !== StaticImage) {
+                    URL.revokeObjectURL(url);
+                }
+            });
+        };
+    }, [books]);
+
+    return (
+        books?.map((book, i) => (
+            <div
+                key={i}
+                className="bg-[#EBEBEB] shadow-lg rounded-xl p-4 w-full max-w-[280px] transition hover:scale-105"
+            >
+                {/* Book Image & Favorite Icon */}
+                <div className="relative">
+                    <Link to={`/book-detail/${book.id}`}>
+                        <div className="w-[240px] h-[240px] mx-auto">
+                            <img
+                                src={images[book.id] || StaticImage}
+                                alt={book.ebookTitle}
+                                className="w-full h-full object-cover rounded-md"
+                            />
+                        </div>
+                    </Link>
+                    <button className="absolute top-2 right-2 bg-white p-1 rounded-full shadow-md cursor-pointer hover:bg-red-100">
+                        <FaHeart className={`text-${book.liked ? 'red' : 'gray'}-500`} />
+                    </button>
+                </div>
+
+                {/* Book Details */}
+                <div className="mt-3">
+                    <div className="flex items-start justify-between">
+                        <h3 className="text-lg font-semibold truncate">
+                            <Link to={`/book-detail/${book.id}`} className="hover:underline">
+                                {book.ebookTitle}
+                            </Link>
+                        </h3>
+
+                        {/* Rating */}
+                        <div className="flex items-center gap-1 text-yellow-500 bg-[#1D2C41] px-3 py-1 rounded-2xl">
+                            <FaStar />
+                            <span className="text-sm font-medium text-white">
+                                {book?.rating || '0.0'}
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Author */}
+                    <p className="text-gray-700 text-sm">
+                        Author: {book?.author?.name || 'Unknown'}
+                    </p>
+
+                    {/* Time & Category */}
+                    <div className="flex flex-wrap items-center gap-4 text-black text-sm mt-2 font-light">
+                        <span className="flex items-center gap-2">
+                            <MdOutlineAccessTime className="text-blue-500" />
+                            {book.timeToRead ? `${book.timeToRead} mins` : 'N/A'}
+                        </span>
+                        <span className="flex items-center gap-2">
+                            <IoMdHeadset className="text-green-600" />
+                            {book?.categories?.[0]?.name || 'Uncategorized'}
+                        </span>
+                    </div>
+                </div>
+
+                {/* Add to Cart Button */}
+                <div className="mt-4 border-2">
+                    <Button
+                        classNames={`w-full py-2 cursor-pointer ${
+                            loading[book.id]
+                                ? 'bg-gray-400'
+                                : 'bg-[#01447E] hover:bg-[#013366]'
+                        } text-white`}
+                        onClick={() => handleAddToCart(book)}
+                        disabled={loading[book.id]}
+                    >
+                        {loading[book.id] ? 'Adding...' : 'Add to Cart'}
+                    </Button>
+                </div>
             </div>
-          </Link>
-          <button className="absolute top-2 right-2 bg-white p-1 rounded-full shadow-md cursor-pointer hover:bg-red-100">
-            <FaHeart className={`text-${book.liked ? 'red' : 'gray'}-500`} />
-          </button>
-        </div>
-
-        {/* Book Details */}
-        <div className="mt-3">
-          <div className="flex items-start justify-between">
-            <h3 className="text-lg font-semibold truncate">
-              <Link to={`/book-detail/${book.id}`} className="hover:underline">
-                {book.ebookTitle}
-              </Link>
-            </h3>
-
-            {/* Rating */}
-            <div className="flex items-center gap-1 text-yellow-500 bg-[#1D2C41] px-3 py-1 rounded-2xl">
-              <FaStar />
-              <span className="text-sm font-medium text-white">{book?.rating}</span>
-            </div>
-          </div>
-
-          {/* Author */}
-          <p className="text-gray-700 text-sm">
-            Author: {book?.author?.name || 'Unknown'}
-          </p>
-
-          {/* Time & Category */}
-          <div className="flex flex-wrap items-center gap-4 text-black text-sm mt-2 font-light">
-            <span className="flex items-center gap-2">
-              <MdOutlineAccessTime className="text-blue-500" /> {book.timeToRead ? `${book.timeToRead} mins` : 'N/A'}
-            </span>
-            <span className="flex items-center gap-2">
-              <IoMdHeadset className="text-green-600" /> {book?.categories?.[0]?.name || 'Uncategorized'}
-            </span>
-          </div>
-        </div>
-
-        {/* Add to Cart Button */}
-        <div className="mt-4">
-          <Button
-            classNames="bg-[#01447E] text-white w-full py-2 cursor-pointer hover:bg-[#013366]"
-            onClick={() => handleAddToCart(book)}
-          >
-            Add to Cart
-          </Button>
-        </div>
-      </div>
-    ))
-  );
+        ))
+    );
 };
 
 export default React.memo(BookCard);

@@ -1,11 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
 import BookCoverImage from '../../assets/images/BookCoverImage.png'
 import { FaStar } from "react-icons/fa";
 import Button from '../../components/Button/Button';
 import BookCard from '../../components/BookCard/BookCard';
+import { useSelector } from 'react-redux';
 
 const CartPage = () => {
+    
+    const products = useSelector((state) => state?.cart?.products);
 
+    const totalQuantity = products?.reduce((sum, product) => sum + product.quantity, 0) || 0;
+    const totalPrice = products?.reduce((sum, product) => sum + (product.price * product.quantity), 0) || 0;
+
+    // Unit price
+    const averageUnitPrice = totalQuantity > 0 ? (totalPrice / totalQuantity).toFixed(2) : 0;
+
+    // const {books, setBooks} = useState(products);
     const books = [
         {
             image: BookCoverImage,
@@ -44,7 +54,7 @@ const CartPage = () => {
             <h1 className='bg-[#F7F8F8] my-3 p-3 rounded-xl text-[#203949] text-3xl font-medium'>Cart</h1>
             <div className='my-10 flex items-start gap-[30px]'>
                 <div className='md:w-[70%]'>
-                    {books?.map((book, i) => {
+                    {products?.map((book, i) => {
                         return (
                             <div 
                                 key={i}
@@ -93,15 +103,15 @@ const CartPage = () => {
                         <div className="mt-5">
                             <div className='flex justify-between items-center'>
                                 <p className='text-[#7C7C7C] text-lg font-medium'>Quantity</p>
-                                <p className='text-[#203949] text-lg font-medium'>3</p>
+                                <p className='text-[#203949] text-lg font-medium'>{totalQuantity}</p>
                             </div>
                             <div className='flex justify-between items-center mt-3'>
                                 <p className='text-[#7C7C7C] text-lg font-medium'>price/unit</p>
-                                <p className='text-[#203949] text-lg font-medium'>$2</p>
+                                    <p className='text-[#203949] text-lg font-medium'>${averageUnitPrice}</p>
                             </div>
                             <div className='flex justify-between items-center mt-3 border-t border-[#EFEFEF] pt-3'>
                                 <p className='text-[#203949] text-lg font-medium'>Total</p>
-                                <p className='text-[#203949] text-lg font-medium'>$6</p>
+                                <p className='text-[#203949] text-lg font-medium'>{totalPrice}</p>
                             </div>
                         </div>
                     </div>
