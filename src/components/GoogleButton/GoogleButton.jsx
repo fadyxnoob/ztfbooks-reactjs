@@ -1,20 +1,30 @@
-import React from 'react'
-import { Link } from 'react-router-dom';
-
-
-// React Icons
+import React from "react";
+import { useGoogleLogin } from "@react-oauth/google";
 import { FcGoogle } from "react-icons/fc";
 
+const GoogleButton = ({ onGoogleAuth, actionType = "Sign up" }) => {
+  const handleGoogleAuth = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      window.opener = null;
+      try {
+        await onGoogleAuth(tokenResponse.access_token);
+        console.log(`${actionType} successful!`);
+      } catch (error) {
+        console.error(`${actionType} failed:`, error.message);
+      }
+    },
+    onError: (error) => console.error("Google Authentication Failed", error),
+  });
 
-const GoogleButton = () => {
   return (
-    <Link to={""}>
-      <button className="flex items-center justify-start gap-4 w-full rounded-lg border border-gray-300 px-4 py-2 text-[#043133] font-medium text-gray-700 text-[18px] hover:bg-gray-50 transition-colors">
-    <FcGoogle size={55} />
-    <span className='text-[1.4rem]'>Sign up with Google</span>
-  </button>
-    </Link>
-  )
-}
+    <button
+      onClick={handleGoogleAuth}
+      className="flex items-center justify-start gap-4 w-full rounded-lg border border-gray-300 px-4 py-2 text-[#043133] font-medium text-gray-700 text-[18px] hover:bg-gray-50 transition-colors cursor-pointer"
+    >
+      <FcGoogle size={55} />
+      <span className="text-[1.4rem]">{actionType} with Google</span>
+    </button>
+  );
+};
 
-export default GoogleButton
+export default React.memo(GoogleButton);

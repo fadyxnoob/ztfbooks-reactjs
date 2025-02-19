@@ -9,7 +9,7 @@ import AppleButton from "../../components/AppleButton/AppleButton";
 import authService from "../../API/authService";
 
 const Signup = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -17,18 +17,16 @@ const Signup = () => {
     formState: { errors },
   } = useForm();
 
-
   const onSubmit = async (data) => {
     const newData = {
       ...data,
       subscribeToNewsletter: true,
-      username: `${data.name.replace(/\s+/g, '').toLowerCase()}123`, // Remove all whitespaces and convert to lowercase
+      username: `${data.name.replace(/\s+/g, "").toLowerCase()}123`, // Remove all whitespaces and convert to lowercase
     };
-    const res = await authService.signup(newData)
+    const res = await authService.signup(newData);
     if (res) {
-      navigate('/login')
+      navigate("/login");
     }
-
   };
 
   return (
@@ -45,10 +43,14 @@ const Signup = () => {
           ZTF Books
         </span>
 
-
-        <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-[570px] mt-8 lg:mt-16">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="w-full max-w-[570px] mt-8 lg:mt-16"
+        >
           <div className="mb-6 lg:mb-8">
-            <label className="text-[#4D5959] text-lg lg:text-[20px] font-medium">Name</label>
+            <label className="text-[#4D5959] text-lg lg:text-[20px] font-medium">
+              Name
+            </label>
             <Input
               type="text"
               placeholder="Enter your Fullname here"
@@ -61,10 +63,14 @@ const Signup = () => {
                 },
               })}
             />
-            {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+            {errors.name && (
+              <p className="text-red-500 text-sm">{errors.name.message}</p>
+            )}
           </div>
           <div className="mb-6 lg:mb-8">
-            <label className="text-[#4D5959] text-lg lg:text-[20px] font-medium">Email</label>
+            <label className="text-[#4D5959] text-lg lg:text-[20px] font-medium">
+              Email
+            </label>
             <Input
               type="email"
               placeholder="Enter your Email here"
@@ -77,11 +83,15 @@ const Signup = () => {
                 },
               })}
             />
-            {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email.message}</p>
+            )}
           </div>
 
           <div className="mb-6 lg:mb-8">
-            <label className="text-[#4D5959] text-lg lg:text-[20px] font-medium">Password</label>
+            <label className="text-[#4D5959] text-lg lg:text-[20px] font-medium">
+              Password
+            </label>
             <Input
               type="password"
               placeholder="Enter your Password"
@@ -94,11 +104,15 @@ const Signup = () => {
                 },
               })}
             />
-            {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+            {errors.password && (
+              <p className="text-red-500 text-sm">{errors.password.message}</p>
+            )}
           </div>
 
           <div className="mb-6 lg:mb-8">
-            <label className="text-[#4D5959] text-lg lg:text-[20px] font-medium">Confirm Password</label>
+            <label className="text-[#4D5959] text-lg lg:text-[20px] font-medium">
+              Confirm Password
+            </label>
             <Input
               type="password"
               placeholder="Enter your Password"
@@ -106,36 +120,50 @@ const Signup = () => {
               inputRegister={register("confirmPassword", {
                 required: "Please confirm your password",
                 validate: (val) => {
-                  if (watch('password') != val) {
+                  if (watch("password") != val) {
                     return "Your passwords do not match";
                   }
                 },
               })}
             />
-            {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+            {errors.password && (
+              <p className="text-red-500 text-sm">{errors.password.message}</p>
+            )}
           </div>
           <p className="text-sm">
-            <b>Note</b>:
-              Your username will be your name in lowercase and includes(123) 
+            <b>Note</b>: Your username will be your name in lowercase and
+            includes(123)
           </p>
 
-          <PrimaryButton classes="border-2 mt-6 lg:mt-8 text-lg lg:text-[20px]" type="submit">
+          <PrimaryButton
+            classes="border-2 mt-6 lg:mt-8 text-lg lg:text-[20px]"
+            type="submit"
+          >
             Submit
           </PrimaryButton>
 
           <div className="mt-4">
-            <Link className="text-base lg:text-[18px] text-[#01447E]" to={"/login"}>
+            <Link
+              className="text-base lg:text-[18px] text-[#01447E]"
+              to={"/login"}
+            >
               Already have an account?{" "}
               <span className="font-medium leading-relaxed">Sign In</span>
             </Link>
           </div>
         </form>
 
-        <div className="text-2xl lg:text-3xl text-[#043133] font-medium mt-6 lg:mt-8 mb-4">OR</div>
+        <div className="text-2xl lg:text-3xl text-[#043133] font-medium mt-6 lg:mt-8 mb-4">
+          OR
+        </div>
         <div className="mt-6 lg:mt-8 w-full mb-2">
           <div className="flex flex-col md:flex-row sm:flex-col gap-4 md:gap-6 w-full mx-auto">
             <div className="flex-1">
-              <GoogleButton />
+              <GoogleButton
+                onGoogleAuth={authService.signUpWithGoogle}
+                actionType="Sign up"
+              />
+              ;
             </div>
             <div className="flex-1">
               <AppleButton />

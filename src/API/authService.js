@@ -99,8 +99,8 @@ export class AuthService {
                 const res = await axios.put(
                     `${import.meta.env.VITE_UPDATE_EMAIL_AND_NAME_API_KEY}`,
                     {
-                        name:userData.name,
-                        email:userData.email,
+                        name: userData.name,
+                        email: userData.email,
                     },
                     {
                         headers: {
@@ -109,8 +109,8 @@ export class AuthService {
                         }
                     }
                 );
-                
-                if(res.status === 200){
+
+                if (res.status === 200) {
                     return res;
                 }
             }
@@ -121,6 +121,60 @@ export class AuthService {
         }
     }
 
+    // signup with google 
+    async signUpWithGoogle(idToken, displayName) {
+        try {
+            const response = await axios.post(
+                import.meta.env.VITE_SIGNUP_WITH_GOOGLE_API_KEY,
+                {
+                    idToken: idToken,
+                    displayName: displayName,
+                    authProvider: "GOOGLE",
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "*/*",
+                    },
+                }
+            );
+
+            console.log("API Response:", response.data);
+        } catch (error) {
+            console.error("Error signing up:", error.response?.data || error.message);
+        }
+    };
+
+    // Login with google 
+    async loginWithGoogle(access_token) {
+        try {
+            // Fetch User Info from Google API
+            const googleUser = await axios.get(
+                `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`
+            );
+
+            const userData = {
+                idToken: googleUser.data.sub, // Unique Google ID
+                displayName: googleUser.data.name,
+                authProvider: "GOOGLE",
+            };
+
+            // Send user data to your backend API for login
+            const response = await axios.post(
+                "https://server.ztfbooks.com/opn/v1/client/social/login", // Change to your login endpoint
+                userData,
+                {
+                    headers: { "Content-Type": "application/json" },
+                }
+            );
+
+            console.log("Login Success:", response.data);
+            return response.data;
+        } catch (error) {
+            console.error("Google Login Error:", error.response?.data || error.message);
+            throw new Error("Login failed. Please try again.");
+        }
+    };
 
 }
 

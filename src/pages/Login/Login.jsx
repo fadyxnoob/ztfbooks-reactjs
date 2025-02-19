@@ -13,15 +13,13 @@ import { setLocalStorage } from "../../LocalStorage/LocalStorage";
 
 const Login = () => {
   const dispatch = useDispatch(); // Initialize useDispatch
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-
-  
   const onSubmit = async (data) => {
     try {
       // Attempt to log in the user
@@ -29,33 +27,34 @@ const Login = () => {
 
       // Ensure the session data is valid
       if (!session?.data) {
-        throw new Error('Invalid session data received from the server.');
+        throw new Error("Invalid session data received from the server.");
       }
 
       // Dispatch the login action with serializable data
       dispatch(authLogin({ userdata: session.data }));
 
       // Store authentication status and user data in localStorage
-      setLocalStorage('authUserStatus', true);
-      setLocalStorage('userdata', session.data);
+      setLocalStorage("authUserStatus", true);
+      setLocalStorage("userdata", session.data);
 
       // Redirect to the home page
-      navigate('/');
+      navigate("/");
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error("Login failed:", error);
 
       // Display a user-friendly error message (optional)
-      alert('Login failed. Please check your credentials and try again.');
+      alert("Login failed. Please check your credentials and try again.");
     }
   };
-
-
-
 
   return (
     <div className="bg-[#F6F7F8F9] lg:px-[80px] md:px-8 px-4 flex items-start">
       <div className="hidden md:block md:w-[40%] h-screen sticky top-0">
-        <img src={image} alt="Signup" className="w-full min-h-screen object-cover" />
+        <img
+          src={image}
+          alt="Signup"
+          className="w-full min-h-screen object-cover"
+        />
       </div>
 
       <div className="bg-white px-4 py-8 md:px-8 lg:px-[130px] lg:py-[150px] w-full md:w-[60%] min-h-screen flex justify-center items-center flex-col">
@@ -66,9 +65,14 @@ const Login = () => {
           ZTF Books
         </span>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-[570px] mt-8 lg:mt-16">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="w-full max-w-[570px] mt-8 lg:mt-16"
+        >
           <div className="mb-6 lg:mb-8">
-            <label className="text-[#4D5959] text-lg lg:text-[20px] font-medium">Username</label>
+            <label className="text-[#4D5959] text-lg lg:text-[20px] font-medium">
+              Username
+            </label>
             <Input
               type="text"
               placeholder="Enter username here"
@@ -77,11 +81,15 @@ const Login = () => {
                 required: "Username is required",
               })}
             />
-            {errors.username && <p className="text-red-500 text-sm">{errors.username.message}</p>}
+            {errors.username && (
+              <p className="text-red-500 text-sm">{errors.username.message}</p>
+            )}
           </div>
 
           <div className="mb-6 lg:mb-8">
-            <label className="text-[#4D5959] text-lg lg:text-[20px] font-medium">Password</label>
+            <label className="text-[#4D5959] text-lg lg:text-[20px] font-medium">
+              Password
+            </label>
             <Input
               type="password"
               placeholder="Enter your Password"
@@ -94,33 +102,52 @@ const Login = () => {
                 },
               })}
             />
-            {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+            {errors.password && (
+              <p className="text-red-500 text-sm">{errors.password.message}</p>
+            )}
           </div>
 
-          <Link className="text-base lg:text-[18px] text-[#01447E] leading-relaxed" to={"/forgot-password"}>
+          <Link
+            className="text-base lg:text-[18px] text-[#01447E] leading-relaxed"
+            to={"/forgot-password"}
+          >
             Forgot Password?
           </Link>
 
-          <PrimaryButton classes="border-2 mt-6 lg:mt-8 text-lg lg:text-[20px]" type="submit">
+          <PrimaryButton
+            classes="border-2 mt-6 lg:mt-8 text-lg lg:text-[20px]"
+            type="submit"
+          >
             Submit
           </PrimaryButton>
 
           <div className="mt-4">
-            <Link className="text-base lg:text-[18px] text-[#01447E]" to={"/signup"}>
+            <Link
+              className="text-base lg:text-[18px] text-[#01447E]"
+              to={"/signup"}
+            >
               Don't have an account?{" "}
               <span className="font-medium leading-relaxed">Sign Up</span>
             </Link>
           </div>
         </form>
 
-        <div className="text-2xl lg:text-3xl text-[#043133] font-medium mt-6 lg:mt-8 mb-4">OR</div>
+        <div className="text-2xl lg:text-3xl text-[#043133] font-medium mt-6 lg:mt-8 mb-4">
+          OR
+        </div>
         <div className="mt-6 lg:mt-8 w-full mb-2">
           <div className="flex flex-col md:flex-row sm:flex-col gap-4 md:gap-6 w-full mx-auto">
             <div className="flex-1">
-              <Link><GoogleButton /></Link>
+              <GoogleButton
+                onGoogleAuth={authService.loginWithGoogle}
+                actionType="Log in"
+              />
+              ;
             </div>
             <div className="flex-1">
-              <Link><AppleButton /></Link>
+              <Link>
+                <AppleButton />
+              </Link>
             </div>
           </div>
         </div>
