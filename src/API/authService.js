@@ -95,8 +95,26 @@ export class AuthService {
                     }
                 }
             );
+            if (response.status === 200 && (userData.name && userData.email)) {
+                const res = await axios.put(
+                    `${import.meta.env.VITE_UPDATE_EMAIL_AND_NAME_API_KEY}`,
+                    {
+                        name:userData.name,
+                        email:userData.email,
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+                
+                if(res.status === 200){
+                    return res;
+                }
+            }
 
-            // console.log('User updated successfully:', response.data);
             return response.data;
         } catch (error) {
             console.error('Error updating user:', error.response?.data || error.message);

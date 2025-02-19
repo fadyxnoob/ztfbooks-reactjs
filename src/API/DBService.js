@@ -18,7 +18,7 @@ export class DBService {
 
     // get all approved books from the backend using api
     async getApprovedBooks(apiKey) {
-        console.log(apiKey)
+        // console.log(apiKey)
         try {
             const res = await axios.get(apiKey)
             return res.data;
@@ -89,47 +89,7 @@ export class DBService {
         }
     }
 
-    //  delete file using api 
-    async deleteFile(file) {
-        try {
-            const file = await axios.pull(import.meta.env.VITE_GET_BEST_SALES_BOOKS_API_KEY)
-            return file;
-        } catch (error) {
-            console.error('Failed to Get File by name::', error)
-        }
-    }
-
-
-    //  Reset Password 
-    async resetPassword() {
-        try {
-            const res = await axios.post(import.meta.env.VITE_RESET_PASSWORD_API_KEY)
-            return res;
-        } catch (error) {
-            console.error('Failed to reset password::', error)
-        }
-    }
-
-    // resend otp 
-    async resendOTP() {
-        try {
-            const res = await axios.get(import.meta.env.VITE_RESEND_OTP_API_KEY)
-            return res;
-        } catch (error) {
-            console.error('Failed to resend otp::', error)
-        }
-    }
-
-    // get all categories
-    async getCategories() {
-        try {
-            const res = await axios.get(import.meta.env.VITE_GET_ALL_CATEGORIES_API_KEY)
-            return res;
-        } catch (error) {
-            console.error('Failed get categories::', error)
-        }
-    }
-
+    // get single ebook by id
     async getBookByID (id){
         try {
             const res = await axios.get(`${import.meta.env.VITE_GET_SINGLE_EBOOK_BY_ID_API_KEY}${id}`)
@@ -138,8 +98,6 @@ export class DBService {
             console.log('DBService:: Failed to fetch Single book by ID', error)
         }
     }
-
-
 
 
 }

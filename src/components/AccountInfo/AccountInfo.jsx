@@ -58,15 +58,14 @@ const AccountInfo = () => {
     "Debit / Credit Card"
   );
   const [userInfo, setUserInfo] = useState(null);
-  const [image, setImage] = useState(null); 
-  const [imageUrl, setImageUrl] = useState(""); 
+  const [image, setImage] = useState(null);
+  const [imageUrl, setImageUrl] = useState("");
 
   const { register, handleSubmit, setValue } = useForm();
 
   useEffect(() => {
     const getUserInfo = async () => {
       const res = await authService.getCurrentLoggedIn();
-      // console.log({res})
       setUserInfo(res);
       setValue("name", res?.user?.name);
       setValue("email", res?.user?.email);
@@ -80,8 +79,8 @@ const AccountInfo = () => {
         res?.contactDetails?.physicalAddress || "Location not available"
       );
       setValue("gender", res?.user?.gender || "Not specified");
-      const imageUrl = await service.getFileByName(res.image)
-      setImageUrl(imageUrl || image); 
+      const imageUrl = await service.getFileByName(res.image);
+      setImageUrl(imageUrl || image);
     };
 
     getUserInfo();
@@ -92,33 +91,34 @@ const AccountInfo = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(file); 
-        setImageUrl(reader.result); 
+        setImage(file);
+        setImageUrl(reader.result);
       };
-      reader.readAsDataURL(file); 
+      reader.readAsDataURL(file);
     }
   };
 
   const onSubmit = async (data) => {
     try {
-      let imageUrl = userInfo?.image || ""; 
-  
+      let imageUrl = userInfo?.image || "";
+
       if (image) {
-        const uploadResponse = await service.uploadFile(image); 
-        imageUrl = uploadResponse?.name || ""; 
+        const uploadResponse = await service.uploadFile(image);
+        imageUrl = uploadResponse?.name || "";
       }
-  
+
       const userID = userInfo?.id;
-  
-      const res = await authService.updateUser(userID, { ...data, image: imageUrl });
+
+      const res = await authService.updateUser(userID, {
+        ...data,
+        image: imageUrl,
+      });
       console.log("Updated user info:", res);
-      setUserInfo(res); 
+      setUserInfo(res);
     } catch (error) {
       console.error("Error updating user info:", error);
     }
   };
-
-
 
   const inputClass =
     "w-full p-4 rounded-lg border border-none bg-[#fff] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none";
@@ -129,14 +129,15 @@ const AccountInfo = () => {
         Account Information
       </h1>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 md:gap-16 pb-[3rem] sm:pb-[4rem] md:pb-[6rem] p-4 sm:p-[16px]">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 md:gap-16 pb-[3rem] sm:pb-[4rem] md:pb-[6rem] p-4 sm:p-[16px]">
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-4 sm:space-y-5 md:space-y-6">
             <div className="flex justify-center mb-6 sm:mb-7 md:mb-8">
               <div className="relative">
                 <img
                   src={
-                    imageUrl || image ||
+                    imageUrl ||
+                    image ||
                     "https://img.freepik.com/free-vector/young-prince-royal-attire_1308-176144.jpg?ga=GA1.1.1799393695.1726636772&semt=ais_hybrid"
                   }
                   alt="Profile"
@@ -191,81 +192,78 @@ const AccountInfo = () => {
                 }
                 type="submit"
               >
-                Account Information
+                Save Information
               </button>
             </div>
           </div>
-
-          <div className="space-y-4 sm:space-y-5 md:space-y-6 mt-8 md:mt-0">
-            <div>
-              <h2 className="text-base sm:text-lg font-medium mb-3 sm:mb-4">
-                Language Preferences
-              </h2>
-              <div className="mb-4">
-                <button className="bg-white mb-3 sm:mb-4 w-full flex items-center justify-start px-3 sm:px-4 py-3 sm:py-4 rounded-xl">
-                  <div className="flex items-center gap-2">
-                    <FiGlobe className="mr-1 sm:mr-2 w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
-                    <span className="text-sm sm:text-base">
-                      Select Language
-                    </span>
-                  </div>
-                  <IoIosArrowDown className="ml-2 sm:ml-4 w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
-                </button>
-                <PreferenceButton
-                  icon={
-                    <img
-                      src="https://flagpedia.net/data/flags/w580/pf.webp"
-                      className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-gray-500 rounded-full"
-                    />
-                  }
-                  label="French"
-                  selected={selectedLanguage === "French"}
-                  onClick={() => setSelectedLanguage("French")}
-                />
-                <PreferenceButton
-                  icon={
-                    <img
-                      src="https://flagpedia.net/data/flags/w580/us.webp"
-                      className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-gray-500 rounded-full"
-                    />
-                  }
-                  label="USA"
-                  selected={selectedLanguage === "USA"}
-                  onClick={() => setSelectedLanguage("USA")}
-                />
-                <PreferenceButton
-                  icon={
-                    <img
-                      src="https://flagpedia.net/data/flags/w580/au.webp"
-                      className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-gray-500 rounded-full"
-                    />
-                  }
-                  label="Australia"
-                  selected={selectedLanguage === "Australia"}
-                  onClick={() => setSelectedLanguage("Australia")}
-                />
-              </div>
-            </div>
-
-            <div className="mt-8 sm:mt-12 md:mt-[4rem]">
-              <h2 className="text-base sm:text-lg font-medium mb-2 text-bold text-[#333333]">
-                Manage Payments
-              </h2>
-              <p className="text-base sm:text-[1.1rem] text-[#333333] mb-4 sm:mb-6">
-                Manage your saved payment options
-              </p>
+        </form>
+        <div className="space-y-4 sm:space-y-5 md:space-y-6 mt-8 md:mt-0">
+          <div>
+            <h2 className="text-base sm:text-lg font-medium mb-3 sm:mb-4">
+              Language Preferences
+            </h2>
+            <div className="mb-4">
+              <button className="bg-white mb-3 sm:mb-4 w-full flex items-center justify-start px-3 sm:px-4 py-3 sm:py-4 rounded-xl">
+                <div className="flex items-center gap-2">
+                  <FiGlobe className="mr-1 sm:mr-2 w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+                  <span className="text-sm sm:text-base">Select Language</span>
+                </div>
+                <IoIosArrowDown className="ml-2 sm:ml-4 w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+              </button>
               <PreferenceButton
                 icon={
-                  <BsCreditCard className="w-8 h-6 sm:w-9 sm:h-7 md:w-10 md:h-8 text-[#014471]" />
+                  <img
+                    src="https://flagpedia.net/data/flags/w580/pf.webp"
+                    className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-gray-500 rounded-full"
+                  />
                 }
-                label="Debit / Credit Card"
-                selected={selectedPayment === "Debit / Credit Card"}
-                onClick={() => setSelectedPayment("Debit / Credit Card")}
+                label="French"
+                selected={selectedLanguage === "French"}
+                onClick={() => setSelectedLanguage("French")}
+              />
+              <PreferenceButton
+                icon={
+                  <img
+                    src="https://flagpedia.net/data/flags/w580/us.webp"
+                    className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-gray-500 rounded-full"
+                  />
+                }
+                label="USA"
+                selected={selectedLanguage === "USA"}
+                onClick={() => setSelectedLanguage("USA")}
+              />
+              <PreferenceButton
+                icon={
+                  <img
+                    src="https://flagpedia.net/data/flags/w580/au.webp"
+                    className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-gray-500 rounded-full"
+                  />
+                }
+                label="Australia"
+                selected={selectedLanguage === "Australia"}
+                onClick={() => setSelectedLanguage("Australia")}
               />
             </div>
           </div>
+
+          <div className="mt-8 sm:mt-12 md:mt-[4rem]">
+            <h2 className="text-base sm:text-lg font-medium mb-2 text-bold text-[#333333]">
+              Manage Payments
+            </h2>
+            <p className="text-base sm:text-[1.1rem] text-[#333333] mb-4 sm:mb-6">
+              Manage your saved payment options
+            </p>
+            <PreferenceButton
+              icon={
+                <BsCreditCard className="w-8 h-6 sm:w-9 sm:h-7 md:w-10 md:h-8 text-[#014471]" />
+              }
+              label="Debit / Credit Card"
+              selected={selectedPayment === "Debit / Credit Card"}
+              onClick={() => setSelectedPayment("Debit / Credit Card")}
+            />
+          </div>
         </div>
-      </form>
+      </div>
     </div>
   );
 };

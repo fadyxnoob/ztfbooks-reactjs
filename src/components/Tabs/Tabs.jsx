@@ -108,8 +108,8 @@ const Tabs = () => {
   // Define filter conditions
   const filterDiscount = {
     detailedInfo: {
-      status: "APPROVED", // Filter for books with status "APPROVED" in detailedInfo
-      freeBook: true, // Only include books marked as free in detailedInfo
+      status: "APPROVED", 
+      freeBook: true, 
     },
   };
 
@@ -124,12 +124,12 @@ const Tabs = () => {
 
   return (
     <div className="w-full mx-auto">
-      <div className="flex w-1/2 gap-10">
+      <div className="flex md:w-1/2 justify-between gap-2 md:gap-10">
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            className={`w-1/2 py-4 text-center font-medium text-gray-700 cursor-pointer ${
-              activeTab === tab.id ? "bg-gray-200" : "border rounded-full"
+            className={`w-1/3 md:w-1/2 py-2 md:py-4 text-center font-medium text-gray-700 cursor-pointer ${
+              activeTab === tab.id ? "bg-gray-200 rounded-full" : "border rounded-full"
             }
                             focus:outline-none`}
             onClick={() => setActiveTab(tab.id)}

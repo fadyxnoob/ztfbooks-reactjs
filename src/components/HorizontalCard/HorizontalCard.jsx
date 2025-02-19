@@ -42,17 +42,17 @@ const HorizontalCard = ({ books, toggleFavorite, favorites }) => {
         key={i}
         className="bg-[#EBEBEB] shadow-lg rounded-lg p-4 w-full max-w-[381px] mb-10 text-black"
       >
-        <div className="relative flex">
-          <div className="w-1/2 h-[260px] mx-auto">
+        <div className="relative flex flex-col md:flex-row gap-2">
+          <div className="md:w-1/2 h-[260px] mx-auto">
             <Link to={`book-detail/${book.id}`}>
               <img
                 src={imageUrl}
                 alt={book.title}
-                className="w-full h-full object-cover rounded-md"
+                className="w-full h-full object-fill rounded-md"
               />
             </Link>
           </div>
-          <div className="px-5 w-1/2">
+          <div className="px-5 md:w-1/2">
             <Link to={`book-detail/${book.id}`}>
               <h3 className="text-lg font-semibold">{book.title}</h3>
             </Link>

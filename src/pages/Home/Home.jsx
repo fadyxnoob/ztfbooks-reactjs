@@ -13,12 +13,11 @@ const Home = () => {
   const [bestSalesBooks, setBestSalesBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const apiKey = import.meta.env.VITE_GET_APPROVED_BOOKS_API_KEY;
-  console.log({apiKey})
   // Fetch approved e-books
   const getApprovedBooks = async () => {
     try {
       const res = await service.getApprovedBooks(apiKey);
-      console.log('approved res::',{res})
+      // console.log("approved res::", { res });
       setApprovedEBooks(res.content || []);
     } catch (err) {
       console.error("Failed to fetch approved books:", err);
