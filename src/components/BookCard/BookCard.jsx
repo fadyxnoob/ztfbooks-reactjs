@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import StaticImage from '../../assets/images/BookCoverImage.png';
 import service from "../../API/DBService";
 import { addToCart, addToCartAsync } from "../../Store/cartSlice";
+import { getLocalStorage } from "../../LocalStorage/LocalStorage";
 
 const BookCard = ({ books }) => {
     const dispatch = useDispatch();
