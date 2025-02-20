@@ -4,28 +4,17 @@ import Button from "../../components/Button/Button";
 import BookCard from "../../components/BookCard/BookCard";
 import { useSelector } from "react-redux";
 import service from "../../API/DBService";
-import { useNavigate } from "react-router-dom";
-import Alert from "../../components/Alert/Alert";
+import { Link, useNavigate } from "react-router-dom";
+import Loader from "../../components/Loader/Loader";
 
 const CartPage = () => {
   const navigate = useNavigate();
   const apiKey = import.meta.env.VITE_GET_APPROVED_BOOKS_API_KEY;
   const [approvedEBooks, setApprovedEBooks] = useState([]);
   const [cartBooks, setCartBooks] = useState([]);
-  const [alert, setAlert] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  // Function to show alert
-  const showAlert = (type, message) => {
-    setAlert({ type, message });
-    setTimeout(() => setAlert(null), 2000); // Hide after 2 seconds
-  };
-  const token = localStorage.getItem("userdata").jwtToken;
-  if (!token) {
-    showAlert("error", "Please Login First! ");
-    setTimeout(() => {
-      navigate("/login");
-    }, 200);
-  }
+  const authStatus = useSelector((state) => state.auth.status);
 
   const products = useSelector((state) => state?.cart?.products || []);
   const totalQuantity = products.reduce(
@@ -43,13 +32,20 @@ const CartPage = () => {
   const getApprovedBooks = async () => {
     try {
       const res = await service.getApprovedBooks(apiKey);
-      setApprovedEBooks(res.content);
+      if (res.content) {
+        setApprovedEBooks(res.content);
+        setLoading(false);
+      }
     } catch (err) {
       console.error("Failed to fetch approved books:", err);
     }
   };
 
   useEffect(() => {
+    console.log({ approvedEBooks });
+    if (!authStatus) {
+      navigate("/login");
+    }
     getApprovedBooks();
   }, []);
 
@@ -63,6 +59,7 @@ const CartPage = () => {
 
             const file = bookRes.data.thumbnailFileName;
             const fileURL = await service.getFileByName(file);
+
             return {
               ...book,
               fileURL,
@@ -82,23 +79,21 @@ const CartPage = () => {
     if (products.length > 0) {
       fetchBookDetails();
     }
-  }, [products]);
+  }, [cartBooks]);
+
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <>
-      {alert && (
-        <Alert
-          type={alert.type}
-          message={alert.message}
-          onClose={() => setAlert(null)}
-        />
-      )}
       <div className="px-5 md:px-20 py-5 bg-[#f4f3f4]">
         <h1 className="bg-[#F7F8F8] my-3 p-3 rounded-xl text-[#203949] text-3xl font-medium">
           Cart
         </h1>
         <div className="my-10 flex flex-col md:flex-row items-start gap-5 md:gap-[30px]">
           <div className="w-full md:w-[70%]">
-            {cartBooks.length > 0 ? (
+            {cartBooks?.length > 0 ? (
               cartBooks.map((book) => {
                 return (
                   <div
@@ -204,10 +199,13 @@ const CartPage = () => {
                 </div>
               </div>
             </div>
+
             {/* Checkout button */}
-            <Button classNames="text-white rounded-3xl bg-[#01447E] mt-10 w-full py-3 text-xl font-medium">
-              Checkout
-            </Button>
+            <Link to="/payment-method">
+              <Button classNames="cursor-pointer text-white rounded-3xl bg-[#01447E] mt-10 w-full py-3 text-xl font-medium">
+                Checkout
+              </Button>
+            </Link>
           </div>
         </div>
 

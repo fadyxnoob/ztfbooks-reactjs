@@ -16,15 +16,19 @@ const Topbar = () => {
 
   const { register } = useForm();
   const isLogin =
-    useSelector((state) => state.auth.status) || getLocalStorage("authUserStatus");
+    useSelector((state) => state.auth.status) ||
+    getLocalStorage("authUserStatus");
 
   const cart = useSelector((state) => state.cart);
-  const totalQuantity = cart?.products?.reduce((sum, product) => sum + product.quantity, 0) || 0;
+  const totalQuantity =
+    cart?.products?.reduce((sum, product) => sum + product.quantity, 0) || 0;
 
   // Debounced search function
   const debouncedSearch = debounce((value) => {
     setQuery(value);
-    navigate(value.trim() ? `/search?q=${encodeURIComponent(value)}` : "/search");
+    navigate(
+      value.trim() ? `/search?q=${encodeURIComponent(value)}` : "/search"
+    );
   }, 500);
 
   const handleSearch = (value) => {
@@ -38,6 +42,7 @@ const Topbar = () => {
     }
   };
 
+  const authStatus = localStorage.getItem("authUserStatus");
   return (
     <div className="bg-[#f6f7f8] flex items-center justify-between px-5 md:px-[80px] py-4 border-b border-[#ded5d5]">
       <h1 className="text-3xl md:text-[36px] font-bold text-[#0B457F]">
@@ -68,7 +73,7 @@ const Topbar = () => {
         <Link to="my-cart">
           <div className="relative hidden md:block">
             <BsCart3 className="text-gray-600 text-3xl cursor-pointer" />
-            {totalQuantity > 0 && (
+            {authStatus && totalQuantity > 0 && (
               <div className="size-[23px] bg-[#BE5C5C] text-white text-sm font-normal text-center align-middle rounded-full absolute top-0 -right-2">
                 {totalQuantity}
               </div>

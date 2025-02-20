@@ -1,7 +1,9 @@
 import axios from 'axios';
+import { getLocalStorage } from '../LocalStorage/LocalStorage';
 
 
 export class DBService {
+    token = getLocalStorage('userdata')
     constructor() { }
 
     // get all faqs from the backend using api
@@ -46,15 +48,15 @@ export class DBService {
 
         try {
             const response = await axios.get(`${import.meta.env.VITE_GET_FILE_BY_NAME_API_KEY}${fileName}`, {
-                responseType: 'blob', 
+                responseType: 'blob',
             });
 
-             // Check if imageRes.data is a Blob before creating object URL
-             if (response.data && response.data instanceof Blob) {
+            // Check if imageRes.data is a Blob before creating object URL
+            if (response.data && response.data instanceof Blob) {
                 const imageUrl = URL.createObjectURL(response.data);
                 // console.log({imageUrl})
-               return imageUrl
-                
+                return imageUrl
+
             } else {
                 console.error("Image data is not a valid Blob or file.");
             }
@@ -70,28 +72,28 @@ export class DBService {
     async uploadFile(file) {
         try {
             const formData = new FormData();
-            formData.append('file', file); 
-    
+            formData.append('file', file);
+
             const response = await axios.post(
                 import.meta.env.VITE_Upload_FILE_BY_NAME_API_KEY,
                 formData,
                 {
                     headers: {
-                        'accept': '*/*', 
-                        'Content-Type': 'multipart/form-data', 
+                        'accept': '*/*',
+                        'Content-Type': 'multipart/form-data',
                     },
                 }
             );
-    
+
             console.log('File uploaded res:::', response.data)
-            return response.data; 
+            return response.data;
         } catch (error) {
             console.error('Failed to upload file:', error);
         }
     }
 
     // get single ebook by id
-    async getBookByID (id){
+    async getBookByID(id) {
         try {
             const res = await axios.get(`${import.meta.env.VITE_GET_SINGLE_EBOOK_BY_ID_API_KEY}${id}`)
             return res;
@@ -100,6 +102,81 @@ export class DBService {
         }
     }
 
+    // get default currency
+    async getDefaultCurrency() {
+        try {
+
+            const response = await axios.get(import.meta.env.VITE_DEFAULT_CURRENCY_API_KEY, {
+                headers: {
+                    Authorization: `Bearer ${this.token.jwtToken}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            // console.log({response})
+            return response.data
+        } catch (error) {
+            console.error('Failed to get Default Currency::', error)
+        }
+    }
+
+
+    // make your payment
+    async makeYourPayment(paymentData) {
+        try {
+            if (!this.token || !this.token.jwtToken) {
+                console.error("Error: Authorization token is missing.");
+                return;
+            }
+    
+            const payload = {
+                currencyCode: paymentData.currencyCode || "EUR",
+                totalAmount: paymentData.totalAmount || 0,
+                cartIds: Array.isArray(paymentData.cartIds) ? paymentData.cartIds : [],
+                paymentMethod: paymentData.paymentMethod || "VOUCHER",
+                integratorPublicId: paymentData.integratorPublicId,
+                metadata: paymentData.metadata || {}
+            };
+    
+            const headers = {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${this.token.jwtToken}`
+            };
+    
+            // Debugging: Check the API URL before sending the request
+            console.log("API URL:", import.meta.env.VITE_CHECKOUT_API_KEY);
+            console.log("Payload:", payload);
+    
+            const response = await axios.post(
+                import.meta.env.VITE_CHECKOUT_API_KEY,
+                payload,
+                { headers }
+            );
+    
+            console.log("Payment Successful:", response);
+            return response; 
+    
+        } catch (error) {
+            console.error("Payment Failed:", error.response?.data || error.message || "Unknown error");
+    
+            // More detailed error handling
+            if (error.response) {
+                console.error("Response Status:", error.status);
+                console.error("Response:", error);
+            }
+    
+            throw error; // Rethrow for handling in UI
+        }
+    }
+    
+    // get about us data
+    async getAboutUs(){
+        try {
+            const res = await axios.get(import.meta.env.VITE_ABOUTUS_API_KEY)
+            return res.data
+        } catch (error) {
+            console.error('failed to get about us::',error)
+        }
+    }
 
 }
 

@@ -12,7 +12,7 @@ import authService from "../../API/authService";
 import { setLocalStorage } from "../../LocalStorage/LocalStorage";
 
 const Login = () => {
-  const dispatch = useDispatch(); // Initialize useDispatch
+  const dispatch = useDispatch(); 
   const navigate = useNavigate();
   const {
     register,
@@ -30,11 +30,10 @@ const Login = () => {
         throw new Error("Invalid session data received from the server.");
       }
 
-      console.log('Session Data',session.data)
-      dispatch(authLogin({ userdata: session.data.jwt }));
+      dispatch(authLogin({ userdata: session?.data?.jwt }));
 
       setLocalStorage("authUserStatus", true);
-      setLocalStorage("userdata", session.data);
+      setLocalStorage("userdata", session?.data);
 
       navigate("/");
     } catch (error) {

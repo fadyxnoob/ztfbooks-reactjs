@@ -5,10 +5,16 @@ import HorizontalCard from "../../components/HorizontalCard/HorizontalCard";
 import { useSelector } from "react-redux";
 import service from "../../API/DBService";
 import { getLocalStorage } from "../../LocalStorage/LocalStorage";
-
+import { useNavigate } from "react-router-dom";
+import Loader from '../../components/Loader/Loader'
 const MyFavourite = () => {
   const storeBooks = useSelector((state) => state.fav.favorites || getLocalStorage('fav'));
   const [favBooks, setFavBooks] = useState([]);
+  const navigate = useNavigate()
+  const [loading, setLoading] = useState(true)
+  const authStatus = useSelector((state) => state.auth.status)
+
+
 
   // Fetch books
   const getFavoriteBooks = async () => {
@@ -42,8 +48,8 @@ const MyFavourite = () => {
             }
           })
       );
-  
-      setFavBooks(formattedBooks.filter(Boolean)); // ✅ Set only valid books
+      setFavBooks(formattedBooks.filter(Boolean)); 
+      setLoading(false)
     } catch (error) {
       console.error("Failed to fetch favorite books:", error);
     }
@@ -51,12 +57,17 @@ const MyFavourite = () => {
   
 
   useEffect(() => {
+    if(!authStatus) return navigate('/')
     getFavoriteBooks();
   }, [storeBooks]);
 
   // Split books into horizontal & normal categories
   const horizontalBooks = favBooks.filter((book) => book.horizontal);
   const normalBooks = favBooks.filter((book) => !book.horizontal);
+
+  if(loading){
+    return <Loader />
+  }
 
   return (
     <div className="px-5 md:px-20">

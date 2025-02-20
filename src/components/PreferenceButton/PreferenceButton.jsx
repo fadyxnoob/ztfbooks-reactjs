@@ -1,10 +1,11 @@
 import React from 'react'
 
-const PreferenceButton = ({ icon, label, selected, onClick }) => {
+const PreferenceButton = ({ icon, label, selected, onClick, ...props }) => {
     return (
       <button
         onClick={onClick}
-        className={`cursor-pointer bg-white flex items-center justify-between w-full px-4 py-3 rounded-lg mb-4 border-gray-200 rounded-xl`}
+        {...props}
+        className={` cursor-pointer bg-white flex items-center justify-between w-full px-4 py-3 rounded-lg mb-4 border-gray-200 rounded-xl`}
       >
         <div className="flex items-center gap-3">
           {icon}

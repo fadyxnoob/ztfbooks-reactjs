@@ -1,9 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
-
-// React Icons
 import { FaApple } from "react-icons/fa";
-
 
 
 const AppleButton = () => {
@@ -17,4 +14,4 @@ const AppleButton = () => {
       );
 }
 
-export default AppleButton
+export default React.memo(AppleButton)

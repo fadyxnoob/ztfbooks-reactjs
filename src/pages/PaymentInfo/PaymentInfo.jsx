@@ -1,138 +1,261 @@
-import React, { useState } from 'react';
-import Button from '../../components/Button/Button';
-// import { Card } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import Button from "../../components/Button/Button";
+import VisaLogo from "../../assets/images/logos_visa.png";
+import MasterCardLogo from "../../assets/images/logos_masterCard.png";
+import UnionPayLogo from "../../assets/images/logos_unionPay.png";
+import { useSelector } from "react-redux";
+import service from "../../API/DBService";
+import { useNavigate, useParams } from "react-router-dom";
+import VerificationSuccess from "../VerificationSuccess/VerificationSuccess";
+import FailedBox from "../../components/FailedBox/FailedBox";
 
 const PaymentForm = () => {
-  const [formData, setFormData] = useState({
-    cardNumber: '',
-    expiry: '',
-    cvv: '',
-    country: 'United States'
-  });
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    
-    // Format card number with spaces
-    if (name === 'cardNumber') {
-      const formatted = value.replace(/\s/g, '').replace(/(\d{4})/g, '$1 ').trim();
-      setFormData(prev => ({ ...prev, [name]: formatted }));
-      return;
-    }
-    
-    // Format expiry date
-    if (name === 'expiry') {
-      const formatted = value
-        .replace(/\D/g, '')
-        .replace(/(\d{2})(\d)/, '$1/$2')
-        .slice(0, 5);
-      setFormData(prev => ({ ...prev, [name]: formatted }));
-      return;
-    }
-
-    setFormData(prev => ({ ...prev, [name]: value }));
+  const { paymentMethod } = useParams();
+  const [defaultCurrency, setDefaultCurrency] = useState(null);
+  const [boxType, setBoxType] = useState("");
+  const [isOpenBox, setIsOpenBox] = useState(false);
+  const getCurrency = async () => {
+    const response = await service.getDefaultCurrency();
+    setDefaultCurrency(response?.code);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle payment submission logic here
-    console.log('Payment submitted:', formData);
+  const navigate= useNavigate()
+  const authStatus = useSelector((state)=> state.auth.status)
+  useEffect(() => {
+    if(!authStatus){
+      navigate('/login')
+    }
+    getCurrency();
+  }, []);
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      cardNumber: "",
+      expiry: "",
+      cvv: "",
+      country: "United States",
+    },
+  });
+
+  const formatCardNumber = (e) => {
+    const formatted = e.target.value
+      .replace(/\s/g, "")
+      .replace(/(\d{4})/g, "$1 ")
+      .trim();
+    setValue("cardNumber", formatted);
+  };
+
+  const formatExpiryDate = (e) => {
+    const formatted = e.target.value
+      .replace(/\D/g, "")
+      .replace(/(\d{2})(\d)/, "$1/$2")
+      .slice(0, 5);
+    setValue("expiry", formatted);
+  };
+
+  const cart = useSelector((state) => state.cart);
+  const totalPrice =
+    cart?.products?.reduce((sum, product) => sum + product.price, 0) || 0;
+
+  const cartIds = cart?.products?.map((product) => product.id) || [];
+
+  const handlePayment = async (formData) => {
+    try {
+      const paymentData = {
+        currencyCode: defaultCurrency,
+        totalAmount: totalPrice,
+        cartIds: formData.cartIds,
+        paymentMethod: { paymentMethod } || "CARD",
+        integratorPublicId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        metadata: {
+          additionalProp1: formData.cardNumber,
+          additionalProp2: formData.expiry,
+          additionalProp3: formData.cvv,
+        },
+      };
+
+      const paymentResponse = await service.makeYourPayment(paymentData);
+      console.log("Payment Success:", paymentResponse);
+      setIsOpenBox(true);
+      setBoxType("success");
+    } catch (error) {
+      setIsOpenBox(true);
+      setBoxType("failed");
+    }
+  };
+
+  useEffect(() => {
+    if (isOpenBox) {
+      document.body.style.overflow = "hidden"; 
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  
+    return () => {
+      document.body.style.overflow = "auto"; 
+    };
+  }, [isOpenBox]); 
+
+  const onSubmit = (data) => {
+    const formData = { ...data, cartIds };
+    // console.log({formData})
+    handlePayment(formData);
   };
 
   return (
-    <div className="bg-[#F6F7F8] min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8"
-    >
+    <>
+      {isOpenBox ? (
+        boxType === "success" ? (
+          <VerificationSuccess
+            title="Thank You for Your Purchase!"
+            message="Your transaction was successful, and your book is now available in your library."
+            buttonText={"Browse More Books"}
+            classNames={`absolute bg-white/10 top-0 p-0 md:left-1/4 z-50`}
+            pathTo="/"
+          />
+        ) : (
+          <FailedBox pathTo="/my-cart" />
+        )
+      ) : null}
+      <div className="bg-[#F6F7F8] min-h-screen p-4 md:p-6 lg:p-8">
         <div className="border-b border-[#EBEBEB]">
           <h1 className="text-center mt-8 pb-2 text-2xl sm:text-3xl lg:text-4xl text-[#014471] font-medium">
             Payment Information
           </h1>
         </div>
-      <div className="mt-[5rem] w-[768px] mx-auto">
-        <div className="bg-[#F6F7F8] p-6 md:p-8">
-        
-          
-          <div className="bg-[#FFBC06] bg-opacity-40 text-[#333333] w-20 rounded-md p-2 mb-6" style={{backgroundColor: "#FFBC06"}}>
-            <span className="text-sm font-medium text-yellow-800 text-[0.6rem">Payment</span>
-          </div>
+        <div className="mt-[5rem] md:w-[768px] mx-auto">
+          <div className="bg-[#F6F7F8] p-6 md:p-8">
+            <div className="bg-[#FFBC06] bg-opacity-40 text-[#333333] w-20 rounded-md p-2 mb-6">
+              <span className="text-sm font-medium text-yellow-800">
+                Payment
+              </span>
+            </div>
 
-          <p className='text-xl text-[#333333] mb-8 font-bold '>Add your payment information</p>
+            <p className="text-xl text-[#333333] mb-8 font-bold">
+              Add your payment information
+            </p>
 
-          <form onSubmit={handleSubmit}>
-            <div className="space-y-6">
-              <div className=''>
-                Card Details
-                <div className="relative w-[100%]">
-                  <input
-                    type="text"
-                    name="cardNumber"
-                    value={formData.cardNumber}
-                    onChange={handleInputChange}
-                    placeholder="XXXX XXXX XXXX XXXX"
-                    maxLength="19"
-                    className="bg-[#fff] border-b-[#CCC] border-b-[5px] w-full px-4 py-3 rounded-lg bg-[#FFFFFF] border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2 flex gap-2">
-                    <img src="/api/placeholder/24/16" alt="visa" className="h-4 w-6" />
-                    <img src="/api/placeholder/24/16" alt="mastercard" className="h-4 w-6" />
-                    <img src="/api/placeholder/24/16" alt="unionpay" className="h-4 w-6" />
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="space-y-6">
+                <div>
+                  Card Details
+                  <div className="relative w-[100%]">
+                    <input
+                      type="text"
+                      {...register("cardNumber", {
+                        required: "Card number is required",
+                        pattern: {
+                          value: /^\d{4} \d{4} \d{4} \d{4}$/,
+                          message: "Invalid card number",
+                        },
+                      })}
+                      onChange={formatCardNumber}
+                      placeholder="XXXX XXXX XXXX XXXX"
+                      maxLength="19"
+                      className="bg-[#fff] border-b-[#CCC] border-b-[5px] w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+                    />
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 flex gap-2">
+                      <img src={VisaLogo} alt="visa" className="h-4 w-6" />
+                      <img
+                        src={MasterCardLogo}
+                        alt="mastercard"
+                        className="h-4 w-6"
+                      />
+                      <img
+                        src={UnionPayLogo}
+                        alt="unionpay"
+                        className="h-4 w-6"
+                      />
+                    </div>
+                    {errors.cardNumber && (
+                      <p className="text-red-500 text-sm">
+                        {errors.cardNumber.message}
+                      </p>
+                    )}
                   </div>
                 </div>
-              </div>
 
-              <div className="flex justify-between items-center">
-                <div className='w-40'>
-                  <input
-                    type="text"
-                    name="expiry"
-                    value={formData.expiry}
-                    onChange={handleInputChange}
-                    placeholder="MM/YY"
-                    maxLength="5"
-                    className="bg-[#fff] border-b-[#CCC] border-b-[5px] w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
+                <div className="flex justify-between items-center">
+                  <div className="w-40">
+                    <input
+                      type="text"
+                      {...register("expiry", {
+                        required: "Expiry date is required",
+                        pattern: {
+                          value: /^(0[1-9]|1[0-2])\/\d{2}$/,
+                          message: "Invalid format (MM/YY)",
+                        },
+                      })}
+                      onChange={formatExpiryDate}
+                      placeholder="MM/YY"
+                      maxLength="5"
+                      className="bg-[#fff] border-b-[#CCC] border-b-[5px] w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+                    />
+                    {errors.expiry && (
+                      <p className="text-red-500 text-sm">
+                        {errors.expiry.message}
+                      </p>
+                    )}
+                  </div>
+                  <div className="w-40">
+                    <input
+                      type="text"
+                      {...register("cvv", {
+                        required: "CVV is required",
+                        pattern: { value: /^\d{3,4}$/, message: "Invalid CVV" },
+                      })}
+                      placeholder="CVV"
+                      maxLength="4"
+                      className="bg-[#fff] border-b-[#CCC] border-b-[5px] w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+                    />
+                    {errors.cvv && (
+                      <p className="text-red-500 text-sm">
+                        {errors.cvv.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
-                <div className='w-40'>
-                  <input
-                    type="text"
-                    name="cvv"
-                    value={formData.cvv}
-                    onChange={handleInputChange}
-                    placeholder="CVV"
-                    maxLength="4"
-                    className="bg-[#fff] border-b-[#CCC] border-b-[5px] w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-              </div>
 
-              <div className='mb-8'>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Country
-                </label>
-                <select
-                  name="country"
-                  value={formData.country}
-                  onChange={handleInputChange}
-                  className="bg-white border-none w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                <div className="mb-8">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Country
+                  </label>
+                  <select
+                    {...register("country", {
+                      required: "Country is required",
+                    })}
+                    className="bg-white border-none w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="United States">United States</option>
+                    <option value="Canada">Canada</option>
+                    <option value="United Kingdom">United Kingdom</option>
+                  </select>
+                  {errors.country && (
+                    <p className="text-red-500 text-sm">
+                      {errors.country.message}
+                    </p>
+                  )}
+                </div>
+
+                <Button
+                  type="submit"
+                  classNames="cursor-pointer w-full bg-blue-800 text-white py-3 px-4 rounded-3xl hover:bg-blue-900 transition-colors"
                 >
-                  <option value="United States">United States</option>
-                  <option value="Canada">Canada</option>
-                  <option value="United Kingdom">United Kingdom</option>
-                  {/* Add more countries as needed */}
-                </select>
+                  {defaultCurrency} {totalPrice}
+                </Button>
               </div>
-
-              <Button
-                type="submit"
-                classNames="w-full bg-blue-800 text-white py-3 px-4 rounded-3xl hover:bg-blue-900 transition-colors"
-              >
-                Pay $099
-              </Button>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
-export default PaymentForm;
+export default React.memo(PaymentForm);
