@@ -20,6 +20,8 @@ const BookCard = ({ books }) => {
   const [images, setImages] = useState({});
   const [loading, setLoading] = useState({});
   const [alert, setAlert] = useState(null);
+  const authStatus = useSelector((state) => state.auth.status);
+  
 
   // Function to show alert
   const showAlert = (type, message) => {
@@ -28,6 +30,9 @@ const BookCard = ({ books }) => {
   };
 
   const handleAddToCart = (ebookId, quantity, name, price) => {
+    if (!authStatus) {
+      return showAlert("error", "Please login first...");
+    }
     if (!ebookId || !quantity || !name || !price) {
       console.error("Invalid cart item:", { ebookId, quantity, name, price });
       return;
@@ -78,6 +83,8 @@ const BookCard = ({ books }) => {
       });
     };
   }, [books]);
+
+
   return (
     <>
       {alert && (

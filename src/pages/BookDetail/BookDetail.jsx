@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import service from "../../API/DBService";
 import DOMPurify from "dompurify";
 import Alert from "../../components/Alert/Alert";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../Store/cartSlice";
 
 const BookDetail = () => {
@@ -20,11 +20,12 @@ const BookDetail = () => {
   const dispatch = useDispatch();
   const [alert, setAlert] = useState(null);
   const [loading, setLoading] = useState(false);
+  const authStatus = useSelector((state) => state.auth.status);
 
   // fetching book detail from API using book ID
   const fetchBook = async () => {
     const res = await service.getBookByID(bookID);
-    console.log(res.data);
+
     setBookDetail(res.data);
     const url = await service.getFileByName(res?.data?.thumbnailFileName);
     setBookImage(url);
@@ -46,6 +47,7 @@ const BookDetail = () => {
       const res = await service.getApprovedBooks(apiKey);
       const booksResponse = res.content.slice(0, 4);
       setApprovedEBooks(booksResponse);
+      setLoading(false)
     } catch (err) {
       console.error("Failed to fetch approved books:", err);
     }
@@ -57,6 +59,9 @@ const BookDetail = () => {
 
   // Function to add book to the cart
   const handleAddToCart = (ebookId, quantity, name, price) => {
+    if (!authStatus) {
+      return showAlert("error", "Please login first...");
+    }
     if (!ebookId || !quantity || !name || !price) {
       console.error("Invalid cart item:", { ebookId, quantity, name, price });
       return;
