@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PreferenceButton from "../../components/PreferenceButton/PreferenceButton";
 import { BsCreditCard } from "react-icons/bs";
 import { FaPlus } from "react-icons/fa6";
