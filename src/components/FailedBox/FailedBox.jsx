@@ -12,7 +12,7 @@ const FailedBox = ({ pathTo }) => {
 
   return (
     <div
-      className={`absolute min-h-screen w-full flex items-center justify-center bg-white/10 z-50 top-1/2`}
+      className={`fixed  w-full flex items-center justify-center bg-white/10 z-50 top-0`}
     >
       <div
         className="bg-white/20 rounded-lg shadow-lg w-full md:mx-4 md:w-[627px] p-4 md:p-20 pb-8 flex flex-col items-center space-y-6 border border-white/30 backdrop-blur-lg "

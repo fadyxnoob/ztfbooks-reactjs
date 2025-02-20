@@ -42,7 +42,6 @@ const CartPage = () => {
   };
 
   useEffect(() => {
-    console.log({ approvedEBooks });
     if (!authStatus) {
       navigate("/login");
     }

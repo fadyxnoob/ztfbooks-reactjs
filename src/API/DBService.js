@@ -142,10 +142,6 @@ export class DBService {
                 "Authorization": `Bearer ${this.token.jwtToken}`
             };
     
-            // Debugging: Check the API URL before sending the request
-            console.log("API URL:", import.meta.env.VITE_CHECKOUT_API_KEY);
-            console.log("Payload:", payload);
-    
             const response = await axios.post(
                 import.meta.env.VITE_CHECKOUT_API_KEY,
                 payload,

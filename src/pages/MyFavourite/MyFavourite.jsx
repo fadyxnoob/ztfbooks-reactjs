@@ -57,7 +57,7 @@ const MyFavourite = () => {
   
 
   useEffect(() => {
-    if(!authStatus) return navigate('/')
+    if(!authStatus) return navigate('/login')
     getFavoriteBooks();
   }, [storeBooks]);
 

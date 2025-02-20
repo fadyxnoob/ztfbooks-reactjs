@@ -116,7 +116,7 @@ const PaymentForm = () => {
             title="Thank You for Your Purchase!"
             message="Your transaction was successful, and your book is now available in your library."
             buttonText={"Browse More Books"}
-            classNames={`absolute bg-white/10 top-0 p-0 md:left-1/4 z-50`}
+            classNames={`fixed bg-white/10 top-16 md:top-0 p-0 md:left-1/4 z-50`}
             pathTo="/"
           />
         ) : (
