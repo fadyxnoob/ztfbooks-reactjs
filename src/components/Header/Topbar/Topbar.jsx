@@ -15,9 +15,7 @@ const Topbar = () => {
   const navigate = useNavigate();
 
   const { register } = useForm();
-  const isLogin =
-    useSelector((state) => state.auth.status) ||
-    getLocalStorage("authUserStatus");
+  const isLogin = useSelector((state) => state.auth.status) 
 
   const cart = useSelector((state) => state.cart);
   const totalQuantity =

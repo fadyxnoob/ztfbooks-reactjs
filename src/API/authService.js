@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getLocalStorage } from '../LocalStorage/LocalStorage';
 
 export class AuthService {
-    token = getLocalStorage('userdata').jwtToken;
+    token = getLocalStorage('userdata')?.jwtToken;
     constructor() { }
 
     // signup user using api

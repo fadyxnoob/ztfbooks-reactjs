@@ -2,14 +2,10 @@ import React, { useEffect, useState } from "react";
 import Banner from "../../components/Banner/Banner";
 import BookCard from "../../components/BookCard/BookCard";
 import Tabs from "../../components/Tabs/Tabs";
-import { useSelector } from "react-redux";
-import { getLocalStorage } from "../../LocalStorage/LocalStorage";
 import service from "../../API/DBService";
 import Carousel from "../../components/Carousel/Carousel";
 
 const Home = () => {
-  const loggedInUser = useSelector((state) => state.auth.userdata) || getLocalStorage("userdata");
-
   const [approvedEBooks, setApprovedEBooks] = useState([]);
   const [bestSalesBooks, setBestSalesBooks] = useState([]);
   const [loading, setLoading] = useState(true);
