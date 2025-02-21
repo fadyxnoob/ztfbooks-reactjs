@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Banner from "../../components/Banner/Banner";
-import BookCard from "../../components/BookCard/BookCard";
 import Tabs from "../../components/Tabs/Tabs";
 import service from "../../API/DBService";
 import Carousel from "../../components/Carousel/Carousel";
@@ -9,7 +8,7 @@ const Home = () => {
   const [approvedEBooks, setApprovedEBooks] = useState([]);
   const [bestSalesBooks, setBestSalesBooks] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  console.log({bestSalesBooks})
   const apiKey = import.meta.env.VITE_GET_ALL_APPROVED_BOOKS_API_KEY;
 
   // Fetch approved e-books
