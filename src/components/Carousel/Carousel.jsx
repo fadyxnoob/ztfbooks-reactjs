@@ -62,7 +62,7 @@ const Carousel = ({books}) => {
       {isEnd && (
         <div className="text-center mt-5">
           <Link
-            to="/all-books"
+            to="/e-books"
             className="text-blue-600 font-semibold hover:underline"
           >
             View All Books →
