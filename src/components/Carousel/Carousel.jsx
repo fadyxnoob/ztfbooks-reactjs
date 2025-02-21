@@ -46,7 +46,7 @@ const Carousel = ({ books, pathTo = "/e-books" }) => {
       <Swiper
         ref={swiperRef}
         modules={[Navigation]}
-        slidesPerView={4}
+        slidesPerView={5}
         spaceBetween={20}
         loop={false}
         onSlideChange={handleSlideChange}

@@ -102,7 +102,7 @@ const Home = () => {
       </section>
 
       {/* Top Chart section */}
-      <section className="my-10 py-2 bg-white mx-5 md:mx-20 ps-5">
+      <section className="my-10 py-2 bg-white mx-5 md:mx-20 md:ps-5">
         <h4 className="text-black text-lg text-center md:text-start font-medium">
           Top Chart
         </h4>

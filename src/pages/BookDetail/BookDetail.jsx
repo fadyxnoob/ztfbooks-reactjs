@@ -22,6 +22,7 @@ const BookDetail = () => {
   const [loading, setLoading] = useState(false);
   const authStatus = useSelector((state) => state.auth.status);
 
+  console.log({bookDetail})
   // fetching book detail from API using book ID
   const fetchBook = async () => {
     const res = await service.getBookByID(bookID);
@@ -107,14 +108,14 @@ const BookDetail = () => {
         </h1>
         <div className="my-5 flex flex-col md:flex-row gap-5 items-start">
           {/* Product Image */}
-          <div className="md:w-[700px] md:h-[500px] md:mt-3 mx-auto">
+          <div className="w-full md:w-1/2 md:mt-3 mx-auto">
             <img
               src={bookImage ? bookImage : null}
               alt={bookImage}
               className="size-full object-contain"
             />
           </div>
-          <div className="md:w-1/3">
+          <div className="w-full md:w-1/2">
             <h2 className="text-[#203949] text-2xl font-medium">
               {bookDetail?.ebookTitle}
             </h2>
