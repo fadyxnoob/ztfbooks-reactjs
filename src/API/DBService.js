@@ -31,7 +31,6 @@ export class DBService {
 
     // get best Sales books from the backend using api
     async getBestSalesBooks(limit) {
-        console.log(limit)
         try {
             const res = await axios.get(`${import.meta.env.VITE_GET_BEST_SALES_BOOKS_API_KEY}${limit}`)
             return res.data;
