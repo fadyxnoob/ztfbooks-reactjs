@@ -41,6 +41,7 @@ export class DBService {
 
     // get a file from the backend using API
     async getFileByName(fileName) {
+        console.log({fileName})
         if (!fileName) {
             console.warn('File name is undefined');
             return null;
