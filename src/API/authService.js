@@ -3,7 +3,9 @@ import { getLocalStorage } from '../LocalStorage/LocalStorage';
 
 export class AuthService {
     token = getLocalStorage('userdata')?.jwtToken;
-    constructor() { }
+    constructor() {
+        console.log({token})
+     }
 
     // signup user using api
     async signup(data) {
