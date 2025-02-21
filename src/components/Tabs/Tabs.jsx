@@ -121,7 +121,7 @@ const Tabs = () => {
     getBestSellingBooks();
     getApprovedBooks();
   }, []);
-
+  const limitized = bestSalesBooks.slice(0, 10)
   return (
     <div className="w-full mx-auto">
       <div className="flex md:w-1/2 justify-between gap-2 md:gap-10">
@@ -145,7 +145,7 @@ const Tabs = () => {
         <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-3">
           {bestSalesBooks.length > 0 ? (
             <HorizontalCard
-              books={bestSalesBooks}
+              books={limitized}
               toggleFavorite={toggleFavorite}
               favorites={favorites}
             />
