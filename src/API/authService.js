@@ -25,6 +25,7 @@ export class AuthService {
 
     // let the user login using api
     async login(data) {
+        console.log({data})
         try {
             const response = await axios.post(
                 'https://server.ztfbooks.com/v1/authenticate/user',
@@ -67,8 +68,7 @@ export class AuthService {
     // update user 
     async updateUser(userId, userData) {
         try {
-            const token = JSON.parse(localStorage.getItem('userdata'))?.jwtToken;
-            if (!token) {
+            if (!this.token) {
                 throw new Error('No token found. Please log in again.');
             }
 
@@ -85,7 +85,7 @@ export class AuthService {
                 },
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        Authorization: `Bearer ${this.token}`,
                         'Content-Type': 'application/json'
                     }
                 }

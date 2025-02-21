@@ -22,6 +22,17 @@ const Carousel = ({ books, pathTo = "/e-books" }) => {
 
   return (
     <div className="relative w-full">
+        {/* Show "View All Books" Link Only on Last Slide */}
+        {isEnd && (
+          <div className="text-center mt-5 absolute top-0 right-5">
+            <Link
+              to={pathTo}
+              className="text-blue-600 font-semibold hover:underline"
+            >
+              View All Books →
+            </Link>
+          </div>
+        )}
       {/* Custom Left Arrow (Hidden on First Slide) */}
       {!isBeginning && (
         <button
@@ -67,18 +78,6 @@ const Carousel = ({ books, pathTo = "/e-books" }) => {
         >
           <FaChevronRight size={20} />
         </button>
-      )}
-
-      {/* Show "View All Books" Link Only on Last Slide */}
-      {isEnd && (
-        <div className="text-center mt-5">
-          <Link
-            to={pathTo}
-            className="text-blue-600 font-semibold hover:underline"
-          >
-            View All Books →
-          </Link>
-        </div>
       )}
     </div>
   );
