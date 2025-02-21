@@ -9,6 +9,7 @@ import service from "../../API/DBService";
 import { useNavigate, useParams } from "react-router-dom";
 import VerificationSuccess from "../VerificationSuccess/VerificationSuccess";
 import FailedBox from "../../components/FailedBox/FailedBox";
+import { removeLocalStorage } from "../../LocalStorage/LocalStorage";
 
 const PaymentForm = () => {
   const { paymentMethod } = useParams();
@@ -84,6 +85,7 @@ const PaymentForm = () => {
       console.log("Payment Success:", paymentResponse);
       setIsOpenBox(true);
       setBoxType("success");
+      removeLocalStorage('carts')
     } catch (error) {
       setIsOpenBox(true);
       setBoxType("failed");

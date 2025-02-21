@@ -5,22 +5,23 @@ import Tabs from "../../components/Tabs/Tabs";
 import { useSelector } from "react-redux";
 import { getLocalStorage } from "../../LocalStorage/LocalStorage";
 import service from "../../API/DBService";
+import Carousel from "../../components/Carousel/Carousel";
 
 const Home = () => {
-  const loggedInUser =
-    useSelector((state) => state.auth.userdata) || getLocalStorage("userdata");
+  const loggedInUser = useSelector((state) => state.auth.userdata) || getLocalStorage("userdata");
 
   const [approvedEBooks, setApprovedEBooks] = useState([]);
   const [bestSalesBooks, setBestSalesBooks] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const apiKey = import.meta.env.VITE_GET_APPROVED_BOOKS_API_KEY;
+  const apiKey = import.meta.env.VITE_GET_ALL_APPROVED_BOOKS_API_KEY;
 
   // Fetch approved e-books
   const getApprovedBooks = async () => {
     try {
       const res = await service.getApprovedBooks(apiKey);
-      setApprovedEBooks(res.content || []);
+      const approvedBooks = res.content.slice(0, 10)
+      setApprovedEBooks(approvedBooks || []);
     } catch (err) {
       console.error("Failed to fetch approved books:", err);
     }
@@ -99,7 +100,8 @@ const Home = () => {
           Recent Ebooks
         </h4>
         <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-5">
-          <BookCard books={approvedEBooks} />
+          {/* <BookCard books={approvedEBooks} /> */}
+          <Carousel books={approvedEBooks} />
         </div>
       </section>
 
@@ -119,7 +121,8 @@ const Home = () => {
           Recommended Books
         </h4>
         <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-5">
-          <BookCard books={approvedEBooks} />
+          {/* <BookCard books={approvedEBooks} /> */}
+          <Carousel books={approvedEBooks} />
         </div>
       </section>
 
@@ -129,7 +132,8 @@ const Home = () => {
           Best Selling Books
         </h4>
         <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-5">
-          <BookCard books={bestSalesBooks} />
+          {/* <BookCard books={bestSalesBooks} /> */}
+          <Carousel books={bestSalesBooks} />
         </div>
       </section>
 
@@ -139,7 +143,8 @@ const Home = () => {
           Special Discount
         </h4>
         <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-5">
-          <BookCard books={specialDiscountBooks} />
+          {/* <BookCard books={specialDiscountBooks} /> */}
+          <Carousel books={specialDiscountBooks} />
         </div>
       </section>
     </div>

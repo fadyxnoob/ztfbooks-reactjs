@@ -41,6 +41,7 @@ const CartPage = () => {
     }
   };
 
+  
   useEffect(() => {
     if (!authStatus) {
       navigate("/login");
