@@ -174,6 +174,16 @@ export class DBService {
         }
     }
 
+    async getReviewesByBookID(id){
+        try {
+            const response = await axios.get(`https://server.ztfbooks.com/opn/v1/e-book/reviews/${id}`);
+            // console.log('from book ID::',{response})
+            return response?.data;
+        } catch (error) {
+            console.log('Failed to get reviews:::', error)
+        }
+    }
+
 }
 
 const service = new DBService();

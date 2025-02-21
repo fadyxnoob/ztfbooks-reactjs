@@ -10,6 +10,11 @@ import DOMPurify from "dompurify";
 import Alert from "../../components/Alert/Alert";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../Store/cartSlice";
+import Loader from '../../components/Loader/Loader'
+
+
+
+
 
 const BookDetail = () => {
   const { bookID } = useParams();
@@ -19,22 +24,28 @@ const BookDetail = () => {
   const apiKey = import.meta.env.VITE_GET_ALL_APPROVED_BOOKS_API_KEY;
   const dispatch = useDispatch();
   const [alert, setAlert] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const authStatus = useSelector((state) => state.auth.status);
+  const [reviews, setReviews] = useState([])
 
-  console.log({bookDetail})
+
+
   // fetching book detail from API using book ID
   const fetchBook = async () => {
     const res = await service.getBookByID(bookID);
-
     setBookDetail(res.data);
+    setLoading(false)
     const url = await service.getFileByName(res?.data?.thumbnailFileName);
     setBookImage(url);
   };
+
+
+
   useEffect(() => {
     fetchBook();
     window.scrollTo(0, 0);
   }, [bookID]);
+
 
   // Function to show alert
   const showAlert = (type, message) => {
@@ -54,8 +65,15 @@ const BookDetail = () => {
     }
   };
 
+  const getBookReviews = async (bookID) => {
+    const response = await service.getReviewesByBookID(bookID) 
+    console.log({response})
+    setReviews(response?.reviewComments)
+  }
+
   useEffect(() => {
     getApprovedBooks();
+    getBookReviews(bookID)
   }, []);
 
   // Function to add book to the cart
@@ -75,22 +93,26 @@ const BookDetail = () => {
     }
   };
 
-  const reviews = [
-    {
-      name: "Ahmed Khan",
-      image: ReviewImage, // Replace with actual image
-      rating: 4.0,
-      date: "02 June 2024",
-      text: "Lorem ipsum dolor sit amet consectetur. Sagittis suscipit amet diam eu magna tortor arcu dui. Dignissim elementum curabitur orci lobortis tortor.Lorem ipsum dolor sit amet consectetur. Sagittis suscipit amet diam eu ]r.  ",
-    },
-    {
-      name: "Sarah Ali",
-      image: ReviewImage,
-      rating: 5.0,
-      date: "10 July 2024",
-      text: "Lorem ipsum dolor sit amet consectetur. Sagittis suscipit amet diam eu magna tortor arcu dui. Dignissim elementum curabitur orci lobortis tortor.Lorem ipsum dolor sit amet consectetur. Sagittis suscipit amet diam eu ]r.  ",
-    },
-  ];
+  // const reviews = [
+  //   {
+  //     name: "Ahmed Khan",
+  //     image: ReviewImage, // Replace with actual image
+  //     rating: 4.0,
+  //     date: "02 June 2024",
+  //     text: "Lorem ipsum dolor sit amet consectetur. Sagittis suscipit amet diam eu magna tortor arcu dui. Dignissim elementum curabitur orci lobortis tortor.Lorem ipsum dolor sit amet consectetur. Sagittis suscipit amet diam eu ]r.  ",
+  //   },
+  //   {
+  //     name: "Sarah Ali",
+  //     image: ReviewImage,
+  //     rating: 5.0,
+  //     date: "10 July 2024",
+  //     text: "Lorem ipsum dolor sit amet consectetur. Sagittis suscipit amet diam eu magna tortor arcu dui. Dignissim elementum curabitur orci lobortis tortor.Lorem ipsum dolor sit amet consectetur. Sagittis suscipit amet diam eu ]r.  ",
+  //   },
+  // ];
+
+  if(loading){
+    return <Loader />
+  }
 
   return (
     <>
@@ -185,11 +207,8 @@ const BookDetail = () => {
         </section>
 
         {/* More from Author */}
-        <section className="mt-20 p-3 bg-white">
+        <section className="mt-20 p-3">
           <h2 className="text-2xl text-black font-medium">More from Author</h2>
-          <p className="mt-3 text-sm text-black font-normal">
-            Meet the beautiful minds
-          </p>
           <div className="flex justify-center md:justify-between items-start flex-wrap mt-5 gap-10 md:gap-0">
             <BookCard books={approvedEBooks} />
           </div>

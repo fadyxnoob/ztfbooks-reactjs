@@ -1,4 +1,6 @@
 import React from 'react'
+import image from '../../assets/images/review-image.png'
+
 
 const ReviewCard = ({ reviews }) => {
     return (
@@ -11,18 +13,18 @@ const ReviewCard = ({ reviews }) => {
                     <div className='flex items-start gap-4'>
                         {/* Profile Image */}
                         <img
-                            src={review.image}
-                            alt={review.name}
+                            src={review.image || image}
+                            alt={review.comment}
                             className="w-[40px] h-[40px] rounded-full object-cover"
                         />
 
                         <div className="flex flex-1 justify-between">
                             {/* Review Content */}
                             <div className="">
-                                <h3 className="font-semibold text-xl">{review.name}</h3>
+                                <h3 className="font-semibold text-xl">{review.fullName}</h3>
                                 {/* Rating */}
                                 <div className="flex items-center text-[#7C7C7C] text-sm">
-                                    {review.rating}.0 ⭐
+                                    {review.stars} ⭐
                                 </div>
 
                             </div>
@@ -32,7 +34,7 @@ const ReviewCard = ({ reviews }) => {
                     </div>
                     {/* Review Text */}
                     <p className="text-gray-600 text-sm mt-2">
-                        {review.text}
+                        {review.comment || 'Nice Book, I have never buy this type of book in my life before, highly recommended'}
                     </p>
 
                 </div>

@@ -41,9 +41,9 @@ const HorizontalCard = ({ books }) => {
     return (
       <div
         key={i}
-        className="bg-[#EBEBEB] shadow-lg rounded-lg p-4 w-full max-w-[381px] mb-10 text-black"
+        className="bg-[#EBEBEB] shadow-lg rounded-lg p-1 w-full md:w-0px] mb-10 text-black "
       >
-        <div className="relative flex flex-col md:flex-row gap-2">
+        <div className="relative flex flex-col md:flex-row gap-2 w-full">
           <div className="md:w-1/2 h-[260px] mx-auto">
             <Link to={`book-detail/${book.id}`}>
               <img
@@ -53,9 +53,9 @@ const HorizontalCard = ({ books }) => {
               />
             </Link>
           </div>
-          <div className="px-5 md:w-1/2">
+          <div className="p-2 md:p-0 md:w-1/2">
             <Link to={`book-detail/${book.id}`}>
-              <h3 className="text-lg font-semibold">{book.title}</h3>
+              <h3 className="text-lg font-semibold">{book.title.split(' ').slice(0, 2).join(' ')}</h3>
             </Link>
             <p className="text-gray-600 text-sm">Author: {book?.author}</p>
             <div className="flex flex-wrap items-center gap-2 text-black text-sm mt-2 font-[300]">
@@ -67,11 +67,11 @@ const HorizontalCard = ({ books }) => {
               </span>
             </div>
             <button
-              className="mt-2 rounded-full cursor-pointer flex gap-2 items-center text-[14px]"
+              className="mt-2 rounded-full cursor-pointer flex gap-1 items-center text-[14px] text-start"
               onClick={() => isFavorite(book.id) ? handleRemoveFromFavorite(book.id) : handleAddToFavorite(book.id, true)}
             >
 
-               <FaHeart className={`text-lg ${isFavorite(book.id) ? "text-red-500" : "text-gray-400"}`} />
+               <FaHeart className={`text-lg ${isFavorite(book.id) ? "text-red-500" : "text-gray-400 "}`} />
                {isFavorite(book.id) ? "Remove from Favourite" : "Add to Favourite"}
             </button>
           </div>

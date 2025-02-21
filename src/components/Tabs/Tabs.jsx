@@ -108,20 +108,20 @@ const Tabs = () => {
   // Define filter conditions
   const filterDiscount = {
     detailedInfo: {
-      status: "APPROVED", 
-      freeBook: true, 
+      status: "APPROVED",
+      freeBook: true,
     },
   };
 
   // Usage
   const specialDiscountBooks = filterBooks(approvedEBooks, filterDiscount);
-  const displayBooksOnly = specialDiscountBooks.slice(0, 8)
+  const displayBooksOnly = specialDiscountBooks.slice(0, 8);
 
   useEffect(() => {
     getBestSellingBooks();
     getApprovedBooks();
   }, []);
-  const limitized = bestSalesBooks.slice(0, 10)
+  const limitized = bestSalesBooks.slice(0, 10);
   return (
     <div className="w-full mx-auto">
       <div className="flex md:w-1/2 justify-between gap-2 md:gap-10">
@@ -129,7 +129,9 @@ const Tabs = () => {
           <button
             key={tab.id}
             className={`w-1/3 md:w-1/2 py-2 md:py-4 text-center font-medium text-gray-700 cursor-pointer ${
-              activeTab === tab.id ? "bg-gray-200 rounded-full" : "border rounded-full"
+              activeTab === tab.id
+                ? "bg-gray-200 rounded-full"
+                : "border rounded-full"
             }
                             focus:outline-none`}
             onClick={() => setActiveTab(tab.id)}
@@ -142,7 +144,7 @@ const Tabs = () => {
       <div
         className={`p-4 ${activeTab === "bestSelling" ? "block" : "hidden"}`}
       >
-        <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {bestSalesBooks.length > 0 ? (
             <HorizontalCard
               books={limitized}
@@ -171,7 +173,7 @@ const Tabs = () => {
 
       <div className={`p-4 ${activeTab === "topFree" ? "block" : "hidden"}`}>
         <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-3">
-        {specialDiscountBooks.length > 0 ? (
+          {specialDiscountBooks.length > 0 ? (
             <HorizontalCard
               books={displayBooksOnly}
               toggleFavorite={toggleFavorite}
