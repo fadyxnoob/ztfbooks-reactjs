@@ -23,8 +23,6 @@ export class AuthService {
         }
     }
 
-
-
     // let the user login using api
     async login(data) {
         try {
