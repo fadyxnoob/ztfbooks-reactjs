@@ -29,7 +29,7 @@ export class AuthService {
     async login(data) {
         try {
             const response = await axios.post(
-                import.meta.env.VITE_LOGIN_API_KEY,
+                'https://server.ztfbooks.com/v1/authenticate/user',
                 data,
             );
             // Return only serializable data
