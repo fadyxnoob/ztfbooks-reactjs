@@ -114,7 +114,7 @@ const AccountInfo = () => {
   // Function to show alert
   const showAlert = (type, message) => {
     setAlert({ type, message });
-    setTimeout(() => setAlert(null), 2000); // Hide after 2 seconds
+    setTimeout(() => setAlert(null), 2000); 
   };
 
   const onSubmit = async (data) => {

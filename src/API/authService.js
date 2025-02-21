@@ -52,7 +52,7 @@ export class AuthService {
                 return;
             }
 
-            const response = await axios.get(import.meta.env.VITE_GET_CURRENT_LOGGEDIN_API_KEY, {
+            const response = await axios.get('https://server.ztfbooks.com/client/v1/clients/current-logged', {
                 headers: {
                     Authorization: `Bearer ${this.token}`, // Send token in the Authorization header
                 }
