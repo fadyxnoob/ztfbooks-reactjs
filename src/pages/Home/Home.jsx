@@ -24,9 +24,9 @@ const Home = () => {
   };
 
   // Fetch best-selling books
-  const getBestSellingBooks = async (limit) => {
+  const getBestSellingBooks = async () => {
     try {
-      const res = await service.getBestSalesBooks(limit);
+      const res = await service.getBestSalesBooks(10);
       if (res && res.length > 0) {
         const formattedBooks = await Promise.all(
           res.map(async (book) => {
@@ -69,7 +69,7 @@ const Home = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      await Promise.all([getApprovedBooks(), getBestSellingBooks(10)]);
+      await Promise.all([getApprovedBooks(), getBestSellingBooks()]);
       setLoading(false);
     };
     fetchData();
