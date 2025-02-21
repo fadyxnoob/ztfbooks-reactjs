@@ -24,9 +24,9 @@ const Home = () => {
   };
 
   // Fetch best-selling books
-  const getBestSellingBooks = async () => {
+  const getBestSellingBooks = async (limit) => {
     try {
-      const res = await service.getBestSalesBooks(4);
+      const res = await service.getBestSalesBooks(limit);
       if (res && res.length > 0) {
         const formattedBooks = await Promise.all(
           res.map(async (book) => {
@@ -69,7 +69,7 @@ const Home = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      await Promise.all([getApprovedBooks(), getBestSellingBooks()]);
+      await Promise.all([getApprovedBooks(), getBestSellingBooks(10)]);
       setLoading(false);
     };
     fetchData();
@@ -97,7 +97,7 @@ const Home = () => {
         </h4>
         <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-5">
           {/* <BookCard books={approvedEBooks} /> */}
-          <Carousel books={approvedEBooks} />
+          <Carousel books={approvedEBooks} pathTo="/recent-books" />
         </div>
       </section>
 
@@ -118,7 +118,7 @@ const Home = () => {
         </h4>
         <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-5">
           {/* <BookCard books={approvedEBooks} /> */}
-          <Carousel books={approvedEBooks} />
+          <Carousel books={approvedEBooks} pathTo="/recommended-books"/>
         </div>
       </section>
 
@@ -129,7 +129,7 @@ const Home = () => {
         </h4>
         <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-5">
           {/* <BookCard books={bestSalesBooks} /> */}
-          <Carousel books={bestSalesBooks} />
+          <Carousel books={bestSalesBooks} pathTo="/best-selling-books"/>
         </div>
       </section>
 
@@ -140,7 +140,7 @@ const Home = () => {
         </h4>
         <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-5">
           {/* <BookCard books={specialDiscountBooks} /> */}
-          <Carousel books={specialDiscountBooks} />
+          <Carousel books={specialDiscountBooks} pathTo="/special-discount-books"/>
         </div>
       </section>
     </div>

@@ -7,7 +7,6 @@ import Input from "../../Input/Input";
 import Button from "../../Button/Button";
 import UserLogin from "../../UserLogin/UserLogin";
 import { useSelector } from "react-redux";
-import { getLocalStorage } from "../../../LocalStorage/LocalStorage";
 import { debounce } from "lodash";
 
 const Topbar = () => {

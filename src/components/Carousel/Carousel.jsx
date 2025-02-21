@@ -8,8 +8,8 @@ import "swiper/css/pagination";
 import BookCard from "../BookCard/BookCard";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-const Carousel = ({books}) => {
-    const [isBeginning, setIsBeginning] = useState(true);
+const Carousel = ({ books, pathTo = "/e-books" }) => {
+  const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
   const swiperRef = useRef(null);
 
@@ -40,6 +40,17 @@ const Carousel = ({books}) => {
         loop={false}
         onSlideChange={handleSlideChange}
         className="mySwiper"
+        breakpoints={{
+          0: {
+            slidesPerView: 1, // 1 item on very small screens
+          },
+          640: {
+            slidesPerView: 2, // 2 items on small tablets
+          },
+          1024: {
+            slidesPerView: 4, // 4 items on larger screens
+          },
+        }}
       >
         {books.map((book, index) => (
           <SwiperSlide key={index}>
@@ -62,7 +73,7 @@ const Carousel = ({books}) => {
       {isEnd && (
         <div className="text-center mt-5">
           <Link
-            to="/e-books"
+            to={pathTo}
             className="text-blue-600 font-semibold hover:underline"
           >
             View All Books →

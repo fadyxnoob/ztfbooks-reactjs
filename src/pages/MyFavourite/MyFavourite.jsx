@@ -5,37 +5,34 @@ import HorizontalCard from "../../components/HorizontalCard/HorizontalCard";
 import { useSelector } from "react-redux";
 import service from "../../API/DBService";
 import { getLocalStorage } from "../../LocalStorage/LocalStorage";
-import { useNavigate } from "react-router-dom";
-import Loader from '../../components/Loader/Loader'
+import Loader from "../../components/Loader/Loader";
 const MyFavourite = () => {
-  const storeBooks = useSelector((state) => state.fav.favorites || getLocalStorage('fav'));
+  const storeBooks = useSelector(
+    (state) => state.fav.favorites || getLocalStorage("fav")
+  );
   const [favBooks, setFavBooks] = useState([]);
-  const navigate = useNavigate()
-  const [loading, setLoading] = useState(true)
-  const authStatus = useSelector((state) => state.auth.status)
-
-
+  const [loading, setLoading] = useState(true);
 
   // Fetch books
   const getFavoriteBooks = async () => {
-    if (!storeBooks?.length) return; 
+    if (!storeBooks?.length) return;
     try {
       const formattedBooks = await Promise.all(
         storeBooks
-          .filter((bookItem) => bookItem?.id) 
+          .filter((bookItem) => bookItem?.id)
           .map(async (bookItem) => {
             try {
               const singleBook = await service.getBookByID(bookItem.id);
-  
+
               if (!singleBook?.data) {
                 console.warn(`No data for book ID: ${bookItem.id}`); // ✅ Warn if API fails
                 return null;
               }
-  
+
               return {
                 title: singleBook.data.ebookTitle,
                 id: singleBook.data.id,
-                horizontal: bookItem.horizontal, 
+                horizontal: bookItem.horizontal,
                 thumbnailFileName: singleBook.data.thumbnailFileName,
                 author: singleBook.data.author?.name || "Unknown Author",
                 duration: singleBook.data.timeToRead || "N/A",
@@ -43,21 +40,22 @@ const MyFavourite = () => {
                 detailedInfo: singleBook.data,
               };
             } catch (error) {
-              console.error(`Failed to fetch book details for ID: ${bookItem.id}`, error);
+              console.error(
+                `Failed to fetch book details for ID: ${bookItem.id}`,
+                error
+              );
               return null;
             }
           })
       );
-      setFavBooks(formattedBooks.filter(Boolean)); 
-      setLoading(false)
+      setFavBooks(formattedBooks.filter(Boolean));
+      setLoading(false);
     } catch (error) {
       console.error("Failed to fetch favorite books:", error);
     }
   };
-  
 
   useEffect(() => {
-    if(!authStatus) return navigate('/login')
     getFavoriteBooks();
   }, [storeBooks]);
 
@@ -65,8 +63,8 @@ const MyFavourite = () => {
   const horizontalBooks = favBooks.filter((book) => book.horizontal);
   const normalBooks = favBooks.filter((book) => !book.horizontal);
 
-  if(loading){
-    return <Loader />
+  if (loading) {
+    return <Loader />;
   }
 
   return (
@@ -76,13 +74,13 @@ const MyFavourite = () => {
           My Favourite
         </h4>
         <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-5">
-        <BookCard books={normalBooks} fav={true} /> 
+          <BookCard books={normalBooks} fav={true} />
         </div>
       </section>
 
       <section className="my-10 py-2 bg-white">
         <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-3">
-        <HorizontalCard books={horizontalBooks} fav={true} />
+          <HorizontalCard books={horizontalBooks} fav={true} />
         </div>
       </section>
     </div>

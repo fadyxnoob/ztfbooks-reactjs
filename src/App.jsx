@@ -3,7 +3,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Layout from "./pages/Layout/Layout";
 import Loader from "./components/Loader/Loader.jsx";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop.jsx";
-import FailedBox from "./components/FailedBox/FailedBox.jsx";
+
 // Lazy loading components
 const Home = React.lazy(() => import("./pages/Home/Home"));
 const BookDetail = React.lazy(() => import("./pages/BookDetail/BookDetail"));
@@ -30,6 +30,10 @@ const SearchPage = React.lazy(() => import("./pages/SearchPage/SearchPage"));
 const About = React.lazy(() => import("./pages/About/About"));
 const PaymentInformation = React.lazy(() => import("./pages/PaymentInformation/PaymentInformation.jsx"));
 const PaymentInfo = React.lazy(() => import("./pages/PaymentInfo/PaymentInfo.jsx"));
+const RecommendedBooks = React.lazy(() => import("./pages/RecommendedBooks/RecommendedBooks.jsx"));
+const RecentBooks = React.lazy(() => import("./pages/RecentBooks/RecentBooks.jsx"));
+const BestSellingBooks = React.lazy(() => import("./pages/BestSellingBooks/BestSellingBooks.jsx"));
+const SpecialDiscount = React.lazy(() => import("./pages/SpecialDiscount/SpecialDiscount.jsx"));
 
 const App = () => {
   return (
@@ -44,6 +48,10 @@ const App = () => {
             <Route path="/search" element={<SearchPage />} />
             <Route path="book-detail/:bookID" element={<BookDetail />} />
             <Route path="e-books" element={<EBooks />} />
+            <Route path="recommended-books" element={<RecommendedBooks />} />
+            <Route path="best-selling-books" element={<BestSellingBooks />} />
+            <Route path="recent-books" element={<RecentBooks />} />
+            <Route path="special-discount-books" element={<SpecialDiscount />} />
             <Route path="audio-books" element={<AudioBooks />} />
             <Route path="my-cart" element={<CartPage />} />
             <Route path="my-favourite" element={<MyFavourite />} />
