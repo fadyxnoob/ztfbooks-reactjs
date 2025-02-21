@@ -11,7 +11,6 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         login: (state, action) => {
-            console.log({ action })
             if (!action.payload) {
                 console.error("Invalid payload detected");
                 return;

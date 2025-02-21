@@ -2,6 +2,7 @@ import axios from 'axios';
 import { getLocalStorage } from '../LocalStorage/LocalStorage';
 
 export class AuthService {
+    token = getLocalStorage('userdata').jwtToken;
     constructor() { }
 
     // signup user using api
@@ -14,7 +15,7 @@ export class AuthService {
 
         try {
             const response = await axios.post(apiUrl, data);
-            console.log('Signup successful:', response.data);
+            // console.log('Signup successful:', response.data);
             return { status: 200, message: 'Your account has been created' };
         } catch (error) {
             console.error('Failed to signup:', error.response?.data || error.message);
@@ -26,15 +27,11 @@ export class AuthService {
 
     // let the user login using api
     async login(data) {
-        console.log({data})
         try {
             const response = await axios.post(
                 import.meta.env.VITE_LOGIN_API_KEY,
                 data,
             );
-
-            console.log('Login successful:', response);
-
             // Return only serializable data
             return {
                 status: 200,
@@ -50,16 +47,15 @@ export class AuthService {
     // get logged in user 
     async getCurrentLoggedIn() {
         try {
-            const userData = JSON.parse(localStorage.getItem('userdata'));
-            const token = userData?.jwtToken;
-            if (!token) {
+
+            if (!this.token) {
                 console.error("No token found in localStorage");
                 return;
             }
 
             const response = await axios.get(import.meta.env.VITE_GET_CURRENT_LOGGEDIN_API_KEY, {
                 headers: {
-                    Authorization: `Bearer ${token}`, // Send token in the Authorization header
+                    Authorization: `Bearer ${this.token}`, // Send token in the Authorization header
                 }
             });
             // console.log('The Logged-in Account is ::', response);
