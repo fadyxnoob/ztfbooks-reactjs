@@ -3,9 +3,7 @@ import { getLocalStorage } from '../LocalStorage/LocalStorage';
 
 export class AuthService {
     token = getLocalStorage('userdata')?.jwtToken;
-    constructor() {
-        console.log({token})
-     }
+    constructor() {}
 
     // signup user using api
     async signup(data) {
@@ -59,7 +57,7 @@ export class AuthService {
                     Authorization: `Bearer ${this.token}`, 
                 }
             });
-            console.log('The Logged-in Account is ::', response);
+            // console.log('The Logged-in Account is ::', response);
             return response.data;
         } catch (error) {
             console.error('Error getting Current LoggedIN::', error);

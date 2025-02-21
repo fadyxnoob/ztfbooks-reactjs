@@ -76,7 +76,6 @@ const AccountInfo = () => {
     }
     const getUserInfo = async () => {
       const res = await authService.getCurrentLoggedIn();
-      console.log(res.image)
       setUserInfo(res);
       setValue("name", res?.user?.name);
       setValue("email", res?.user?.email);
@@ -92,7 +91,6 @@ const AccountInfo = () => {
       setValue("gender", res?.user?.gender || "Not specified");
 
       const imageUrl = await service.getFileByName(res?.image);
-      console.log({imageUrl})
       setImageUrl(imageUrl || image);
     };
 
