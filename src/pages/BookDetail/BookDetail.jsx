@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import Button from "../../components/Button/Button";
 import BookCard from "../../components/BookCard/BookCard";
@@ -10,11 +10,9 @@ import DOMPurify from "dompurify";
 import Alert from "../../components/Alert/Alert";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../Store/cartSlice";
-import Loader from '../../components/Loader/Loader'
-
-
-
-
+import Loader from "../../components/Loader/Loader";
+import ShareButton from "../../components/share/share";
+import BookReview from "../../components/add-review/addReview";
 
 const BookDetail = () => {
   const { bookID } = useParams();
@@ -26,31 +24,27 @@ const BookDetail = () => {
   const [alert, setAlert] = useState(null);
   const [loading, setLoading] = useState(true);
   const authStatus = useSelector((state) => state.auth.status);
-  const [reviews, setReviews] = useState([])
-
+  const [reviews, setReviews] = useState([]);
 
 
   // fetching book detail from API using book ID
   const fetchBook = async () => {
     const res = await service.getBookByID(bookID);
     setBookDetail(res.data);
-    setLoading(false)
+    setLoading(false);
     const url = await service.getFileByName(res?.data?.thumbnailFileName);
     setBookImage(url);
   };
-
-
 
   useEffect(() => {
     fetchBook();
     window.scrollTo(0, 0);
   }, [bookID]);
 
-
   // Function to show alert
   const showAlert = (type, message) => {
     setAlert({ type, message });
-    setTimeout(() => setAlert(null), 2000); // Hide after 2 seconds
+    setTimeout(() => setAlert(null), 2000); 
   };
 
   // get all approved e-books
@@ -59,21 +53,21 @@ const BookDetail = () => {
       const res = await service.getApprovedBooks(apiKey);
       const booksResponse = res.content.slice(0, 4);
       setApprovedEBooks(booksResponse);
-      setLoading(false)
+      setLoading(false);
     } catch (err) {
       console.error("Failed to fetch approved books:", err);
     }
   };
 
-  const getBookReviews = async (bookID) => {
-    const response = await service.getReviewesByBookID(bookID) 
-    console.log({response})
-    setReviews(response?.reviewComments)
-  }
+  const getBookReviews = useCallback(async (bookID) => {
+    const response = await service.getReviewesByBookID(bookID);
+    console.log({ response });
+    setReviews(response?.reviewComments);
+  }, []);
 
   useEffect(() => {
     getApprovedBooks();
-    getBookReviews(bookID)
+    getBookReviews(bookID);
   }, []);
 
   // Function to add book to the cart
@@ -81,16 +75,19 @@ const BookDetail = () => {
     if (!authStatus) {
       return showAlert("error", "Please login first...");
     }
+
     if (!ebookId || !quantity || !name || !price) {
       console.error("Invalid cart item:", { ebookId, quantity, name, price });
       return;
     }
+
     try {
       dispatch(addToCart({ ebookId, quantity, name, price }));
       showAlert("success", "Item add to the cart");
     } catch (error) {
       showAlert("error", "Failed to add item ");
     }
+
   };
 
   // const reviews = [
@@ -110,8 +107,8 @@ const BookDetail = () => {
   //   },
   // ];
 
-  if(loading){
-    return <Loader />
+  if (loading) {
+    return <Loader />;
   }
 
   return (
@@ -123,6 +120,7 @@ const BookDetail = () => {
           onClose={() => setAlert(null)}
         />
       )}
+
       {/* Book Details */}
       <div className="px-5 md:px-20 py-5 bg-[#f4f3f4]">
         <h1 className="bg-[#F7F8F8] my-3 p-3 rounded-xl text-[#203949] text-3xl font-medium">
@@ -145,9 +143,9 @@ const BookDetail = () => {
               <p className="text-[#7C7C7C] text-lg">{bookDetail?.rating}</p>
               <FaStar className="text-[#FFCC68] text-xl" />
             </div>
-            <div className="my-5">
-              <h2 className="text-[#203949] text-xl font-medium">Author</h2>
-              <p className="mt-2 text-[#203949] text-lg">
+            <div className="my-5 flex">
+              <h2 className="text-[#203949] text-xl font-medium">Author: </h2>
+              <p className=" ml-1 text-[#203949] text-lg">
                 {bookDetail?.author?.name}
               </p>
             </div>
@@ -175,6 +173,21 @@ const BookDetail = () => {
                 <p className="text-[#203949] text-lg font-medium">
                   {bookDetail?.numberOfPages}
                 </p>
+              </div>
+              <div>
+                <p className="font-medium text-lg text-[#7C7C7C]">Likes</p>
+                <p className="text-[#203949] text-lg font-medium">
+                  {bookDetail?.numberOfLikes}
+                </p>
+              </div>
+              <div>
+                <p className="font-medium text-lg text-[#7C7C7C]">Share</p>
+                <ShareButton />
+              </div>
+
+              <div>
+                
+                <BookReview ebookId={bookID} callReviews={getBookReviews}/>
               </div>
             </div>
             <div className="my-5">

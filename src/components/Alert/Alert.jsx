@@ -13,15 +13,15 @@ const Alert = ({ type, message, duration = 3000, onClose }) => {
 
             if (percentage === 0) {
                 clearInterval(interval);
-                onClose(); // Close alert ONLY when the bar finishes
+                onClose(); 
             }
-        }, 30); // Smooth animation
+        }, 30); 
 
         return () => clearInterval(interval);
     }, [duration, onClose]);
 
     return (
-        <div className="fixed top-5 right-5 z-50 bg-white shadow-lg rounded-lg px-4 py-3 w-72 flex items-center gap-3 border-l-4
+        <div className="fixed top-0 right-0 z-50 bg-white shadow-lg rounded-lg px-4 py-3 w-72 flex items-center gap-3 border-l-4
             text-gray-900 border-opacity-80"
             style={{ borderColor: type === "success" ? "#22c55e" : "#ef4444" }}
         >
