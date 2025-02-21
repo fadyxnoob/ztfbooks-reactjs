@@ -85,6 +85,8 @@ const Home = () => {
     );
   }
 
+  const limitized = bestSalesBooks.slice(0, 10)
+
   return (
     <div className="bg-[#f4f3f4]">
       <Banner />
@@ -128,7 +130,7 @@ const Home = () => {
         </h4>
         <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-5">
           {/* <BookCard books={bestSalesBooks} /> */}
-          <Carousel books={bestSalesBooks} pathTo="/best-selling-books"/>
+          <Carousel books={limitized} pathTo="/best-selling-books"/>
         </div>
       </section>
 
