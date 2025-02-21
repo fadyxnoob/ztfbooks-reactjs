@@ -54,10 +54,10 @@ export class AuthService {
 
             const response = await axios.get('https://server.ztfbooks.com/client/v1/clients/current-logged', {
                 headers: {
-                    Authorization: `Bearer ${this.token}`, // Send token in the Authorization header
+                    Authorization: `Bearer ${this.token}`, 
                 }
             });
-            // console.log('The Logged-in Account is ::', response);
+            console.log('The Logged-in Account is ::', response);
             return response.data;
         } catch (error) {
             console.error('Error getting Current LoggedIN::', error);
