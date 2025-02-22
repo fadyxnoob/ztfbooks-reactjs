@@ -172,4 +172,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default React.memo(Home);

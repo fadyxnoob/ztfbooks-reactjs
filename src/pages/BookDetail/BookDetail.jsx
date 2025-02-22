@@ -3,16 +3,16 @@ import { FaStar } from "react-icons/fa";
 import Button from "../../components/Button/Button";
 import BookCard from "../../components/BookCard/BookCard";
 import ReviewCard from "../../components/ReviewCard/ReviewCard";
-import ReviewImage from "../../assets/images/review-image.png";
 import { useParams } from "react-router-dom";
 import service from "../../API/DBService";
-import DOMPurify from "dompurify";
 import Alert from "../../components/Alert/Alert";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../Store/cartSlice";
 import Loader from "../../components/Loader/Loader";
 import ShareButton from "../../components/share/share";
 import BookReview from "../../components/add-review/addReview";
+import Description from '../../components/Description/Description'
+
 
 const BookDetail = () => {
   const { bookID } = useParams();
@@ -149,17 +149,7 @@ const BookDetail = () => {
                 {bookDetail?.author?.name}
               </p>
             </div>
-            <div className="my-5">
-              <h2 className="text-[#333333] text-xl font-medium">
-                Description
-              </h2>
-              <p
-                className="mt-2 text-[#203949] font-medium"
-                dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(bookDetail?.description),
-                }}
-              />
-            </div>
+            <Description description={bookDetail?.description} />
             <div className="my-5 flex gap-5">
               <div>
                 <p className="font-medium text-lg text-[#7C7C7C]">Price</p>

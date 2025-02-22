@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { FaFacebook, FaLinkedin, FaTwitter, FaInstagram } from "react-icons/fa";
 const Footer = () => {
   return (
-    <div className="text-white bg-[#01447e] w-full px-5 md:px-[80px]">
+    <div className="text-white bg-[#01447e] w-full px-5 md:px-[80px] mt-22">
       <div className=" flex flex-col md:flex-row items-start justify-between py-20 gap-5 md:gap-0">
         <div className="">
           <h2 className="text-white font-bold text-[36px] leading-[43px]">

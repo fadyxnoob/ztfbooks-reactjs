@@ -24,9 +24,10 @@ const Carousel = ({ books, pathTo = "/e-books" }) => {
     <div className="relative w-full">
         {/* Show "View All Books" Link Only on Last Slide */}
         {isEnd && (
-          <div className="text-center mt-5 absolute top-0 right-5">
+          <div className="text-center mt-5 absolute top-0 right-5 z-20">
             <Link
               to={pathTo}
+              onClick={() => console.log(`You clicked on ${pathTo}`)}
               className="text-blue-600 font-semibold hover:underline"
             >
               View All Books →
@@ -53,18 +54,18 @@ const Carousel = ({ books, pathTo = "/e-books" }) => {
         className="mySwiper"
         breakpoints={{
           0: {
-            slidesPerView: 1, // 1 item on very small screens
+            slidesPerView: 1, 
           },
           640: {
-            slidesPerView: 2, // 2 items on small tablets
+            slidesPerView: 2, 
           },
           1024: {
-            slidesPerView: 4, // 4 items on larger screens
+            slidesPerView: 4, 
           },
         }}
       >
         {books.map((book, index) => (
-          <SwiperSlide key={index}>
+          <SwiperSlide key={index} className="mt-10">
             <BookCard books={[book]} />
           </SwiperSlide>
         ))}
