@@ -39,8 +39,7 @@ const Footer = () => {
           </h3>
           <ul className="mt-10 leading-[23px] font-medium list-none flex gap-3 flex-col md:flex-row">
             <li className="h-[80px] w-[240px]">
-              <a href="#">
-                {" "}
+              <a href="https://play.google.com/store/apps/details?id=com.ztfbooks.ztfbooks">
                 <img
                   src={androidApp}
                   alt="Android App"
@@ -50,7 +49,6 @@ const Footer = () => {
             </li>
             <li className="h-[80px] w-[240px]">
               <a href="#">
-                {" "}
                 <img
                   src={iosApp}
                   alt="Ios App"

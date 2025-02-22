@@ -124,7 +124,7 @@ const Home = () => {
           organizations.
         </p>
         <div className="mt-5 flex flex-col md:flex-row gap-10 items-center justify-center">
-         <a href="#">
+         <a href="https://play.google.com/store/apps/details?id=com.ztfbooks.ztfbooks">
          <img src={PlayStore} alt={PlayStore} className="h-[80px] w-[200px]" />
          </a>
           <a href="#">

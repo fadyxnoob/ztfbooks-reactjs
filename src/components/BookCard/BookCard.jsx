@@ -99,7 +99,7 @@ const BookCard = ({ books }) => {
       {books?.map((book, i) => (
         <div
           key={i}
-          className="bg-[#EBEBEB] shadow-lg rounded-xl p-4 w-full mx-auto w-full mt-5 transition hover:scale-105"
+          className="bg-[#EBEBEB] shadow-lg rounded-xl p-4 w-full mx-auto mb-5 mt-5 transition hover:scale-105"
         >
           {/* Book Image & Favorite Icon */}
           <div className="relative">
