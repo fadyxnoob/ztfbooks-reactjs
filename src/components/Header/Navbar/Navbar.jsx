@@ -75,32 +75,44 @@ const Navbar = () => {
         } list-none md:hidden flex-col items-start gap-5 text-left  md:mx-auto overflow-hidden py-2 w-full`}
       >
         <li>
-          <Link to={"/e-books"} className="font-medium text-[#333333]">
+          <Link
+            onClick={()=> setOpenMenu(false)}
+          to={"/e-books"} className="font-medium text-[#333333]">
             {" "}
             eBooks
           </Link>
         </li>
         <li>
-          <Link to={"/audio-books"} className="font-medium text-[#333333]">
+          <Link
+            onClick={()=> setOpenMenu(false)}
+          to={"/audio-books"} className="font-medium text-[#333333]">
             AudioBooks
           </Link>
         </li>
         <li>
-          <Link to={"/faqs"} className="font-medium text-[#333333]">
+          <Link
+            onClick={()=> setOpenMenu(false)}
+          to={"/faqs"} className="font-medium text-[#333333]">
             Faq's
           </Link>
         </li>
         <li>
-          <Link to={"/about-us"} className="font-medium text-[#333333]">
+          <Link
+            onClick={()=> setOpenMenu(false)}
+          to={"/about-us"} className="font-medium text-[#333333]">
             About us
           </Link>
         </li>
         <li>
           <div className="flex items-center justify-between w-fit gap-10">
-            <Link to="my-favourite">
+            <Link
+              onClick={()=> setOpenMenu(false)}
+            to="my-favourite">
               <CiHeart className="text-gray-600 text-3xl cursor-pointer" />
             </Link>
-            <Link to="my-cart">
+            <Link
+              onClick={()=> setOpenMenu(false)}
+            to="my-cart">
               <div className="relative">
                 <BsCart3 className="text-gray-600 text-3xl cursor-pointer" />
                 {authStatus && totalQuantity > 0 && (

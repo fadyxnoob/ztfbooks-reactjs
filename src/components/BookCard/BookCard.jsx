@@ -8,9 +8,9 @@ import { useDispatch, useSelector } from "react-redux";
 import StaticImage from "../../assets/images/BookCoverImage.png";
 import service from "../../API/DBService";
 import { addToCart } from "../../Store/cartSlice";
-import { getLocalStorage } from "../../LocalStorage/LocalStorage";
 import Alert from "../Alert/Alert";
 import useFavorite from "../../Hooks/useFavorite";
+import store from '../../Store/Store'
 
 const BookCard = ({ books }) => {
   const dispatch = useDispatch();
@@ -29,19 +29,31 @@ const BookCard = ({ books }) => {
     setTimeout(() => setAlert(null), 2000); // Hide after 2 seconds
   };
 
+
   const handleAddToCart = (ebookId, quantity, name, price) => {
     if (!authStatus) {
       return showAlert("error", "Please login first...");
     }
+
     if (!ebookId || !quantity || !name || !price) {
       console.error("Invalid cart item:", { ebookId, quantity, name, price });
       return;
     }
+
+    // ✅ Get the current cart state before dispatching
+    const cartState = store.getState().cart; // <-- Fetch state manually
+    const itemExists = cartState.products.some((item) => item.id === ebookId);
+
+    if (itemExists) {
+      return showAlert("error", "Item is already in the cart"); // Stop execution
+    }
+
     try {
       dispatch(addToCart({ ebookId, quantity, name, price }));
-      showAlert("success", "Item add to the cart");
+      showAlert("success", "Item added to the cart");
     } catch (error) {
-      showAlert("error", "Failed to add item ");
+      console.error("Error adding to cart:", error);
+      showAlert("error", "Failed to add item");
     }
   };
 

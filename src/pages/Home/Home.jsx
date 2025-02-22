@@ -6,6 +6,7 @@ import Carousel from "../../components/Carousel/Carousel";
 import sectionBg from '../../assets/images/read-bg.png'
 import PlayStore from '../../assets/images/android-app.png'
 import IOSApp from '../../assets/images/ios-app.png'
+
 const Home = () => {
   const [approvedEBooks, setApprovedEBooks] = useState([]);
   const [bestSalesBooks, setBestSalesBooks] = useState([]);

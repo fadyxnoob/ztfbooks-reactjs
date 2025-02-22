@@ -8,7 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/Loader";
 import { useDispatch } from "react-redux";
 import { FaTrash } from "react-icons/fa";
-
+import { addToCart } from "../../Store/cartSlice";
 
 const CartPage = () => {
   const navigate = useNavigate();
@@ -16,9 +16,7 @@ const CartPage = () => {
   const [approvedEBooks, setApprovedEBooks] = useState([]);
   const [cartBooks, setCartBooks] = useState([]);
   const [loading, setLoading] = useState(false);
-
   const authStatus = useSelector((state) => state.auth.status);
-
   const products = useSelector((state) => state?.cart?.products || []);
   const totalQuantity = products.reduce(
     (sum, product) => sum + product.quantity,
@@ -28,8 +26,7 @@ const CartPage = () => {
     (sum, product) => sum + product.price * product.quantity,
     0
   );
-  const averageUnitPrice =
-    totalQuantity > 0 ? (totalPrice / totalQuantity).toFixed(2) : 0;
+  const averageUnitPrice = totalQuantity > 0 ? (totalPrice / totalQuantity).toFixed(2) : 0;
 
   // Fetch approved eBooks
   const getApprovedBooks = async () => {
@@ -47,21 +44,10 @@ const CartPage = () => {
 
   const handleDelete = (bookId) => {
     const updatedCart = cartBooks.filter((book) => book.id !== bookId);
-    setCartBooks(updatedCart); // Update local cartBooks state
-  
-    // Recalculate totals after item removal
-    const updatedTotalQuantity = updatedCart.reduce((sum, book) => sum + book.quantity, 0);
-    const updatedTotalPrice = updatedCart.reduce((sum, book) => sum + book.price * book.quantity, 0);
-  
-    dispatch({ type: "cart/removeItem", payload: bookId }); // Update Redux store
-  
-    // Update total quantity and total price states
-    setTotalQuantity(updatedTotalQuantity);
-    setTotalPrice(updatedTotalPrice);
+    setCartBooks(updatedCart);
+    dispatch({ type: "cart/removeItem", payload: bookId });
   };
-  
-  
-  
+
   useEffect(() => {
     if (!authStatus) {
       navigate("/login");
@@ -99,7 +85,7 @@ const CartPage = () => {
     if (products.length > 0) {
       fetchBookDetails();
     }
-  }, [cartBooks]);
+  }, [products]);
 
   if (loading) {
     return <Loader />;
@@ -178,11 +164,11 @@ const CartPage = () => {
                         </p>
                       </div>
                       <button
-    onClick={() => handleDelete(book.id)}
-    className="text-red-500 text-xl hover:text-red-700 transition"
-  >
-    <FaTrash />
-  </button>
+                        onClick={() => handleDelete(book.id)}
+                        className="text-red-500 text-xl hover:text-red-700 transition"
+                      >
+                        <FaTrash />
+                      </button>
                       <div>
                         <p className="text-[#7C7C7C] text-sm font-normal">
                           {book.date || "N/A"}
@@ -241,9 +227,8 @@ const CartPage = () => {
             Recent Ebooks
           </h4>
           <div className="grid mt-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-  <BookCard books={approvedEBooks} />
-</div>
-
+            <BookCard books={approvedEBooks} />
+          </div>
         </section>
       </div>
     </>

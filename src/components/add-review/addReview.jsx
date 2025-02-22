@@ -125,7 +125,7 @@ const ReviewSection = ({ ebookId }) => {
         className="font-medium text-lg text-[#7C7C7C] cursor-pointer"
         onClick={() => setIsReviewOpen(true)}
       >
-        Add a Review
+        Review
       </p>
       <p>
         <FaComments className="text-gray-600 text-xl mx-auto mt-1" />

@@ -11,7 +11,8 @@ import { addToCart } from "../../Store/cartSlice";
 import Loader from "../../components/Loader/Loader";
 import ShareButton from "../../components/share/share";
 import BookReview from "../../components/add-review/addReview";
-import Description from '../../components/Description/Description'
+import Description from "../../components/Description/Description";
+import store from '../../Store/Store'
 
 
 const BookDetail = () => {
@@ -25,7 +26,6 @@ const BookDetail = () => {
   const [loading, setLoading] = useState(true);
   const authStatus = useSelector((state) => state.auth.status);
   const [reviews, setReviews] = useState([]);
-
 
   // fetching book detail from API using book ID
   const fetchBook = async () => {
@@ -44,7 +44,7 @@ const BookDetail = () => {
   // Function to show alert
   const showAlert = (type, message) => {
     setAlert({ type, message });
-    setTimeout(() => setAlert(null), 2000); 
+    setTimeout(() => setAlert(null), 2000);
   };
 
   // get all approved e-books
@@ -61,7 +61,6 @@ const BookDetail = () => {
 
   const getBookReviews = useCallback(async (bookID) => {
     const response = await service.getReviewesByBookID(bookID);
-    console.log({ response });
     setReviews(response?.reviewComments);
   }, []);
 
@@ -70,7 +69,6 @@ const BookDetail = () => {
     getBookReviews(bookID);
   }, []);
 
-  // Function to add book to the cart
   const handleAddToCart = (ebookId, quantity, name, price) => {
     if (!authStatus) {
       return showAlert("error", "Please login first...");
@@ -81,19 +79,27 @@ const BookDetail = () => {
       return;
     }
 
-    try {
-      dispatch(addToCart({ ebookId, quantity, name, price }));
-      showAlert("success", "Item add to the cart");
-    } catch (error) {
-      showAlert("error", "Failed to add item ");
+    // ✅ Get the current cart state before dispatching
+    const cartState = store.getState().cart; // <-- Fetch state manually
+    const itemExists = cartState.products.some((item) => item.id === ebookId);
+
+    if (itemExists) {
+      return showAlert("error", "Item is already in the cart"); // Stop execution
     }
 
+    try {
+      dispatch(addToCart({ ebookId, quantity, name, price }));
+      showAlert("success", "Item added to the cart");
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      showAlert("error", "Failed to add item");
+    }
   };
 
   const StarRating = ({ rating }) => {
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 >= 0.5;
-  
+
     return (
       <div className="my-3 flex items-center gap-1">
         {[...Array(fullStars)].map((_, i) => (
@@ -154,10 +160,10 @@ const BookDetail = () => {
               {bookDetail?.ebookTitle}
             </h2>
             <div className="my-3 flex items-center gap-2">
-            <StarRating rating={bookDetail?.rating || 0} />
+              <StarRating rating={bookDetail?.rating || 0} />
 
-  <p className="text-[#7C7C7C] text-lg">({bookDetail?.rating})</p>
-</div>
+              <p className="text-[#7C7C7C] text-lg">({bookDetail?.rating})</p>
+            </div>
             <div className="my-5 flex">
               <h2 className="text-[#203949] text-xl font-medium">Author: </h2>
               <p className=" ml-1 text-[#203949] text-lg">
@@ -191,7 +197,7 @@ const BookDetail = () => {
               </div>
 
               <div>
-                <BookReview ebookId={bookID} callReviews={getBookReviews}/>
+                <BookReview ebookId={bookID} callReviews={getBookReviews} />
               </div>
             </div>
             <div className="my-5">
