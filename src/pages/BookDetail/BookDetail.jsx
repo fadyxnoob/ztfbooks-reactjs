@@ -228,7 +228,7 @@ const BookDetail = () => {
 
         {/* reviews section */}
         <section className="my-10 bg-[#EBEBEB] pt-10 pb-3 px-3">
-          <h2 className="text-[#203949] text-2xl font-semibold">
+          <h2 className="text-[#203949] text-sm md:text-2xl font-semibold">
             Reviews on {bookDetail?.ebookTitle} Ebook
           </h2>
           <div className="mt-10 flex flex-col gap-5">
