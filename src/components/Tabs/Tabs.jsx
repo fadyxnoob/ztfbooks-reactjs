@@ -158,7 +158,7 @@ const Tabs = () => {
       </div>
 
       <div className={`p-4 ${activeTab === "freeBooks" ? "block" : "hidden"}`}>
-        <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-3">
+        <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4">
           {specialDiscountBooks.length > 0 ? (
             <HorizontalCard
               books={displayBooksOnly}
@@ -172,7 +172,7 @@ const Tabs = () => {
       </div>
 
       <div className={`p-4 ${activeTab === "topFree" ? "block" : "hidden"}`}>
-        <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-3">
+        <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4">
           {specialDiscountBooks.length > 0 ? (
             <HorizontalCard
               books={displayBooksOnly}

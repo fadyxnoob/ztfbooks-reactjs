@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
-
+import { FaComments } from "react-icons/fa";
 const BookReview = ({ ebookId, onClose, callReviews }) => {
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async ({}) => {
-
     if (rating === 0 || reviewText.trim() === "") {
       alert("Please provide a rating and review text.");
       return;
@@ -16,7 +15,7 @@ const BookReview = ({ ebookId, onClose, callReviews }) => {
     setLoading(true);
 
     try {
-      const userdata = JSON.parse(localStorage.getItem("userdata")); 
+      const userdata = JSON.parse(localStorage.getItem("userdata"));
       const token = userdata?.jwtToken;
 
       if (!token) {
@@ -31,7 +30,7 @@ const BookReview = ({ ebookId, onClose, callReviews }) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, 
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             ebookId: ebookId,
@@ -48,7 +47,7 @@ const BookReview = ({ ebookId, onClose, callReviews }) => {
         setRating(0);
         setReviewText("");
         onClose();
-        callReviews()
+        callReviews();
       } else {
         alert(`Error: ${result.message || "Something went wrong"}`);
       }
@@ -127,6 +126,9 @@ const ReviewSection = ({ ebookId }) => {
         onClick={() => setIsReviewOpen(true)}
       >
         Add a Review
+      </p>
+      <p>
+        <FaComments className="text-gray-600 text-xl mx-auto mt-1" />
       </p>
 
       {isReviewOpen && (

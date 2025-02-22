@@ -41,7 +41,7 @@ const HorizontalCard = ({ books }) => {
     return (
       <div
         key={i}
-        className="bg-[#EBEBEB] shadow-lg rounded-lg p-1 w-full md:w-0px] mb-10 text-black "
+        className="bg-[#EBEBEB] shadow-lg rounded-lg p-1 w-full mb-10 text-black "
       >
         <div className="relative flex flex-col md:flex-row gap-2 w-full">
           <div className="md:w-1/2 h-[260px] mx-auto">

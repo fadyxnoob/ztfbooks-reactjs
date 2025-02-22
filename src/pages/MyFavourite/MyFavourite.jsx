@@ -79,7 +79,7 @@ const MyFavourite = () => {
       </section>
 
       <section className="my-10 py-2 bg-white">
-        <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-3">
+        <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4">
           <HorizontalCard books={horizontalBooks} fav={true} />
         </div>
       </section>

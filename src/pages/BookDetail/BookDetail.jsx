@@ -186,7 +186,6 @@ const BookDetail = () => {
               </div>
 
               <div>
-                
                 <BookReview ebookId={bookID} callReviews={getBookReviews}/>
               </div>
             </div>
