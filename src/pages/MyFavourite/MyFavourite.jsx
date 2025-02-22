@@ -73,14 +73,14 @@ const MyFavourite = () => {
         <h4 className="text-[#203949] text-3xl text-center md:text-start font-medium">
           My Favourite
         </h4>
-        <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-5">
-          <BookCard books={normalBooks} fav={true} />
+        <div className="grid mt-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        <BookCard books={normalBooks} fav={true} />
         </div>
       </section>
 
-      <section className="my-10 py-2 bg-white">
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <HorizontalCard books={horizontalBooks} fav={true} />
+      <section className=" bg-white p-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 ">
+      <HorizontalCard  books={horizontalBooks} fav={true} />
         </div>
       </section>
     </div>

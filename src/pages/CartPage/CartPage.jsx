@@ -240,9 +240,10 @@ const CartPage = () => {
           <h4 className="text-black text-lg text-center md:text-start font-medium">
             Recent Ebooks
           </h4>
-          <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-5">
-            <BookCard books={approvedEBooks} />
-          </div>
+          <div className="grid mt-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+  <BookCard books={approvedEBooks} />
+</div>
+
         </section>
       </div>
     </>
