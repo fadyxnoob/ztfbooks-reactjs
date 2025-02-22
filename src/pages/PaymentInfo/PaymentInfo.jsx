@@ -249,7 +249,7 @@ const PaymentForm = () => {
                   type="submit"
                   classNames="cursor-pointer w-full bg-blue-800 text-white py-3 px-4 rounded-3xl hover:bg-blue-900 transition-colors"
                 >
-                  {defaultCurrency} {totalPrice}
+                  ${totalPrice}
                 </Button>
               </div>
             </form>

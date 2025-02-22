@@ -188,13 +188,13 @@ const CartPage = () => {
                     Price/unit
                   </p>
                   <p className="text-[#203949] text-lg font-medium">
-                    EUR {averageUnitPrice}
+                    ${averageUnitPrice}
                   </p>
                 </div>
                 <div className="flex justify-between items-center mt-3 border-t border-[#EFEFEF] pt-3">
                   <p className="text-[#203949] text-lg font-medium">Total</p>
                   <p className="text-[#203949] text-lg font-medium">
-                    EUR {totalPrice}
+                    ${totalPrice}
                   </p>
                 </div>
               </div>
