@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { FaStar } from "react-icons/fa";
+import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import Button from "../../components/Button/Button";
 import BookCard from "../../components/BookCard/BookCard";
 import ReviewCard from "../../components/ReviewCard/ReviewCard";
@@ -90,6 +90,20 @@ const BookDetail = () => {
 
   };
 
+  const StarRating = ({ rating }) => {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+  
+    return (
+      <div className="my-3 flex items-center gap-1">
+        {[...Array(fullStars)].map((_, i) => (
+          <FaStar key={i} className="text-[#FFCC68] text-xl" />
+        ))}
+        {hasHalfStar && <FaStarHalfAlt className="text-[#FFCC68] text-xl" />}
+      </div>
+    );
+  };
+
   // const reviews = [
   //   {
   //     name: "Ahmed Khan",
@@ -140,9 +154,10 @@ const BookDetail = () => {
               {bookDetail?.ebookTitle}
             </h2>
             <div className="my-3 flex items-center gap-2">
-              <p className="text-[#7C7C7C] text-lg">{bookDetail?.rating}</p>
-              <FaStar className="text-[#FFCC68] text-xl" />
-            </div>
+            <StarRating rating={bookDetail?.rating || 0} />
+
+  <p className="text-[#7C7C7C] text-lg">({bookDetail?.rating})</p>
+</div>
             <div className="my-5 flex">
               <h2 className="text-[#203949] text-xl font-medium">Author: </h2>
               <p className=" ml-1 text-[#203949] text-lg">

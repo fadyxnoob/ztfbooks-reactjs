@@ -6,6 +6,9 @@ import { useSelector } from "react-redux";
 import service from "../../API/DBService";
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/Loader";
+import { useDispatch } from "react-redux";
+import { FaTrash } from "react-icons/fa";
+
 
 const CartPage = () => {
   const navigate = useNavigate();
@@ -40,7 +43,24 @@ const CartPage = () => {
       console.error("Failed to fetch approved books:", err);
     }
   };
+  const dispatch = useDispatch();
 
+  const handleDelete = (bookId) => {
+    const updatedCart = cartBooks.filter((book) => book.id !== bookId);
+    setCartBooks(updatedCart); // Update local cartBooks state
+  
+    // Recalculate totals after item removal
+    const updatedTotalQuantity = updatedCart.reduce((sum, book) => sum + book.quantity, 0);
+    const updatedTotalPrice = updatedCart.reduce((sum, book) => sum + book.price * book.quantity, 0);
+  
+    dispatch({ type: "cart/removeItem", payload: bookId }); // Update Redux store
+  
+    // Update total quantity and total price states
+    setTotalQuantity(updatedTotalQuantity);
+    setTotalPrice(updatedTotalPrice);
+  };
+  
+  
   
   useEffect(() => {
     if (!authStatus) {
@@ -157,6 +177,12 @@ const CartPage = () => {
                           ${book.price}
                         </p>
                       </div>
+                      <button
+    onClick={() => handleDelete(book.id)}
+    className="text-red-500 text-xl hover:text-red-700 transition"
+  >
+    <FaTrash />
+  </button>
                       <div>
                         <p className="text-[#7C7C7C] text-sm font-normal">
                           {book.date || "N/A"}

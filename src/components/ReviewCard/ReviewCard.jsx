@@ -34,7 +34,7 @@ const ReviewCard = ({ reviews }) => {
                     </div>
                     {/* Review Text */}
                     <p className="text-gray-600 text-sm mt-2">
-                        {review.comment || 'Nice Book, I have never buy this type of book in my life before, highly recommended'}
+                        {review.comment}
                     </p>
 
                 </div>
