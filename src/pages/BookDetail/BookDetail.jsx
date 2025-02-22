@@ -213,15 +213,15 @@ const BookDetail = () => {
           <h4 className="text-[#203949] text-xl text-center md:text-start font-semibold">
             Also Bought Book
           </h4>
-          <div className="flex mt-2 flex-wrap items-center justify-center md:justify-start gap-5">
+          <div className="mt-5 grid grid-cols-1 md:grid-cols-4 gap-5">
             <BookCard books={approvedEBooks} />
           </div>
         </section>
 
         {/* More from Author */}
-        <section className="mt-20 p-3">
+        <section className="mt-20">
           <h2 className="text-2xl text-black font-medium">More from Author</h2>
-          <div className="flex justify-center md:justify-between items-start flex-wrap mt-5 gap-10 md:gap-0">
+          <div className="mt-5 grid grid-cols-1 md:grid-cols-4 gap-5">
             <BookCard books={approvedEBooks} />
           </div>
         </section>
