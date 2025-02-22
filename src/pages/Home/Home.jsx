@@ -3,7 +3,9 @@ import Banner from "../../components/Banner/Banner";
 import Tabs from "../../components/Tabs/Tabs";
 import service from "../../API/DBService";
 import Carousel from "../../components/Carousel/Carousel";
-
+import sectionBg from '../../assets/images/read-bg.png'
+import PlayStore from '../../assets/images/android-app.png'
+import IOSApp from '../../assets/images/ios-app.png'
 const Home = () => {
   const [approvedEBooks, setApprovedEBooks] = useState([]);
   const [bestSalesBooks, setBestSalesBooks] = useState([]);
@@ -14,7 +16,7 @@ const Home = () => {
   const getApprovedBooks = async () => {
     try {
       const res = await service.getApprovedBooks(apiKey);
-      const approvedBooks = res.content.slice(0, 10)
+      const approvedBooks = res.content.slice(0, 10);
       setApprovedEBooks(approvedBooks || []);
     } catch (err) {
       console.error("Failed to fetch approved books:", err);
@@ -84,7 +86,7 @@ const Home = () => {
     );
   }
 
-  const limitized = bestSalesBooks.slice(0, 10)
+  const limitized = bestSalesBooks.slice(0, 10);
 
   return (
     <div className="bg-[#f4f3f4]">
@@ -111,6 +113,26 @@ const Home = () => {
         </div>
       </section>
 
+      {/* read section */}
+      <div className="p-4 bg-cover flex flex-col gap-5" style={{ backgroundImage: `url(${sectionBg})` }}>
+        <h3 className="text-center text-xl font-bold text-white">
+          Read & Listen your Favourite Book Anytime
+        </h3>
+        <p className="text-lg font-normal text-[#FAFAFA] text-center">
+          Data analysis software is a type of software tool used for data
+          analysis <br /> and reporting. It is designed to help businesses,
+          organizations.
+        </p>
+        <div className="mt-5 flex flex-col md:flex-row gap-10 items-center justify-center">
+         <a href="#">
+         <img src={PlayStore} alt={PlayStore} className="h-[80px] w-[200px]" />
+         </a>
+          <a href="#">
+          <img src={IOSApp} alt={IOSApp} className="h-[80px] w-[200px]" />
+          </a>
+        </div>
+      </div>
+
       {/* Recommended Books section */}
       <section className="my-10 px-5 md:px-20">
         <h4 className="text-black text-lg text-center md:text-start font-medium">
@@ -118,7 +140,7 @@ const Home = () => {
         </h4>
         <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-5">
           {/* <BookCard books={approvedEBooks} /> */}
-          <Carousel books={approvedEBooks} pathTo="/recommended-books"/>
+          <Carousel books={approvedEBooks} pathTo="/recommended-books" />
         </div>
       </section>
 
@@ -129,7 +151,7 @@ const Home = () => {
         </h4>
         <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-5">
           {/* <BookCard books={bestSalesBooks} /> */}
-          <Carousel books={limitized} pathTo="/best-selling-books"/>
+          <Carousel books={limitized} pathTo="/best-selling-books" />
         </div>
       </section>
 
@@ -140,7 +162,10 @@ const Home = () => {
         </h4>
         <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-5">
           {/* <BookCard books={specialDiscountBooks} /> */}
-          <Carousel books={specialDiscountBooks} pathTo="/special-discount-books"/>
+          <Carousel
+            books={specialDiscountBooks}
+            pathTo="/special-discount-books"
+          />
         </div>
       </section>
     </div>

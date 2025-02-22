@@ -23,7 +23,7 @@ const SharePopup = ({ onClose, shareUrl }) => {
             href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex flex-col items-center text-green-600 hover:text-green-800"
+            className="flex flex-col items-center text-gray-600 hover:text-gray-800"
           >
             <MessageCircle className="w-8 h-8" />
             <span className="mt-2 text-sm">WhatsApp</span>
@@ -34,7 +34,7 @@ const SharePopup = ({ onClose, shareUrl }) => {
             href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex flex-col items-center text-blue-600 hover:text-blue-800"
+            className="flex flex-col items-center text-gray-600 hover:text-gray-800"
           >
             <Facebook className="w-8 h-8" />
             <span className="mt-2 text-sm">Facebook</span>
@@ -52,7 +52,7 @@ const SharePopup = ({ onClose, shareUrl }) => {
           {/* Copy Link */}
           <button
             onClick={copyToClipboard}
-            className="flex flex-col items-center text-blue-600 hover:text-blue-800"
+            className="flex flex-col items-center text-gray-600 hover:text-gray-800"
           >
             <Link className="w-8 h-8" />
             <span className="mt-2 text-sm">Copy Link</span>
