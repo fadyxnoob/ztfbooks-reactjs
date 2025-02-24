@@ -124,17 +124,18 @@ export class DBService {
     async makeYourPayment(paymentData) {
         try {
             if (!this.token || !this.token.jwtToken) {
-                console.error("Error: Authorization token is missing.");
+                console.error("❌ Error: Authorization token is missing.");
                 return;
             }
     
+            // 🛠 Ensure all values are properly formatted
             const payload = {
                 currencyCode: paymentData.currencyCode || "EUR",
-                totalAmount: paymentData.totalAmount || 0,
-                cartIds: Array.isArray(paymentData.cartIds) ? paymentData.cartIds : [],
-                paymentMethod: paymentData.paymentMethod || "VOUCHER",
+                totalAmount: Math.round(paymentData.totalAmount || 0),  // Ensure it's an integer
+                cartIds: Array.isArray(paymentData.cartIds) ? paymentData.cartIds : [],  // Ensure it's an array
+                paymentMethod: paymentData.paymentMethod || "VOUCHER",  // Default to "VOUCHER"
                 integratorPublicId: paymentData.integratorPublicId,
-                metadata: paymentData.metadata || {}
+                metadata: paymentData.metadata || {}  // Default to empty object
             };
     
             const headers = {
@@ -142,39 +143,44 @@ export class DBService {
                 "Authorization": `Bearer ${this.token.jwtToken}`
             };
     
+            console.log("🛠 Sending Payment Data:", payload);
+            console.log("🔗 API Endpoint:", import.meta.env.VITE_CHECKOUT_API_KEY);
+            console.log("🔑 Auth Token:", this.token.jwtToken);
+    
+            // 🌐 Send request to the API
             const response = await axios.post(
-                import.meta.env.VITE_CHECKOUT_API_KEY,
-                payload,
+                import.meta.env.VITE_CHECKOUT_API_KEY, 
+                payload, 
                 { headers }
             );
     
-            console.log("Payment Successful:", response);
-            return response; 
+            console.log("✅ Payment Successful:", response.data);
+            return response.data;
     
         } catch (error) {
-            console.error("Payment Failed:", error.response?.data || error.message || "Unknown error");
+            console.error("❌ Payment Failed:", error.response?.data || error.message || "Unknown error");
     
-            // More detailed error handling
             if (error.response) {
-                console.error("Response Status:", error.status);
-                console.error("Response:", error);
+                console.error("🛑 Response Status:", error.response.status);
+                console.error("🔍 Full Response Data:", error.response.data);
+            } else {
+                console.error("⚠️ Network Error:", error.message);
             }
     
-            throw error; // Rethrow for handling in UI
-        }
-    }
-    
+            throw error;  // Rethrow error for UI handling
+        }}
+
     // get about us data
-    async getAboutUs(){
+    async getAboutUs() {
         try {
             const res = await axios.get(import.meta.env.VITE_ABOUTUS_API_KEY)
             return res.data
         } catch (error) {
-            console.error('failed to get about us::',error)
+            console.error('failed to get about us::', error)
         }
     }
 
-    async getReviewesByBookID(id){
+    async getReviewesByBookID(id) {
         try {
             const response = await axios.get(`https://server.ztfbooks.com/opn/v1/e-book/reviews/${id}`);
             // console.log('from book ID::',{response})

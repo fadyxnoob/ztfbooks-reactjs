@@ -3,6 +3,11 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Layout from "./pages/Layout/Layout";
 import Loader from "./components/Loader/Loader.jsx";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop.jsx";
+import VoucherPay from "./pages/VoucherPay/VoucherPay.jsx";
+import MobilePay from "./pages/MobilePay/MobilePay.jsx";
+import ChooseByMobilePay from "./pages/ChooseByMobilePay/ChooseByMobilePay.jsx";
+import TelephonePay from "./pages/TelephonePay/TelephonePay.jsx";
+import Methods from "./components/Methods/Methods.jsx";
 
 // Lazy loading components
 const Home = React.lazy(() => import("./pages/Home/Home"));
@@ -44,7 +49,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Layout />}>
             {/* All routes nested under Layout */}
-            <Route index element={<Home />} />
+            <Route index element={<TelephonePay />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="book-detail/:bookID" element={<BookDetail />} />
             <Route path="e-books" element={<EBooks />} />
@@ -59,7 +64,9 @@ const App = () => {
             <Route path="faqs" element={<Faqs />} />
             <Route path="about-us" element={<About />} />
             <Route path="payment-method" element={<PaymentInformation />} />
-            <Route path="checkout/:paymentMethod" element={<PaymentInfo />} />
+            <Route path="methods/:paymentMethod" element={<Methods />} />
+            <Route path="methods/:paymentMethod/:mobileMethod" element={<ChooseByMobilePay />} />
+            <Route path="methods/:paymentMethod/:mobileMethod/:other" element={<TelephonePay />} />
             {/* 404 Catch-all route */}
             <Route path="*" element={<div>404 Not Found</div>} />
           </Route>

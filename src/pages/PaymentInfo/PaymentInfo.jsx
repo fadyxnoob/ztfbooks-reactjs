@@ -16,6 +16,7 @@ const PaymentForm = () => {
   const [defaultCurrency, setDefaultCurrency] = useState(null);
   const [boxType, setBoxType] = useState("");
   const [isOpenBox, setIsOpenBox] = useState(false);
+
   const getCurrency = async () => {
     const response = await service.getDefaultCurrency();
     setDefaultCurrency(response?.code);
@@ -67,12 +68,13 @@ const PaymentForm = () => {
   const cartIds = cart?.products?.map((product) => product.id) || [];
 
   const handlePayment = async (formData) => {
+   
     try {
       const paymentData = {
         currencyCode: defaultCurrency,
-        totalAmount: totalPrice,
-        cartIds: formData.cartIds,
-        paymentMethod: { paymentMethod } || "CARD",
+        totalAmount: totalPrice,  // Ensure this is a valid number
+        cartIds: cartIds,         // Use cartIds instead of formData.cartIds
+        paymentMethod: paymentMethod || "CARD", // Remove the {} brackets
         integratorPublicId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         metadata: {
           additionalProp1: formData.cardNumber,
@@ -80,17 +82,22 @@ const PaymentForm = () => {
           additionalProp3: formData.cvv,
         },
       };
-
+  
+      console.log("Sending Payment Data:", paymentData); // Debugging
+  
       const paymentResponse = await service.makeYourPayment(paymentData);
       console.log("Payment Success:", paymentResponse);
+  
       setIsOpenBox(true);
       setBoxType("success");
-      removeLocalStorage('carts')
+      removeLocalStorage("carts");
     } catch (error) {
+      console.error("Payment Failed:", error.response?.data || error.message);
       setIsOpenBox(true);
       setBoxType("failed");
     }
   };
+  
 
   useEffect(() => {
     if (isOpenBox) {
