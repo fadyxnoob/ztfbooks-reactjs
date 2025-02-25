@@ -191,17 +191,14 @@ export class DBService {
             if(!this.token){
                 console.warn('Please Login first')
             }
-            axios.get('https://server.ztfbooks.com/cmn/v1/flutterwave/credentials', {
+
+            const response = await  axios.get('https://server.ztfbooks.com/cmn/v1/flutterwave/credentials', {
                 headers: {
                     Authorization: `Bearer ${this.token.jwtToken}`,  
                     'Content-Type': 'application/json'
                 }
-            }).then(response => {
-                console.log('Success:', response);
-                return response.data;
-            }).catch(error => {
-                console.error('Error:', error);
-            });
+            })
+            return response.data;
         } catch (error) {
             console.error("Error fetching Flutterwave credentials:", error.response?.data || error.message);
             throw error;
