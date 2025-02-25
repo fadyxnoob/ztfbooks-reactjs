@@ -4,7 +4,7 @@ import service from "../API/DBService";
 import authService from "../API/authService";
 import { useSelector } from "react-redux";
 
-const FlutterPayComponent = () => {
+const FlutterPayComponent = ({className}) => {
   const [publicApi, setPublicApi] = useState("");
   const [clientDetails, setClientDetails] = useState({
     email: "",
@@ -27,7 +27,6 @@ const FlutterPayComponent = () => {
   // get clint dets
   const getClientDetails = async () => {
     const response = await authService.getCurrentLoggedIn();
-    console.log(response?.image)
     const imageUrl = await service.getFileByName(response?.image)
     setClientDetails({
       email:response?.user?.email,
@@ -74,7 +73,7 @@ const FlutterPayComponent = () => {
     <div className="App">
       <FlutterWaveButton
         {...fwConfig}
-        className="cursor-pointer text-white bg-[#1D2C41] text-base font-normal border-[1px] border-[#7C7C7C] py-3 px-16 rounded"
+        className={className}
       />
     </div>
   );

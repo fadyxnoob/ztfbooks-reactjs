@@ -119,82 +119,37 @@ export class DBService {
         }
     }
 
-
-    // make your payment
-    async makeYourPayment(paymentData) {
-        try {
-            if (!this.token || !this.token.jwtToken) {
-                console.error("❌ Error: Authorization token is missing.");
-                return;
+        // get about us data
+        async getAboutUs() {
+            try {
+                const res = await axios.get(import.meta.env.VITE_ABOUTUS_API_KEY)
+                return res.data
+            } catch (error) {
+                console.error('failed to get about us::', error)
             }
+        }
     
-            const payload = {
-                currencyCode: paymentData.currencyCode || "EUR",
-                totalAmount: Math.round(paymentData.totalAmount || 0),  // Ensure it's an integer
-                cartIds: Array.isArray(paymentData.cartIds) ? paymentData.cartIds : [],  // Ensure it's an array
-                paymentMethod: paymentData.paymentMethod || "VOUCHER",  // Default to "VOUCHER"
-                integratorPublicId: paymentData.integratorPublicId,
-                metadata: paymentData.metadata || {}  // Default to empty object
-            };
-    
-            const headers = {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${this.token.jwtToken}`
-            };
-    
-
-            const response = await axios.post(
-                import.meta.env.VITE_CHECKOUT_API_KEY, 
-                payload, 
-                { headers }
-            );
-    
-            console.log("✅ Payment Successful:", response.data);
-            return response.data;
-    
-        } catch (error) {
-            console.error("❌ Payment Failed:", error.response?.data || error.message || "Unknown error");
-    
-            if (error.response) {
-                console.error("🛑 Response Status:", error.response.status);
-                console.error("🔍 Full Response Data:", error.response.data);
-            } else {
-                console.error("⚠️ Network Error:", error.message);
+        // get reviews 
+        async getReviewesByBookID(id) {
+            try {
+                const response = await axios.get(`https://server.ztfbooks.com/opn/v1/e-book/reviews/${id}`);
+                // console.log('from book ID::',{response})
+                return response?.data;
+            } catch (error) {
+                console.log('Failed to get reviews:::', error)
             }
-    
-            throw error;  // Rethrow error for UI handling
-        }}
-
-    // get about us data
-    async getAboutUs() {
-        try {
-            const res = await axios.get(import.meta.env.VITE_ABOUTUS_API_KEY)
-            return res.data
-        } catch (error) {
-            console.error('failed to get about us::', error)
         }
-    }
-
-    async getReviewesByBookID(id) {
-        try {
-            const response = await axios.get(`https://server.ztfbooks.com/opn/v1/e-book/reviews/${id}`);
-            // console.log('from book ID::',{response})
-            return response?.data;
-        } catch (error) {
-            console.log('Failed to get reviews:::', error)
-        }
-    }
 
     // get flutterwave credintial
-    async getFlutterwaveCredentials () {
+    async getFlutterwaveCredentials() {
         try {
-            if(!this.token){
+            if (!this.token) {
                 console.warn('Please Login first')
             }
 
-            const response = await  axios.get('https://server.ztfbooks.com/cmn/v1/flutterwave/credentials', {
+            const response = await axios.get('https://server.ztfbooks.com/cmn/v1/flutterwave/credentials', {
                 headers: {
-                    Authorization: `Bearer ${this.token.jwtToken}`,  
+                    Authorization: `Bearer ${this.token.jwtToken}`,
                     'Content-Type': 'application/json'
                 }
             })
@@ -204,7 +159,53 @@ export class DBService {
             throw error;
         }
     };
-    
+
+     // make your payment
+     async initiatePayment (paymentData) {
+        try {
+            if (!this.token || !this.token.jwtToken) {
+                console.error("❌ Error: Authorization token is missing.");
+                return;
+            }
+
+            const payload = {
+                currencyCode: paymentData.currencyCode || "EUR",
+                totalAmount: Math.round(paymentData.totalAmount || 0),
+                cartIds: Array.isArray(paymentData.cartIds) ? paymentData.cartIds : [],
+                paymentMethod: paymentData.paymentMethod || "VOUCHER",
+                integratorPublicId: paymentData.integratorPublicId,
+                metadata: paymentData.metadata || {}
+            };
+
+            const headers = {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${this.token.jwtToken}`
+            };
+
+
+            const response = await axios.post(
+                import.meta.env.VITE_CHECKOUT_API_KEY,
+                payload,
+                { headers }
+            );
+
+            console.log("✅ Payment Successful:", response.data);
+            return response.data;
+
+        } catch (error) {
+            console.error("❌ Payment Failed:", error.response?.data || error.message || "Unknown error");
+
+            if (error.response) {
+                console.error("🛑 Response Status:", error.response.status);
+                console.error("🔍 Full Response Data:", error.response.data);
+            } else {
+                console.error("⚠️ Network Error:", error.message);
+            }
+
+            throw error;  // Rethrow error for UI handling
+        }
+    }
+
 }
 
 const service = new DBService();

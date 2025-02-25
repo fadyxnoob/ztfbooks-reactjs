@@ -24,6 +24,9 @@ const PaymentForm = () => {
 
   const navigate= useNavigate()
   const authStatus = useSelector((state)=> state.auth.status)
+
+  const checkoutState = useSelector((state) => state.checkout.data)
+  console.log({checkoutState})
   useEffect(() => {
     if(!authStatus){
       navigate('/login')
@@ -72,9 +75,9 @@ const PaymentForm = () => {
     try {
       const paymentData = {
         currencyCode: defaultCurrency,
-        totalAmount: totalPrice,  // Ensure this is a valid number
-        cartIds: cartIds,         // Use cartIds instead of formData.cartIds
-        paymentMethod: paymentMethod || "CARD", // Remove the {} brackets
+        totalAmount: totalPrice,  
+        cartIds: cartIds,         
+        paymentMethod: paymentMethod || "CARD", 
         integratorPublicId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         metadata: {
           additionalProp1: formData.cardNumber,

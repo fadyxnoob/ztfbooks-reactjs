@@ -20,6 +20,9 @@ const VoucherPay = () => {
   
     const navigate= useNavigate()
     const authStatus = useSelector((state)=> state.auth.status)
+
+
+    
     useEffect(() => {
       if(!authStatus){
         navigate('/login')
@@ -70,7 +73,7 @@ const VoucherPay = () => {
           },
         };
   
-        const paymentResponse = await service.makeYourPayment(paymentData);
+        const paymentResponse = await service.initiatePayment(paymentData);
         console.log("Payment Success:", paymentResponse);
         setIsOpenBox(true);
         setBoxType("success");

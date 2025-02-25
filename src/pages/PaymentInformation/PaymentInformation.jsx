@@ -4,19 +4,25 @@ import { BsCreditCard } from "react-icons/bs";
 import Button from "../../components/Button/Button";
 import { LuSmartphone } from "react-icons/lu";
 import { FaPaypal } from "react-icons/fa6";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { doACheckout } from "../../Store/checkoutSlice";
 
 const PaymentInformation = () => {
+  const dispatch = useDispatch()
   const [selectedPayment, setSelectedPayment] = useState('');
-  
   const navigate= useNavigate()
   const authStatus = useSelector((state)=> state.auth.status)
+
   useEffect(() => {
     if(!authStatus){
       navigate('/login')
     }
   }, []);
+
+  const handleCheckoutMethod = ()=> {
+      dispatch(doACheckout({method:selectedPayment}))
+  }
   return (
     <div className="min-h-screen px-5 md:px-[80px] bg-[#F6F7F8] md:pb-[8rem]">
       <div className="pt-4 w-[100%]">
@@ -45,8 +51,8 @@ const PaymentInformation = () => {
               <FaPaypal className="w-8 h-6 sm:w-9 sm:h-7 md:w-10 md:h-8 text-[#014471]" />
             }
             label="Voucher"
-            selected={selectedPayment === "Voucher"}
-            onClick={() => setSelectedPayment("Voucher")}
+            selected={selectedPayment === "VOUCHER"}
+            onClick={() => setSelectedPayment("VOUCHER")}
           />
         </div>
         <div className="w-[100%]">
@@ -75,6 +81,7 @@ const PaymentInformation = () => {
         <div className="w-full sm:w-[60%] md:w-[20%] mx-auto">
           <Link 
             to={`/methods/${selectedPayment}`}
+            onClick={handleCheckoutMethod}
           >
           <Button
             classNames={

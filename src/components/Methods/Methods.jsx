@@ -6,7 +6,6 @@ import { useParams } from 'react-router-dom'
 
 const Methods = () => {
     const {paymentMethod} = useParams()
-    console.log({paymentMethod})
 
     if(paymentMethod === 'VOUCHER') return <VoucherPay />
     if(paymentMethod === 'BANK') return <PaymentInfo />

@@ -7,11 +7,10 @@ import MTNMasterCard from "../../assets/images/MTN-and-Mastercard 1.png";
 import infinity from "../../assets/images/infinity.png";
 import Button from "../../components/Button/Button";
 import { useParams } from "react-router-dom";
-import FlutterPayComponent from "../../Payments/FlutterPayComponent";
 
 const ChooseByMobilePay = () => {
   const { paymentMethod, mobileMethod } = useParams();
-  const [selectedPayment, setSelectedPayment] = useState("");
+  const [selectedPayment, setSelectedPayment] = useState("card");
 
   return (
     <div className="md:w-[80%] mx-auto my-20">
@@ -88,6 +87,7 @@ const ChooseByMobilePay = () => {
           <button
             onClick={() => setSelectedPayment("otherPayment")}
             className={`flex items-center justify-start gap-5 w-full px-4 py-3 mb-4 rounded-xl border border-[#014471] cursor-pointer`}
+            disabled
           >
             <div
               className={`w-4 h-4 rounded-full border ${
@@ -113,16 +113,12 @@ const ChooseByMobilePay = () => {
           >
             Annuler
           </Button>
-          {selectedPayment === "card" ? (
-            <FlutterPayComponent />
-          ) : (
-            <Button
-              path={`/methods/${paymentMethod}/${mobileMethod}/${selectedPayment}`}
-              classNames="cursor-pointer text-white bg-[#1D2C41] text-base font-normal border-[1px] border-[#7C7C7C] py-3 px-16 rounded"
-            >
-              Sulvant
-            </Button>
-          )}
+          <Button
+            path={`/methods/${paymentMethod}/${mobileMethod}/${selectedPayment}`}
+            classNames="cursor-pointer text-white bg-[#1D2C41] text-base font-normal border-[1px] border-[#7C7C7C] py-3 px-16 rounded"
+          >
+            Sulvant
+          </Button>
         </div>
         <p className="text-[#333333] font-light text-base mt-5 text-center">
           My Cool Payent Gateway @2020

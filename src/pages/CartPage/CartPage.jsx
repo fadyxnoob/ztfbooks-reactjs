@@ -9,6 +9,7 @@ import Loader from "../../components/Loader/Loader";
 import { useDispatch } from "react-redux";
 import { FaTrash } from "react-icons/fa";
 import { addToCart } from "../../Store/cartSlice";
+import { doACheckout } from "../../Store/checkoutSlice";
 
 const CartPage = () => {
   const navigate = useNavigate();
@@ -18,15 +19,24 @@ const CartPage = () => {
   const [loading, setLoading] = useState(false);
   const authStatus = useSelector((state) => state.auth.status);
   const products = useSelector((state) => state?.cart?.products || []);
+  const checkoutDets = useSelector((state) => state.checkout);
+  const [checkoutData, setCheckoutData] = useState({
+    totalAmount: 0,
+    cartIds: [],
+  });
+
   const totalQuantity = products.reduce(
     (sum, product) => sum + product.quantity,
     0
   );
+
   const totalPrice = products.reduce(
     (sum, product) => sum + product.price * product.quantity,
     0
   );
-  const averageUnitPrice = totalQuantity > 0 ? (totalPrice / totalQuantity).toFixed(2) : 0;
+
+  const averageUnitPrice =
+    totalQuantity > 0 ? (totalPrice / totalQuantity).toFixed(2) : 0;
 
   // Fetch approved eBooks
   const getApprovedBooks = async () => {
@@ -86,6 +96,20 @@ const CartPage = () => {
       fetchBookDetails();
     }
   }, [products]);
+
+  const cartIDs = products?.map((product) => product.id) || [];
+
+  const handleCheckout = () => {
+    const checkoutPayload = {
+      totalAmount: totalPrice,
+      cartIds: cartIDs,
+    };
+
+    dispatch(doACheckout(checkoutPayload)); 
+    navigate("/payment-method");
+  };
+
+
 
   if (loading) {
     return <Loader />;
@@ -213,11 +237,12 @@ const CartPage = () => {
             </div>
 
             {/* Checkout button */}
-            <Link to="/payment-method">
-              <Button classNames="cursor-pointer text-white rounded-3xl bg-[#01447E] mt-10 w-full py-3 text-xl font-medium">
-                Checkout
-              </Button>
-            </Link>
+            <Button
+              onClick={handleCheckout}
+              classNames="cursor-pointer text-white rounded-3xl bg-[#01447E] mt-10 w-full py-3 text-xl font-medium"
+            >
+              Checkout
+            </Button>
           </div>
         </div>
 

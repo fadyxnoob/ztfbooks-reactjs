@@ -5,11 +5,11 @@ import { useParams } from "react-router-dom";
 import PreferenceButton from "../../components/PreferenceButton/PreferenceButton";
 import Button from "../../components/Button/Button";
 import { useSelector } from "react-redux";
+import FlutterPayComponent from "../../Payments/FlutterPayComponent";
 
 const MobilePay = () => {
   const { paymentMethod } = useParams();
-  const [selectedPayment, setSelectedPayment] = useState("flutterwve");
-  console.log({selectedPayment})
+  const [selectedPayment, setSelectedPayment] = useState("flutterwave");
   const cart = useSelector((state) => state.cart);
   const totalPrice =
     cart?.products?.reduce((sum, product) => sum + product.price, 0) || 0;
@@ -19,15 +19,10 @@ const MobilePay = () => {
     formState: { errors },
   } = useForm();
 
-  // ✅ Define handlePayment inside the component
-  const handlePayment = (data) => {
-    // console.log("Processing payment with:", data, "via", selectedPayment);
-    // Add API call or payment logic here
-  };
+  const handlePayment = (data) => {};
 
   const onSubmit = (data) => {
-    // console.log({ data, selectedPayment });
-    handlePayment(data); // ✅ No more errors
+    handlePayment(data);
   };
 
   return (
@@ -63,19 +58,22 @@ const MobilePay = () => {
                   <BsCreditCard className="w-8 h-6 sm:w-9 sm:h-7 md:w-10 md:h-8 text-[#014471]" />
                 }
                 label="FLUTTERWVE"
-                selected={selectedPayment === "flutterwve"}
-                onClick={() => setSelectedPayment("flutterwve")}
+                selected={selectedPayment === "flutterwave"}
+                onClick={() => setSelectedPayment("flutterwave")}
               />
             </div>
 
-            {/* Submit Button */}
-            <Button
-            path={`/methods/${paymentMethod}/${selectedPayment}`}
-              type="submit"
-              classNames="text-center block cursor-pointer w-full bg-[#014471] text-white py-3 px-4 rounded-3xl hover:bg-blue-900 transition-colors"
-            >
-              ${totalPrice}
-            </Button>
+            {selectedPayment === "flutterwave" ? (
+              <FlutterPayComponent className='text-center block cursor-pointer w-full bg-[#014471] text-white py-3 px-4 rounded-3xl hover:bg-blue-900 transition-colors'/>
+            ) : (
+              <Button
+                path={`/methods/${paymentMethod}/${selectedPayment}`}
+                type="submit"
+                classNames="text-center block cursor-pointer w-full bg-[#014471] text-white py-3 px-4 rounded-3xl hover:bg-blue-900 transition-colors"
+              >
+                Pay ${totalPrice}
+              </Button>
+            )}
           </form>
         </div>
       </div>
