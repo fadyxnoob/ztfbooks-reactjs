@@ -9,7 +9,7 @@ const Methods = () => {
     console.log({paymentMethod})
 
     if(paymentMethod === 'VOUCHER') return <VoucherPay />
-    if(paymentMethod === 'BANK_TRANSFER') return <PaymentInfo />
+    if(paymentMethod === 'BANK') return <PaymentInfo />
     if(paymentMethod === 'CARD') return  <PaymentInfo />
     if(paymentMethod === 'MOBILE') return <MobilePay />
 }

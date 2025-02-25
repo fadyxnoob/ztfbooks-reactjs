@@ -3,9 +3,9 @@ import Banner from "../../components/Banner/Banner";
 import Tabs from "../../components/Tabs/Tabs";
 import service from "../../API/DBService";
 import Carousel from "../../components/Carousel/Carousel";
-import sectionBg from '../../assets/images/read-bg.png'
-import PlayStore from '../../assets/images/android-app.png'
-import IOSApp from '../../assets/images/ios-app.png'
+import sectionBg from "../../assets/images/read-bg.png";
+import PlayStore from "../../assets/images/android-app.png";
+import IOSApp from "../../assets/images/ios-app.png";
 
 const Home = () => {
   const [approvedEBooks, setApprovedEBooks] = useState([]);
@@ -81,6 +81,20 @@ const Home = () => {
     status: "APPROVED",
   });
 
+  const fetchCredentials = async () => {
+
+    try {
+      const credentials = await service.getFlutterwaveCredentials();
+      console.log("Flutterwave Credentials:", credentials);
+    } catch (error) {
+      console.log("Failed to fetch credentials", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCredentials();
+  }, []);
+
   if (loading) {
     return (
       <div className="text-center py-20 text-xl">Loading, please wait...</div>
@@ -115,7 +129,10 @@ const Home = () => {
       </section>
 
       {/* read section */}
-      <div className="p-4 bg-cover flex flex-col gap-5" style={{ backgroundImage: `url(${sectionBg})` }}>
+      <div
+        className="p-4 bg-cover flex flex-col gap-5"
+        style={{ backgroundImage: `url(${sectionBg})` }}
+      >
         <h3 className="text-center text-xl font-bold text-white">
           Read & Listen your Favourite Book Anytime
         </h3>
@@ -125,11 +142,15 @@ const Home = () => {
           organizations.
         </p>
         <div className="mt-5 flex flex-col md:flex-row gap-10 items-center justify-center">
-         <a href="https://play.google.com/store/apps/details?id=com.ztfbooks.ztfbooks">
-         <img src={PlayStore} alt={PlayStore} className="h-[80px] w-[200px]" />
-         </a>
+          <a href="https://play.google.com/store/apps/details?id=com.ztfbooks.ztfbooks">
+            <img
+              src={PlayStore}
+              alt={PlayStore}
+              className="h-[80px] w-[200px]"
+            />
+          </a>
           <a href="#">
-          <img src={IOSApp} alt={IOSApp} className="h-[80px] w-[200px]" />
+            <img src={IOSApp} alt={IOSApp} className="h-[80px] w-[200px]" />
           </a>
         </div>
       </div>

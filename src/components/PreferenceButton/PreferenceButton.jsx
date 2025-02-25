@@ -22,4 +22,4 @@ const PreferenceButton = ({ icon, label, selected, onClick, ...props }) => {
     );
   };
 
-export default PreferenceButton
+export default React.memo(PreferenceButton)

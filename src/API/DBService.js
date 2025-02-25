@@ -128,7 +128,6 @@ export class DBService {
                 return;
             }
     
-            // 🛠 Ensure all values are properly formatted
             const payload = {
                 currencyCode: paymentData.currencyCode || "EUR",
                 totalAmount: Math.round(paymentData.totalAmount || 0),  // Ensure it's an integer
@@ -143,11 +142,7 @@ export class DBService {
                 "Authorization": `Bearer ${this.token.jwtToken}`
             };
     
-            console.log("🛠 Sending Payment Data:", payload);
-            console.log("🔗 API Endpoint:", import.meta.env.VITE_CHECKOUT_API_KEY);
-            console.log("🔑 Auth Token:", this.token.jwtToken);
-    
-            // 🌐 Send request to the API
+
             const response = await axios.post(
                 import.meta.env.VITE_CHECKOUT_API_KEY, 
                 payload, 
@@ -190,6 +185,29 @@ export class DBService {
         }
     }
 
+    // get flutterwave credintial
+    async getFlutterwaveCredentials () {
+        try {
+            if(!this.token){
+                console.warn('Please Login first')
+            }
+            axios.get('https://server.ztfbooks.com/cmn/v1/flutterwave/credentials', {
+                headers: {
+                    Authorization: `Bearer ${this.token.jwtToken}`,  
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => {
+                console.log('Success:', response);
+                return response.data;
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        } catch (error) {
+            console.error("Error fetching Flutterwave credentials:", error.response?.data || error.message);
+            throw error;
+        }
+    };
+    
 }
 
 const service = new DBService();

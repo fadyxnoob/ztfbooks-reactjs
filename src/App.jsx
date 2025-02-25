@@ -49,7 +49,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Layout />}>
             {/* All routes nested under Layout */}
-            <Route index element={<TelephonePay />} />
+            <Route index element={<Home />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="book-detail/:bookID" element={<BookDetail />} />
             <Route path="e-books" element={<EBooks />} />

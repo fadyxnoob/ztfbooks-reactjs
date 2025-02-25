@@ -9,6 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const PaymentInformation = () => {
   const [selectedPayment, setSelectedPayment] = useState('');
+  
   const navigate= useNavigate()
   const authStatus = useSelector((state)=> state.auth.status)
   useEffect(() => {
@@ -18,9 +19,9 @@ const PaymentInformation = () => {
   }, []);
   return (
     <div className="min-h-screen px-5 md:px-[80px] bg-[#F6F7F8] md:pb-[8rem]">
-      <div className="px-2 md:px-[32px] pt-4 w-[100%]">
+      <div className="pt-4 w-[100%]">
         <div className="border-b border-[#EBEBEB]">
-          <h1 className='bg-[#F7F8F8] my-3 p-3 rounded-xl text-[#203949] text-3xl font-medium'> Payment Information</h1>
+          <h1 className='bg-[#F7F8F8] my-3 p-3 rounded-xl text-[#203949] text-3xl font-medium text-center'> Payment Information</h1>
         </div>
         <p className="text-[#000000] text-[1rem] mb-8 mt-12">
           Choose your payment option
@@ -33,8 +34,8 @@ const PaymentInformation = () => {
               <BsCreditCard className="w-8 h-6 sm:w-9 sm:h-7 md:w-10 md:h-8 text-[#014471]" />
             }
             label="Bank Transfer"
-            selected={selectedPayment === "BANK_TRANSFERx`"}
-            onClick={() => setSelectedPayment("BANK_TRANSFER")}
+            selected={selectedPayment === "BANK"}
+            onClick={() => setSelectedPayment("BANK")}
           />
         </div>
        
