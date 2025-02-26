@@ -53,7 +53,7 @@ const FlutterPayComponent = ({ className, currency, options, btnText }) => {
     tx_ref: Date.now(),
     amount: "200",
     currency: currency,
-    payment_options: `${options}, ussd`,
+    payment_options:`${options}, ussd`,
 
     customer: {
       email: clientDetails?.email,

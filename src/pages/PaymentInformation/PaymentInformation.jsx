@@ -82,14 +82,7 @@ const PaymentInformation = () => {
       </div>
       <div className="w-[100%]">
         <div className="w-full sm:w-[60%] md:w-[20%] mx-auto">
-          {selectedPayment === "CARD" ? (
-            <FlutterPayComponent
-            btnText={'Continue'}
-              currency="USD"
-              options='banktransfer'
-              className="cursor-pointer mt-8 sm:mt-12 md:mt-[4rem] w-full bg-[#014471] text-[#ffffff] py-3 sm:py-3 px-3 sm:px-4 rounded-2xl hover:bg-blue-900 transition-colors"
-            />
-          ) : selectedPayment === "BANK" ? (
+          {selectedPayment === "BANK" ? (
             <FlutterPayComponent
             btnText={'Continue'}
               currency="NGN"

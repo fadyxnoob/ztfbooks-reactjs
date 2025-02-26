@@ -157,7 +157,7 @@ export class DBService {
             }
         }
 
-    // get flutterwave credintial
+    // get flutterwave Credentials
     async getFlutterwaveCredentials() {
         try {
             if (!this.token) {
@@ -170,6 +170,27 @@ export class DBService {
                     'Content-Type': 'application/json'
                 }
             })
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching Flutterwave credentials:", error.response?.data || error.message);
+            throw error;
+        }
+    };
+
+    // get Stripe Credentials
+    async getStripeCredentials() {
+        try {
+            if (!this.token) {
+                console.warn('Please Login first')
+            }
+
+            const response = await axios.get('https://server.ztfbooks.com/client/v1/stripe/credentials', {
+                headers: {
+                    Authorization: `Bearer ${this.token.jwtToken}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            console.log({response})
             return response.data;
         } catch (error) {
             console.error("Error fetching Flutterwave credentials:", error.response?.data || error.message);
@@ -219,7 +240,7 @@ export class DBService {
                 console.error("⚠️ Network Error:", error.message);
             }
 
-            throw error;  // Rethrow error for UI handling
+            throw error; 
         }
     }
 

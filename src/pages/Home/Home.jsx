@@ -85,7 +85,7 @@ const Home = () => {
 
     try {
       const credentials = await service.getFlutterwaveCredentials();
-      console.log("Flutterwave Credentials:", credentials);
+      // console.log("Flutterwave Credentials:", credentials);
     } catch (error) {
       console.log("Failed to fetch credentials", error);
     }
