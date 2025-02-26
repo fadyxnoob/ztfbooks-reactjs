@@ -4,13 +4,14 @@ import service from "../API/DBService";
 import authService from "../API/authService";
 import { useSelector } from "react-redux";
 
-const FlutterPayComponent = ({className}) => {
+const FlutterPayComponent = ({ className, currency, options, btnText }) => {
   const [publicApi, setPublicApi] = useState("");
+  const [logo, setLogo] = useState("");
   const [clientDetails, setClientDetails] = useState({
     email: "",
     phone: "",
     name: "",
-    image:''
+    image: "",
   });
   const products = useSelector((state) => state?.cart?.products || []);
   const totalPrice = products.reduce(
@@ -27,25 +28,32 @@ const FlutterPayComponent = ({className}) => {
   // get clint dets
   const getClientDetails = async () => {
     const response = await authService.getCurrentLoggedIn();
-    const imageUrl = await service.getFileByName(response?.image)
+    const imageUrl = await service.getFileByName(response?.image);
     setClientDetails({
-      email:response?.user?.email,
-      phone:response?.contactDetails?.phoneNumber,
-      name:response?.user?.name,
-      image:imageUrl
+      email: response?.user?.email,
+      phone: response?.contactDetails?.phoneNumber,
+      name: response?.user?.name,
+      image: imageUrl,
     });
+  };
+
+  const getSiteLogo = async () => {
+    const logoURL = await service.getLogo();
+    setLogo(logoURL);
   };
 
   useEffect(() => {
     getFlutterWaveData();
     getClientDetails();
+    getSiteLogo();
   }, []);
+
   const config = {
     public_key: publicApi,
     tx_ref: Date.now(),
-    amount: totalPrice,
-    currency: "USD",
-    payment_options: "card,mobilemoney,ussd",
+    amount: "200",
+    currency: currency,
+    payment_options: `${options}, ussd`,
 
     customer: {
       email: clientDetails?.email,
@@ -55,26 +63,23 @@ const FlutterPayComponent = ({className}) => {
     customizations: {
       title: "My books",
       description: "Payment for items in cart",
-      logo: clientDetails.image ||"https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg",
+      logo: '/ztf-log.png',
     },
   };
 
   const fwConfig = {
     ...config,
-    text: `Pay $${totalPrice}`,
+    text: `${btnText}`,
     callback: (response) => {
       console.log(response);
-      closePaymentModal(); // this will close the modal programmatically
+      closePaymentModal(); 
     },
     onClose: () => {},
   };
 
   return (
     <div className="App">
-      <FlutterWaveButton
-        {...fwConfig}
-        className={className}
-      />
+      <FlutterWaveButton {...fwConfig} className={className} />
     </div>
   );
 };

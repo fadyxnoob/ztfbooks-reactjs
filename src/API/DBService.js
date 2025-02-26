@@ -6,6 +6,23 @@ export class DBService {
     token = getLocalStorage('userdata')
     constructor() { }
 
+    // website logo
+    async getLogo() {
+        try {
+            const response = await axios.get(
+                'https://server.ztfbooks.com/opn/v1/ztf-ebooks/logo', 
+                { responseType: 'blob' } // Fetch as a blob
+            );
+    
+            const imageBlob = response.data;
+            const imageUrl = URL.createObjectURL(imageBlob); 
+            return imageUrl; 
+        } catch (error) {
+            console.error('Failed to get website logo:', error);
+            return null;
+        }
+    }
+
     // get all faqs from the backend using api
     async getAllFaqs(apiKey) {
         try {

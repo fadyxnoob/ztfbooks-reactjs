@@ -13,6 +13,7 @@ const MobilePay = () => {
   const cart = useSelector((state) => state.cart);
   const totalPrice =
     cart?.products?.reduce((sum, product) => sum + product.price, 0) || 0;
+    
   const {
     register,
     handleSubmit,
@@ -64,7 +65,7 @@ const MobilePay = () => {
             </div>
 
             {selectedPayment === "flutterwave" ? (
-              <FlutterPayComponent className='text-center block cursor-pointer w-full bg-[#014471] text-white py-3 px-4 rounded-3xl hover:bg-blue-900 transition-colors'/>
+              <FlutterPayComponent currency={'GHS'} className='text-center block cursor-pointer w-full bg-[#014471] text-white py-3 px-4 rounded-3xl hover:bg-blue-900 transition-colors'/>
             ) : (
               <Button
                 path={`/methods/${paymentMethod}/${selectedPayment}`}

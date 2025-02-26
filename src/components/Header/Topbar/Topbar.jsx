@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { CiSearch, CiHeart } from "react-icons/ci";
 import { BsCart3 } from "react-icons/bs";
@@ -8,13 +8,15 @@ import Button from "../../Button/Button";
 import UserLogin from "../../UserLogin/UserLogin";
 import { useSelector } from "react-redux";
 import { debounce } from "lodash";
+import service from "../../../API/DBService";
 
 const Topbar = () => {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
+  const [logo, setLogo] = useState("");
 
   const { register } = useForm();
-  const isLogin = useSelector((state) => state.auth.status) 
+  const isLogin = useSelector((state) => state.auth.status);
 
   const cart = useSelector((state) => state.cart);
   const totalQuantity =
@@ -40,10 +42,25 @@ const Topbar = () => {
   };
 
   const authStatus = localStorage.getItem("authUserStatus");
+
+  const getSiteLogo = async () => {
+    const logoURL = await service.getLogo();
+    setLogo(logoURL);
+  };
+
+  useEffect(() => {
+    getSiteLogo();
+  }, []);
   return (
     <div className="bg-[#f6f7f8] flex items-center justify-between px-5 md:px-[80px] py-4 border-b border-[#ded5d5]">
       <h1 className="text-3xl md:text-[36px] font-bold text-[#0B457F]">
-        <Link to="/">ZTF Books</Link>
+        <Link to="/">
+          {logo ? (
+            <img src={logo} alt="Site Logo" className="h-[44px] w-[190px]" />
+          ) : (
+            " ZTF Books"
+          )}
+        </Link>
       </h1>
 
       {/* Search Bar */}
