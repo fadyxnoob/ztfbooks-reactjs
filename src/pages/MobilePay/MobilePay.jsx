@@ -10,9 +10,11 @@ import FlutterPayComponent from "../../Payments/FlutterPayComponent";
 const MobilePay = () => {
   const { paymentMethod } = useParams();
   const [selectedPayment, setSelectedPayment] = useState("flutterwave");
-  const cart = useSelector((state) => state.cart);
-  const totalPrice =
-    cart?.products?.reduce((sum, product) => sum + product.price, 0) || 0;
+  const products = useSelector((state) => state?.cart?.products || []);
+  const totalPrice = products.reduce(
+    (acc, product) => acc + (product?.ebook?.amount || 0),
+    0
+  );
     
   const {
     register,
@@ -39,10 +41,10 @@ const MobilePay = () => {
             <span className="text-sm font-medium text-yellow-800">Payment</span>
           </div>
           <p className="text-xl text-[#333333] mb-8 font-bold">
-            Add your Voucher Number
+            Add your mobile payment
           </p>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="w-full">
+            <div className="w-full hidden">
               <PreferenceButton
                 icon={
                   <BsCreditCard className="w-8 h-6 sm:w-9 sm:h-7 md:w-10 md:h-8 text-[#014471]" />
@@ -65,7 +67,7 @@ const MobilePay = () => {
             </div>
 
             {selectedPayment === "flutterwave" ? (
-              <FlutterPayComponent currency={'GHS'}
+              <FlutterPayComponent currency={'GHS'} options={'mobilemoney'}
               btnText={`Pay $${totalPrice}`} className='text-center block cursor-pointer w-full bg-[#014471] text-white py-3 px-4 rounded-3xl hover:bg-blue-900 transition-colors'/>
             ) : (
               <Button

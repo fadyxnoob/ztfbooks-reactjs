@@ -10,9 +10,11 @@ const CardMethods = () => {
     const { paymentMethod } = useParams();
     const [selectedPayment, setSelectedPayment] = useState("flutterwave");
   
-    const cart = useSelector((state) => state.cart);
-    const totalPrice =
-      cart?.products?.reduce((sum, product) => sum + product.price, 0) || 0;
+    const products = useSelector((state) => state?.cart?.products || []);
+    const totalPrice = products.reduce(
+      (acc, product) => acc + (product?.ebook?.amount || 0),
+      0
+    );
   
     const handleStripePayment = () => {
       navigate("/stripe-payment", { state: { amount: totalPrice } }); // 🔄 Redirects to StripePayment page

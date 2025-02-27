@@ -10,9 +10,9 @@ const Button = ({ children, classNames, path, onClick, type = 'button', disabled
     return (
         <button
             type={type}
-            className={classNames}
+            className={disabled ?  `${classNames} + opacity-30` : classNames}
             onClick={onClick}
-            disabled={disabled ? disabled : null}
+            disabled={disabled}
         >
             {children}
         </button>

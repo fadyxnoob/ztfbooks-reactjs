@@ -13,11 +13,13 @@ const FlutterPayComponent = ({ className, currency, options, btnText }) => {
     name: "",
     image: "",
   });
+
   const products = useSelector((state) => state?.cart?.products || []);
   const totalPrice = products.reduce(
-    (sum, product) => sum + product.price * product.quantity,
+    (acc, product) => acc + (product?.ebook?.amount || 0),
     0
   );
+  
   const getFlutterWaveData = async () => {
     const res = await service.getFlutterwaveCredentials();
     if (res && res?.publicKey) {
@@ -51,7 +53,7 @@ const FlutterPayComponent = ({ className, currency, options, btnText }) => {
   const config = {
     public_key: publicApi,
     tx_ref: Date.now(),
-    amount: "200",
+    amount: totalPrice,
     currency: currency,
     payment_options:`${options}, ussd`,
 
