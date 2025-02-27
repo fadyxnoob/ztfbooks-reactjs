@@ -8,62 +8,24 @@ import { Link, useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/Loader";
 import { useDispatch } from "react-redux";
 import { FaTrash } from "react-icons/fa";
-import { addToCart } from "../../Store/cartSlice";
 import { doACheckout } from "../../Store/checkoutSlice";
+import { removeFromCart } from "../../Store/cartSlice";
+import Alert from "../../components/Alert/Alert";
 
 const CartPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const apiKey = import.meta.env.VITE_GET_APPROVED_BOOKS_API_KEY;
   const [approvedEBooks, setApprovedEBooks] = useState([]);
   const [cartBooks, setCartBooks] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState(null);
   const authStatus = useSelector((state) => state.auth.status);
-  const products = useSelector((state) => state?.cart?.products || []);
-  const checkoutDets = useSelector((state) => state.checkout);
-  const [checkoutData, setCheckoutData] = useState({
-    totalAmount: 0,
-    cartIds: [],
-  });
-
-  const totalQuantity = products.reduce(
-    (sum, product) => sum + product.quantity,
-    0
-  );
-
-  const totalPrice = products.reduce(
-    (sum, product) => sum + product.price * product.quantity,
-    0
-  );
-
+  const products = useSelector((state) => state.cart.products);
+  const totalPrice = useSelector((state) => state.cart.totalPrice);
+  const totalQuantity = products.length;
   const averageUnitPrice =
     totalQuantity > 0 ? (totalPrice / totalQuantity).toFixed(2) : 0;
-
-  // Fetch approved eBooks
-  const getApprovedBooks = async () => {
-    try {
-      const res = await service.getApprovedBooks(apiKey);
-      if (res.content) {
-        setApprovedEBooks(res.content);
-        setLoading(false);
-      }
-    } catch (err) {
-      console.error("Failed to fetch approved books:", err);
-    }
-  };
-  const dispatch = useDispatch();
-
-  const handleDelete = (bookId) => {
-    const updatedCart = cartBooks.filter((book) => book.id !== bookId);
-    setCartBooks(updatedCart);
-    dispatch({ type: "cart/removeItem", payload: bookId });
-  };
-
-  useEffect(() => {
-    if (!authStatus) {
-      navigate("/login");
-    }
-    getApprovedBooks();
-  }, []);
 
   // Fetch book details
   useEffect(() => {
@@ -71,17 +33,17 @@ const CartPage = () => {
       const updatedBooks = await Promise.all(
         products.map(async (book) => {
           try {
-            const bookRes = await service.getBookByID(book.id);
-
+            const bookRes = await service.getBookByID(book);
             const file = bookRes.data.thumbnailFileName;
             const fileURL = await service.getFileByName(file);
-
             return {
               ...book,
               fileURL,
               category: bookRes.data.categories.name,
               author: bookRes.data.author.name,
               date: bookRes.data.publishDate,
+              id: bookRes.data.id,
+              cartID: book.id,
             };
           } catch (err) {
             console.error(`Failed to fetch book ${book.id}:`, err);
@@ -105,11 +67,62 @@ const CartPage = () => {
       cartIds: cartIDs,
     };
 
-    dispatch(doACheckout(checkoutPayload)); 
+    dispatch(doACheckout(checkoutPayload));
     navigate("/payment-method");
   };
 
+  // Fetch approved eBooks
+  const getApprovedBooks = async () => {
+    try {
+      const res = await service.getApprovedBooks(apiKey);
+      if (res.content) {
+        setApprovedEBooks(res.content);
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error("Failed to fetch approved books:", err);
+    }
+  };
 
+  // Function to show alert
+  const showAlert = (type, message) => {
+    setAlert({ type, message });
+    setTimeout(() => setAlert(null), 2000); // Hide after 2 seconds
+  };
+  const handleRemoveFromCart = async (cartId) => {
+    console.log({ cartId });
+    if (!authStatus) {
+      return showAlert("error", "Please login first...");
+    }
+
+    if (!cartId) {
+      console.error("Invalid cart ID:", cartId);
+      return showAlert("error", "Invalid cart item!");
+    }
+
+    try {
+      const result =  dispatch(removeFromCart(cartId));
+
+      if (removeFromCart.fulfilled.match(result)) {
+        showAlert("success", "Item removed from cart successfully!");
+      } else {
+        showAlert(
+          "error",
+          result.payload || "Failed to remove item from cart."
+        );
+      }
+    } catch (error) {
+      console.error("❌ Error removing from cart:", error);
+      showAlert("error", "Something went wrong! Try again.");
+    }
+  };
+
+  useEffect(() => {
+    if (!authStatus) {
+      navigate("/login");
+    }
+    getApprovedBooks();
+  }, [authStatus]);
 
   if (loading) {
     return <Loader />;
@@ -117,6 +130,13 @@ const CartPage = () => {
 
   return (
     <>
+      {alert && (
+        <Alert
+          type={alert.type}
+          message={alert.message}
+          onClose={() => setAlert(null)}
+        />
+      )}
       <div className="px-5 md:px-20 py-5 bg-[#f4f3f4]">
         <h1 className="bg-[#F7F8F8] my-3 p-3 rounded-xl text-[#203949] text-3xl font-medium">
           Cart
@@ -144,7 +164,7 @@ const CartPage = () => {
                         </h3>
                         <div className="flex items-center gap-2 mt-2">
                           <p className="text-[#7C7C7C] text-sm font-normal">
-                            {book.rating || "4.0"}
+                            {book.rating}
                           </p>
                           <FaStar className="text-[#FFCC68]" />
                         </div>
@@ -158,7 +178,7 @@ const CartPage = () => {
                         </h3>
                         <div className="flex items-center gap-2 mt-2">
                           <p className="text-[#7C7C7C] text-sm font-normal">
-                            {book.rating || "4.0"}
+                            {book.rating}
                           </p>
                           <FaStar className="text-[#FFCC68]" />
                         </div>
@@ -168,7 +188,7 @@ const CartPage = () => {
                           Author
                         </h3>
                         <p className="mt-2 text-[#7C7C7C] text-sm font-normal">
-                          {book?.author || "Unknown"}
+                          {book?.author}
                         </p>
                       </div>
                       <div className="">
@@ -176,7 +196,7 @@ const CartPage = () => {
                           Type
                         </h3>
                         <p className="mt-2 text-[#7C7C7C] text-sm font-normal">
-                          {book.category || "Ebook"}
+                          {book.category}
                         </p>
                       </div>
                       <div className="">
@@ -188,7 +208,7 @@ const CartPage = () => {
                         </p>
                       </div>
                       <button
-                        onClick={() => handleDelete(book.id)}
+                        onClick={() => handleRemoveFromCart(book.cartID)}
                         className="text-red-500 text-xl hover:text-red-700 transition"
                       >
                         <FaTrash />

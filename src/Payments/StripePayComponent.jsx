@@ -1,70 +1,61 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
-import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import axios from "axios";
+import { Elements } from "@stripe/react-stripe-js";
+import { useLocation, useNavigate } from "react-router-dom";
 import service from "../API/DBService";
+import CheckoutForm from "./CheckoutForm";
 
-const stripePromise = loadStripe("pk_test_51LletxBhW6Yoi4csLuVpCLJ2b6WhJ6HnCdnIZ8PkLHIfPeWCPJSkShHSWuGxZCDblkDZmH6QCZbCgvXfzQvNvOG900PaOid8ym");
-
-const CheckoutForm = ({ btnText, btnClasses }) => {
-  const stripe = useStripe();
-  const elements = useElements();
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (!stripe || !elements) return;
-
-    setLoading(true);
-
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: "http://localhost:5173/payment-success",
-      },
-    });
-
-    if (error) {
-      setErrorMessage(error.message);
-      setLoading(false);
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <PaymentElement />
-      <button className={btnClasses} type="submit" disabled={!stripe || loading}>
-        {loading ? "Processing..." : btnText}
-      </button>
-      {errorMessage && <div style={{ color: "red", marginTop: "10px" }}>{errorMessage}</div>}
-    </form>
-  );
-};
-
-const StripePayment = ({ btnText, btnClasses, cartItems }) => {
+const StripePayPage = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { amount } = location.state || {}; // Get amount from navigation state
+  const [stripePromise, setStripePromise] = useState(null);
   const [clientSecret, setClientSecret] = useState("");
 
   useEffect(() => {
-    const getPaymentIntent = async () => {
+    const fetchStripeData = async () => {
       try {
-        const response = await service.createPaymentIntent({ cartItems });
-        setClientSecret(response.data.clientSecret);
+        const res = await service.getStripeCredentials();
+        if (!res.apiKey) {
+          console.error("Publishable key missing");
+          return;
+        }
+        setStripePromise(await loadStripe(res.apiKey));
+
+        // Create PaymentIntent and get clientSecret
+        const paymentIntent = await service.getStripeCredentials();
+        // console.log({paymentIntent})
+        if (paymentIntent.secretKey) {
+          setClientSecret(paymentIntent.secretKey);
+        } else {
+          console.error("Failed to get clientSecret from backend");
+        }
       } catch (error) {
-        console.error("Error fetching client secret:", error);
+        console.error("Error fetching Stripe data:", error);
       }
     };
 
-    getPaymentIntent();
-  }, [cartItems]);
+    fetchStripeData();
+  }, [amount]);
 
-  if (!clientSecret) return <p>Loading payment details...</p>;
+  if (!stripePromise || !clientSecret) return <p>Loading Stripe...</p>;
 
   return (
-    <Elements stripe={stripePromise} options={{ clientSecret }}>
-      <CheckoutForm btnText={btnText} btnClasses={btnClasses} />
-    </Elements>
+    <div className="min-h-screen flex justify-center items-center">
+      <div className="bg-white p-6 rounded-lg shadow-lg">
+        <h2 className="text-2xl font-bold mb-4">Stripe Payment</h2>
+        <Elements stripe={stripePromise} options={{ clientSecret }}>
+          <CheckoutForm />
+        </Elements>
+        <button
+          onClick={() => navigate(-1)}
+          className="mt-4 bg-red-500 text-white px-4 py-2 rounded-md"
+        >
+          Cancel Payment
+        </button>
+      </div>
+    </div>
   );
 };
 
-export default StripePayment;
+export default StripePayPage;

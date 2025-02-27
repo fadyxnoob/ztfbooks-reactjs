@@ -43,15 +43,6 @@ const VoucherPay = () => {
         country: "United States",
       },
     });
-  
-    const formatCardNumber = (e) => {
-      const formatted = e.target.value
-        .replace(/\s/g, "")
-        .replace(/(\d{4})/g, "$1 ")
-        .trim();
-      setValue("cardNumber", formatted);
-    };
-  
 
   
     const cart = useSelector((state) => state.cart);
@@ -63,13 +54,13 @@ const VoucherPay = () => {
     const handlePayment = async (formData) => {
       try {
         const paymentData = {
-          currencyCode: defaultCurrency,
+          currencyCode: "USD",
           totalAmount: totalPrice,
           cartIds: formData.cartIds,
-          paymentMethod: { paymentMethod } || "CARD",
+          paymentMethod: "VOUCHER",
           integratorPublicId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
           metadata: {
-            additionalProp1: formData.cardNumber,
+            VOUCHER_NUMBER: formData.voucherNumber,
           },
         };
   
@@ -98,7 +89,6 @@ const VoucherPay = () => {
   
     const onSubmit = (data) => {
       const formData = { ...data, cartIds };
-      // console.log({formData})
       handlePayment(formData);
     };
   return (
@@ -139,23 +129,20 @@ const VoucherPay = () => {
                 <div>
                   <div className="relative w-[100%]">
                     <input
+                    value={'VAE266757'}
                       type="text"
-                      {...register("cardNumber", {
+                      {...register("voucherNumber", {
                         required: "Voucher number is required",
-                        pattern: {
-                          value: /^\d{4} \d{4} \d{4} \d{4}$/,
-                          message: "Invalid card number",
-                        },
                       })}
-                      onChange={formatCardNumber}
-                      placeholder="XXXX XXXX XXXX XXXX"
+                      onChange={(e)=> e.target.value}
+                      placeholder="VAE266757"
                       maxLength="19"
                       className="bg-[#fff] border-b-[#CCC] border-b-[5px] w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
                     />
                    
-                    {errors.cardNumber && (
+                    {errors.voucherNumber && (
                       <p className="text-red-500 text-sm">
-                        {errors.cardNumber.message}
+                        {errors.voucherNumber.message}
                       </p>
                     )}
                   </div>

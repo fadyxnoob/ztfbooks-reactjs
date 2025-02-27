@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Layout from "./pages/Layout/Layout";
 import Loader from "./components/Loader/Loader.jsx";
@@ -8,6 +8,8 @@ import MobilePay from "./pages/MobilePay/MobilePay.jsx";
 import ChooseByMobilePay from "./pages/ChooseByMobilePay/ChooseByMobilePay.jsx";
 import TelephonePay from "./pages/TelephonePay/TelephonePay.jsx";
 import Methods from "./components/Methods/Methods.jsx";
+import StripePayPage from "./Payments/StripePayComponent.jsx";
+import { useSelector } from "react-redux";
 
 // Lazy loading components
 const Home = React.lazy(() => import("./pages/Home/Home"));
@@ -33,14 +35,27 @@ const AccountInfo = React.lazy(() =>
 );
 const SearchPage = React.lazy(() => import("./pages/SearchPage/SearchPage"));
 const About = React.lazy(() => import("./pages/About/About"));
-const PaymentInformation = React.lazy(() => import("./pages/PaymentInformation/PaymentInformation.jsx"));
-const PaymentInfo = React.lazy(() => import("./pages/PaymentInfo/PaymentInfo.jsx"));
-const RecommendedBooks = React.lazy(() => import("./pages/RecommendedBooks/RecommendedBooks.jsx"));
-const RecentBooks = React.lazy(() => import("./pages/RecentBooks/RecentBooks.jsx"));
-const BestSellingBooks = React.lazy(() => import("./pages/BestSellingBooks/BestSellingBooks.jsx"));
-const SpecialDiscount = React.lazy(() => import("./pages/SpecialDiscount/SpecialDiscount.jsx"));
+const PaymentInformation = React.lazy(() =>
+  import("./pages/PaymentInformation/PaymentInformation.jsx")
+);
+const PaymentInfo = React.lazy(() =>
+  import("./pages/PaymentInfo/PaymentInfo.jsx")
+);
+const RecommendedBooks = React.lazy(() =>
+  import("./pages/RecommendedBooks/RecommendedBooks.jsx")
+);
+const RecentBooks = React.lazy(() =>
+  import("./pages/RecentBooks/RecentBooks.jsx")
+);
+const BestSellingBooks = React.lazy(() =>
+  import("./pages/BestSellingBooks/BestSellingBooks.jsx")
+);
+const SpecialDiscount = React.lazy(() =>
+  import("./pages/SpecialDiscount/SpecialDiscount.jsx")
+);
 
 const App = () => {
+
   return (
     <BrowserRouter>
       {/* Self-closing ScrollToTop component */}
@@ -56,7 +71,10 @@ const App = () => {
             <Route path="recommended-books" element={<RecommendedBooks />} />
             <Route path="best-selling-books" element={<BestSellingBooks />} />
             <Route path="recent-books" element={<RecentBooks />} />
-            <Route path="special-discount-books" element={<SpecialDiscount />} />
+            <Route
+              path="special-discount-books"
+              element={<SpecialDiscount />}
+            />
             <Route path="audio-books" element={<AudioBooks />} />
             <Route path="my-cart" element={<CartPage />} />
             <Route path="my-favourite" element={<MyFavourite />} />
@@ -64,9 +82,16 @@ const App = () => {
             <Route path="faqs" element={<Faqs />} />
             <Route path="about-us" element={<About />} />
             <Route path="payment-method" element={<PaymentInformation />} />
+            <Route path="stripe-payment" element={<StripePayPage />} />
             <Route path="methods/:paymentMethod" element={<Methods />} />
-            <Route path="methods/:paymentMethod/:mobileMethod" element={<ChooseByMobilePay />} />
-            <Route path="methods/:paymentMethod/:mobileMethod/:other" element={<TelephonePay />} />
+            <Route
+              path="methods/:paymentMethod/:mobileMethod"
+              element={<ChooseByMobilePay />}
+            />
+            <Route
+              path="methods/:paymentMethod/:mobileMethod/:other"
+              element={<TelephonePay />}
+            />
             {/* 404 Catch-all route */}
             <Route path="*" element={<div>404 Not Found</div>} />
           </Route>

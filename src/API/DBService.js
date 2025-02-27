@@ -10,13 +10,13 @@ export class DBService {
     async getLogo() {
         try {
             const response = await axios.get(
-                'https://server.ztfbooks.com/opn/v1/ztf-ebooks/logo', 
+                'https://server.ztfbooks.com/opn/v1/ztf-ebooks/logo',
                 { responseType: 'blob' } // Fetch as a blob
             );
-    
+
             const imageBlob = response.data;
-            const imageUrl = URL.createObjectURL(imageBlob); 
-            return imageUrl; 
+            const imageUrl = URL.createObjectURL(imageBlob);
+            return imageUrl;
         } catch (error) {
             console.error('Failed to get website logo:', error);
             return null;
@@ -136,26 +136,26 @@ export class DBService {
         }
     }
 
-        // get about us data
-        async getAboutUs() {
-            try {
-                const res = await axios.get(import.meta.env.VITE_ABOUTUS_API_KEY)
-                return res.data
-            } catch (error) {
-                console.error('failed to get about us::', error)
-            }
+    // get about us data
+    async getAboutUs() {
+        try {
+            const res = await axios.get(import.meta.env.VITE_ABOUTUS_API_KEY)
+            return res.data
+        } catch (error) {
+            console.error('failed to get about us::', error)
         }
-    
-        // get reviews 
-        async getReviewesByBookID(id) {
-            try {
-                const response = await axios.get(`https://server.ztfbooks.com/opn/v1/e-book/reviews/${id}`);
-                // console.log('from book ID::',{response})
-                return response?.data;
-            } catch (error) {
-                console.log('Failed to get reviews:::', error)
-            }
+    }
+
+    // get reviews 
+    async getReviewesByBookID(id) {
+        try {
+            const response = await axios.get(`https://server.ztfbooks.com/opn/v1/e-book/reviews/${id}`);
+            // console.log('from book ID::',{response})
+            return response?.data;
+        } catch (error) {
+            console.log('Failed to get reviews:::', error)
         }
+    }
 
     // get flutterwave Credentials
     async getFlutterwaveCredentials() {
@@ -180,7 +180,7 @@ export class DBService {
     // get Stripe Credentials
     async getStripeCredentials() {
         try {
-            if (!this.token) {
+            if (!this.token.jwtToken) {
                 console.warn('Please Login first')
             }
 
@@ -190,7 +190,6 @@ export class DBService {
                     'Content-Type': 'application/json'
                 }
             })
-            console.log({response})
             return response.data;
         } catch (error) {
             console.error("Error fetching Flutterwave credentials:", error.response?.data || error.message);
@@ -198,11 +197,12 @@ export class DBService {
         }
     };
 
-     // make your payment
-     async initiatePayment (paymentData) {
+    // make your payment
+    async initiatePayment(paymentData) {
+        console.log({ paymentData })
         try {
             if (!this.token || !this.token.jwtToken) {
-                console.error("❌ Error: Authorization token is missing.");
+                console.error("Error: Authorization token is missing.");
                 return;
             }
 
@@ -231,16 +231,8 @@ export class DBService {
             return response.data;
 
         } catch (error) {
-            console.error("❌ Payment Failed:", error.response?.data || error.message || "Unknown error");
-
-            if (error.response) {
-                console.error("🛑 Response Status:", error.response.status);
-                console.error("🔍 Full Response Data:", error.response.data);
-            } else {
-                console.error("⚠️ Network Error:", error.message);
-            }
-
-            throw error; 
+            console.error("Payment Failed:", error.response?.data || error.message || "Unknown error");
+            throw error;
         }
     }
 
@@ -248,3 +240,6 @@ export class DBService {
 
 const service = new DBService();
 export default service;
+
+
+

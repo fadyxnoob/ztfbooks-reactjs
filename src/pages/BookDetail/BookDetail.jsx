@@ -12,8 +12,7 @@ import Loader from "../../components/Loader/Loader";
 import ShareButton from "../../components/share/share";
 import BookReview from "../../components/add-review/addReview";
 import Description from "../../components/Description/Description";
-import store from '../../Store/Store'
-
+import store from "../../Store/Store";
 
 const BookDetail = () => {
   const { bookID } = useParams();
@@ -69,30 +68,28 @@ const BookDetail = () => {
     getBookReviews(bookID);
   }, []);
 
-  const handleAddToCart = (ebookId, quantity, name, price) => {
-    if (!authStatus) {
-      return showAlert("error", "Please login first...");
-    }
-
-    if (!ebookId || !quantity || !name || !price) {
-      console.error("Invalid cart item:", { ebookId, quantity, name, price });
-      return;
-    }
-
-    // ✅ Get the current cart state before dispatching
-    const cartState = store.getState().cart; // <-- Fetch state manually
-    const itemExists = cartState.products.some((item) => item.id === ebookId);
-
-    if (itemExists) {
-      return showAlert("error", "Item is already in the cart"); // Stop execution
+  const handleAddToCart = async (ebookId) => {
+    console.log({ ebookId });
+    if (!ebookId) {
+      console.error("Invalid cart item:", { ebookId });
+      return showAlert("error", "Invalid book details!");
     }
 
     try {
-      dispatch(addToCart({ ebookId, quantity, name, price }));
-      showAlert("success", "Item added to the cart");
+      setLoading((prev) => ({ ...prev, [ebookId]: true }));
+
+      const result = await dispatch(addToCart({ ebookId }));
+      console.log({ result });
+      if (addToCart.fulfilled.match(result)) {
+        showAlert("success", "Item added to the cart successfully!");
+      } else {
+        showAlert("error", result.payload || "Failed to add item to cart.");
+      }
     } catch (error) {
-      console.error("Error adding to cart:", error);
-      showAlert("error", "Failed to add item");
+      console.error("❌ Error adding to cart:", error);
+      showAlert("error", "Something went wrong! Try again.");
+    } finally {
+      setLoading((prev) => ({ ...prev, [ebookId]: false }));
     }
   };
 
@@ -203,14 +200,7 @@ const BookDetail = () => {
             <div className="my-5">
               <Button
                 classNames="bg-[#01447E] rounded-full w-full h-[50px] text-white font-medium text-lg cursor-pointer disabled:opacity-50"
-                onClick={() =>
-                  handleAddToCart(
-                    bookDetail?.id,
-                    1,
-                    bookDetail?.ebookTitle,
-                    bookDetail?.amount
-                  )
-                }
+                onClick={() => handleAddToCart(bookDetail?.id)}
                 disabled={loading}
               >
                 {loading ? "Adding..." : "Add to Cart"}
