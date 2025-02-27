@@ -23,7 +23,6 @@ const CartPage = () => {
   const [cartBooks, setCartBooks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(null);
-  const authStatus = useSelector((state) => state.auth.status);
   const products = useSelector((state) => state.cart.products) || [];
   const [cartProducts, setCartProducts] = useState([]);
   const totalPrice = cartProducts.reduce(
@@ -124,7 +123,6 @@ const CartPage = () => {
   };
 
   useEffect(() => {
-    if (!authStatus) navigate("/login");
     (async () => {
       try {
         const res = await service.getApprovedBooks(apiKey);
