@@ -21,7 +21,6 @@ const checkoutSlice = createSlice({
     initialState,
     reducers: {
         doACheckout: (state, action) => {
-            console.log("In slice check", { state, action });
             state.data = {
                 ...state.data,
                 totalAmount: action.payload.totalAmount,

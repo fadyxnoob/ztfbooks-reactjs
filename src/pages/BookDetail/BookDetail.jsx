@@ -69,7 +69,6 @@ const BookDetail = () => {
   }, []);
 
   const handleAddToCart = async (ebookId) => {
-    console.log({ ebookId });
     if (!ebookId) {
       console.error("Invalid cart item:", { ebookId });
       return showAlert("error", "Invalid book details!");
@@ -79,18 +78,15 @@ const BookDetail = () => {
       setLoading((prev) => ({ ...prev, [ebookId]: true }));
 
       const result = await dispatch(addToCart({ ebookId }));
-      console.log({ result });
       if (addToCart.fulfilled.match(result)) {
         showAlert("success", "Item added to the cart successfully!");
       } else {
-        showAlert("error", result.payload || "Failed to add item to cart.");
+        showAlert("error", result.payload);
       }
     } catch (error) {
       console.error("❌ Error adding to cart:", error);
-      showAlert("error", "Something went wrong! Try again.");
-    } finally {
-      setLoading((prev) => ({ ...prev, [ebookId]: false }));
-    }
+      showAlert("error", error);
+    } 
   };
 
   const StarRating = ({ rating }) => {

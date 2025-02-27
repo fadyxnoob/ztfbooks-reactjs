@@ -27,7 +27,6 @@ const BookCard = ({ books }) => {
   };
 
   const handleAddToCart = async (ebookId) => {
-    console.log({ ebookId });
     if (!ebookId) {
       console.error("Invalid cart item:", { ebookId });
       return showAlert("error", "Invalid book details!");

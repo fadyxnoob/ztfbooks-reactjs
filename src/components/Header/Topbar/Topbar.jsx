@@ -18,10 +18,8 @@ const Topbar = () => {
   const { register } = useForm();
   const isLogin = useSelector((state) => state.auth.status);
 
-  const cart = useSelector((state) => state.cart);
-  const totalQuantity =
-    cart?.products?.reduce((sum, product) => sum + product.quantity, 0) || 0;
-
+  const cart = useSelector((state) => state.cart.products);
+  const totalQuantity = cart.length
   // Debounced search function
   const debouncedSearch = debounce((value) => {
     setQuery(value);

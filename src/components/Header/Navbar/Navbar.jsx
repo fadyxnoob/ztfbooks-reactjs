@@ -36,9 +36,8 @@ const Navbar = () => {
     }
   };
 
-  const cart = useSelector((state) => state.cart);
-  const totalQuantity =
-    cart?.products?.reduce((sum, product) => sum + product.quantity, 0) || 0;
+  const cart = useSelector((state) => state.cart.products);
+  const totalQuantity = cart.length
 
 
   const authStatus = localStorage.getItem("authUserStatus");

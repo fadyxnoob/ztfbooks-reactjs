@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { FaStar } from "react-icons/fa";
+import { FaStar, FaTrash } from "react-icons/fa";
 import Button from "../../components/Button/Button";
 import BookCard from "../../components/BookCard/BookCard";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import service from "../../API/DBService";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/Loader";
-import { useDispatch } from "react-redux";
-import { FaTrash } from "react-icons/fa";
 import { doACheckout } from "../../Store/checkoutSlice";
 import { removeFromCart } from "../../Store/cartSlice";
 import Alert from "../../components/Alert/Alert";
+import {
+  getLocalStorage,
+  setLocalStorage,
+} from "../../LocalStorage/LocalStorage";
+import axios from "axios";
 
 const CartPage = () => {
   const navigate = useNavigate();
@@ -21,67 +24,87 @@ const CartPage = () => {
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(null);
   const authStatus = useSelector((state) => state.auth.status);
-  const products = useSelector((state) => state.cart.products);
-  const totalPrice = useSelector((state) => state.cart.totalPrice);
-  const totalQuantity = products.length;
+  const products = useSelector((state) => state.cart.products) || [];
+  const [cartProducts, setCartProducts] = useState([])
+  const totalPrice = cartProducts.reduce(
+    (acc, product) => acc + (product?.ebook?.amount || 0),
+    0
+  );
+  const totalQuantity = cartProducts.length;
   const averageUnitPrice =
     totalQuantity > 0 ? (totalPrice / totalQuantity).toFixed(2) : 0;
+
+  useEffect(() => {
+    const fetchCartItems = async () => {
+      const token = getLocalStorage("userdata")?.jwtToken;
+      if (!token) return;
+      try {
+        const response = await axios.get(
+          "https://server.ztfbooks.com/client/v1/cart",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setCartProducts(response.data)
+        setLocalStorage("carts", response.data);
+      } catch (error) {
+        console.error("Error fetching cart items:", error);
+      }
+    };
+    fetchCartItems();
+  }, [products]);
 
   // Fetch book details
   useEffect(() => {
     const fetchBookDetails = async () => {
+      if (!cartProducts || cartProducts.length === 0) return;
       const updatedBooks = await Promise.all(
-        products.map(async (book) => {
+        cartProducts.map(async (book) => {
           try {
-            const bookRes = await service.getBookByID(book);
+            const bookRes = await service.getBookByID(book?.ebook.id);
+            if (!bookRes.data) {
+              console.error("Invalid book response:", bookRes);
+              return null;
+            }
+  
             const file = bookRes.data.thumbnailFileName;
             const fileURL = await service.getFileByName(file);
+  
             return {
               ...book,
               fileURL,
-              category: bookRes.data.categories.name,
-              author: bookRes.data.author.name,
-              date: bookRes.data.publishDate,
+              category: bookRes.data.categories?.[0]?.name || "Unknown",
+              author: bookRes.data.author?.name || "Unknown",
+              date: bookRes.data.publishDate || "N/A",
               id: bookRes.data.id,
-              cartID: book.id,
+              cartID: book.id, // Keep this for removing items
+              title: bookRes.data.ebookTitle,
+              price: bookRes.data.amount,
             };
           } catch (err) {
-            console.error(`Failed to fetch book ${book.id}:`, err);
-            return { ...book, fileURL: null };
+            console.error(`Failed to fetch book ${book.ebookId}:`, err);
+            return null;
           }
         })
       );
-      setCartBooks(updatedBooks);
+  
+      // ✅ Only update if books are valid
+      setCartBooks(updatedBooks.filter((book) => book !== null));
     };
-
+  
     if (products.length > 0) {
-      fetchBookDetails();
+      setTimeout(fetchBookDetails, 500); // Small delay to allow Redux update
     }
-  }, [products]);
-
-  const cartIDs = products?.map((product) => product.id) || [];
+  }, [cartProducts]);
 
   const handleCheckout = () => {
-    const checkoutPayload = {
-      totalAmount: totalPrice,
-      cartIds: cartIDs,
-    };
-
-    dispatch(doACheckout(checkoutPayload));
+    dispatch(
+      doACheckout({
+        totalAmount: totalPrice,
+        cartIds: products.map((p) => p?.ebook?.id),
+      })
+    );
     navigate("/payment-method");
-  };
-
-  // Fetch approved eBooks
-  const getApprovedBooks = async () => {
-    try {
-      const res = await service.getApprovedBooks(apiKey);
-      if (res.content) {
-        setApprovedEBooks(res.content);
-        setLoading(false);
-      }
-    } catch (err) {
-      console.error("Failed to fetch approved books:", err);
-    }
   };
 
   // Function to show alert
@@ -89,44 +112,29 @@ const CartPage = () => {
     setAlert({ type, message });
     setTimeout(() => setAlert(null), 2000); // Hide after 2 seconds
   };
+
   const handleRemoveFromCart = async (cartId) => {
-    console.log({ cartId });
-    if (!authStatus) {
-      return showAlert("error", "Please login first...");
-    }
-
-    if (!cartId) {
-      console.error("Invalid cart ID:", cartId);
-      return showAlert("error", "Invalid cart item!");
-    }
-
-    try {
-      const result =  dispatch(removeFromCart(cartId));
-
-      if (removeFromCart.fulfilled.match(result)) {
-        showAlert("success", "Item removed from cart successfully!");
-      } else {
-        showAlert(
-          "error",
-          result.payload || "Failed to remove item from cart."
-        );
-      }
-    } catch (error) {
-      console.error("❌ Error removing from cart:", error);
-      showAlert("error", "Something went wrong! Try again.");
-    }
+    if (!cartId) return showAlert("error", "Invalid cart item!");
+    setCartBooks((prev) => prev.filter((book) => book.cartID !== cartId));
+    const result = await dispatch(removeFromCart(cartId));
+    if (removeFromCart.fulfilled.match(result))
+      showAlert("success", "Item removed successfully!");
+    else showAlert("error", "Failed to remove item.");
   };
 
   useEffect(() => {
-    if (!authStatus) {
-      navigate("/login");
-    }
-    getApprovedBooks();
-  }, [authStatus]);
+    if (!authStatus) navigate("/login");
+    (async () => {
+      try {
+        const res = await service.getApprovedBooks(apiKey);
+        if (res.content) setApprovedEBooks(res.content);
+      } catch (err) {
+        console.error("Failed to fetch approved books:", err);
+      }
+    })();
+  }, []);
 
-  if (loading) {
-    return <Loader />;
-  }
+  if (loading) return <Loader />;
 
   return (
     <>
@@ -160,7 +168,7 @@ const CartPage = () => {
                       </div>
                       <div className="md:hidden">
                         <h3 className="text-xl font-medium text-[#203949]">
-                          {book?.name}
+                          {book?.title}
                         </h3>
                         <div className="flex items-center gap-2 mt-2">
                           <p className="text-[#7C7C7C] text-sm font-normal">
@@ -196,7 +204,7 @@ const CartPage = () => {
                           Type
                         </h3>
                         <p className="mt-2 text-[#7C7C7C] text-sm font-normal">
-                          {book.category}
+                          {book?.category}
                         </p>
                       </div>
                       <div className="">
@@ -260,6 +268,7 @@ const CartPage = () => {
             <Button
               onClick={handleCheckout}
               classNames="cursor-pointer text-white rounded-3xl bg-[#01447E] mt-10 w-full py-3 text-xl font-medium"
+              disabled={cartProducts.length === 0} 
             >
               Checkout
             </Button>

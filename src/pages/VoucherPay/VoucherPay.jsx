@@ -45,12 +45,10 @@ const VoucherPay = () => {
     });
 
   
-    const cart = useSelector((state) => state.cart);
-    const totalPrice =
-      cart?.products?.reduce((sum, product) => sum + product.price, 0) || 0;
-  
-    const cartIds = cart?.products?.map((product) => product.id) || [];
-  
+    const products = useSelector((state) => state.cart.products);
+    const totalPrice = products.reduce((acc, product) => acc + (product.ebook.amount || 0), 0);
+    const cartIds = products.map((product) => product.id);
+
     const handlePayment = async (formData) => {
       try {
         const paymentData = {

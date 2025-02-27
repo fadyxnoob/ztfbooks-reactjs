@@ -6,13 +6,9 @@ import { getLocalStorage, setLocalStorage } from "../LocalStorage/LocalStorage";
 export const addToCart = createAsyncThunk(
     "cart/addToCart",
     async ({ ebookId }, { rejectWithValue }) => {
-        console.log({ebookId})
         try {
             const token = getLocalStorage("userdata")?.jwtToken;
             if (!token) throw new Error("Authentication error! Please login.");
-
-            // 🔍 Debugging logs
-            console.log("🛒 Adding to cart:", ebookId);
             
             // ✅ API Call to Add Item
             const response = await axios.post(
@@ -23,23 +19,11 @@ export const addToCart = createAsyncThunk(
                 }
             );
 
-            console.log("✅ Item added successfully:", response.data);
-
         } catch (error) {
-            console.error("❌ Error adding to cart:", error.response?.data || error.message);
-
-            // Handle API-specific error responses
-            return rejectWithValue(error.response?.data?.error || "Failed to add item to cart.");
+            return rejectWithValue(error.response.data.message );
         }
     }
 );
-
-
-
-
-
-
-
 
 
 
@@ -80,13 +64,6 @@ const cartSlice = createSlice({
                 state.status = "succeeded";
                 state.products.push(action.payload);
 
-                // ✅ Update Local Storage after modification
-                setLocalStorage("carts", state.products);
-
-                state.totalPrice = state.products.reduce(
-                    (sum, product) => sum + product.quantity * product.price,
-                    0
-                );
             })
             .addCase(addToCart.rejected, (state, action) => {
                 state.status = "failed";
@@ -99,13 +76,6 @@ const cartSlice = createSlice({
                 state.status = "succeeded";
                 state.products = state.products.filter((item) => item.id !== action.payload);
 
-                // ✅ Update Local Storage after removing item
-                setLocalStorage("carts", state.products);
-
-                state.totalPrice = state.products.reduce(
-                    (sum, product) => sum + product.quantity * product.price,
-                    0
-                );
             })
             .addCase(removeFromCart.rejected, (state, action) => {
                 state.status = "failed";
