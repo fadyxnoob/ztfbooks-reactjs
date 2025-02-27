@@ -3,13 +3,11 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Layout from "./pages/Layout/Layout";
 import Loader from "./components/Loader/Loader.jsx";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop.jsx";
-import VoucherPay from "./pages/VoucherPay/VoucherPay.jsx";
-import MobilePay from "./pages/MobilePay/MobilePay.jsx";
 import ChooseByMobilePay from "./pages/ChooseByMobilePay/ChooseByMobilePay.jsx";
 import TelephonePay from "./pages/TelephonePay/TelephonePay.jsx";
 import Methods from "./components/Methods/Methods.jsx";
 import StripePayPage from "./Payments/StripePayComponent.jsx";
-import { useSelector } from "react-redux";
+import CheckRoute from "./components/CheckRoute/CheckRoute.jsx";
 
 // Lazy loading components
 const Home = React.lazy(() => import("./pages/Home/Home"));
@@ -55,7 +53,6 @@ const SpecialDiscount = React.lazy(() =>
 );
 
 const App = () => {
-
   return (
     <BrowserRouter>
       {/* Self-closing ScrollToTop component */}
@@ -64,7 +61,9 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Layout />}>
             {/* All routes nested under Layout */}
+
             <Route index element={<Home />} />
+
             <Route path="/search" element={<SearchPage />} />
             <Route path="book-detail/:bookID" element={<BookDetail />} />
             <Route path="e-books" element={<EBooks />} />
@@ -76,21 +75,64 @@ const App = () => {
               element={<SpecialDiscount />}
             />
             <Route path="audio-books" element={<AudioBooks />} />
-            <Route path="my-cart" element={<CartPage />} />
+            <Route
+              path="my-cart"
+              element={
+                <CheckRoute>
+                  <CartPage />
+                </CheckRoute>
+              }
+            />
             <Route path="my-favourite" element={<MyFavourite />} />
-            <Route path="myProfile" element={<AccountInfo />} />
+            <Route
+              path="myProfile"
+              element={
+                <CheckRoute>
+                  <AccountInfo />{" "}
+                </CheckRoute>
+              }
+            />
             <Route path="faqs" element={<Faqs />} />
             <Route path="about-us" element={<About />} />
-            <Route path="payment-method" element={<PaymentInformation />} />
-            <Route path="stripe-payment" element={<StripePayPage />} />
-            <Route path="methods/:paymentMethod" element={<Methods />} />
+            <Route
+              path="payment-method"
+              element={
+                <CheckRoute>
+                  <PaymentInformation />{" "}
+                </CheckRoute>
+              }
+            />
+            <Route
+              path="stripe-payment"
+              element={
+                <CheckRoute>
+                  <StripePayPage />{" "}
+                </CheckRoute>
+              }
+            />
+            <Route
+              path="methods/:paymentMethod"
+              element={
+                <CheckRoute>
+                  <Methods />{" "}
+                </CheckRoute>
+              }
+            />
             <Route
               path="methods/:paymentMethod/:mobileMethod"
-              element={<ChooseByMobilePay />}
+              element={
+                <CheckRoute>
+                  <ChooseByMobilePay />{" "}
+                </CheckRoute>
+              }
             />
             <Route
               path="methods/:paymentMethod/:mobileMethod/:other"
-              element={<TelephonePay />}
+              element={
+                <CheckRoute>
+                  <TelephonePay />{" "}
+                </CheckRoute>
+              }
             />
             {/* 404 Catch-all route */}
             <Route path="*" element={<div>404 Not Found</div>} />

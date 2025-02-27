@@ -6,6 +6,7 @@ import Carousel from "../../components/Carousel/Carousel";
 import sectionBg from "../../assets/images/read-bg.png";
 import PlayStore from "../../assets/images/android-app.png";
 import IOSApp from "../../assets/images/ios-app.png";
+import Loader from  '../../components/Loader/Loader'
 
 const Home = () => {
   const [approvedEBooks, setApprovedEBooks] = useState([]);
@@ -17,6 +18,7 @@ const Home = () => {
   const getApprovedBooks = async () => {
     try {
       const res = await service.getApprovedBooks(apiKey);
+      console.log({res})
       const approvedBooks = res.content.slice(0, 10);
       setApprovedEBooks(approvedBooks || []);
     } catch (err) {
@@ -28,6 +30,7 @@ const Home = () => {
   const getBestSellingBooks = async () => {
     try {
       const res = await service.getBestSalesBooks(10);
+
       if (res && res.length > 0) {
         const formattedBooks = await Promise.all(
           res.map(async (book) => {
@@ -81,25 +84,7 @@ const Home = () => {
     status: "APPROVED",
   });
 
-  const fetchCredentials = async () => {
-
-    try {
-      const credentials = await service.getFlutterwaveCredentials();
-      // console.log("Flutterwave Credentials:", credentials);
-    } catch (error) {
-      console.log("Failed to fetch credentials", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchCredentials();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="text-center py-20 text-xl">Loading, please wait...</div>
-    );
-  }
+  if (loading) return <Loader />;
 
   const limitized = bestSalesBooks.slice(0, 10);
 

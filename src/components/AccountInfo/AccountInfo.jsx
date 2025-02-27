@@ -6,8 +6,6 @@ import { IoIosArrowDown } from "react-icons/io";
 import authService from "../../API/authService";
 import { useForm } from "react-hook-form";
 import service from "../../API/DBService";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import Alert from "../Alert/Alert";
 
 const Input = ({
@@ -42,7 +40,7 @@ const PreferenceButton = ({ icon, label, selected, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className={`cursor-pointer bg-white flex items-center justify-between w-full px-4 py-3 rounded-lg mb-4 border-gray-200 rounded-xl`}
+      className={`cursor-pointer bg-white flex items-center justify-between w-full px-4 py-3  mb-4 border-gray-200 rounded-xl`}
     >
       <div className="flex items-center gap-3">{icon}</div>
       <span className="text-xl text-[#000] sm:text-lg">{label}</span>
@@ -56,13 +54,12 @@ const PreferenceButton = ({ icon, label, selected, onClick }) => {
 };
 
 const AccountInfo = () => {
-  const navigate = useNavigate();
   const [selectedLanguage, setSelectedLanguage] = React.useState("French");
   const [selectedPayment, setSelectedPayment] = React.useState(
     "Debit / Credit Card"
   );
-  const isLogin = useSelector((state) => state.auth.status);
 
+  
   const [userInfo, setUserInfo] = useState(null);
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
@@ -71,9 +68,6 @@ const AccountInfo = () => {
   const { register, handleSubmit, setValue } = useForm();
 
   useEffect(() => {
-    if (!isLogin) {
-      navigate("/login");
-    }
     const getUserInfo = async () => {
       const res = await authService.getCurrentLoggedIn();
       setUserInfo(res);

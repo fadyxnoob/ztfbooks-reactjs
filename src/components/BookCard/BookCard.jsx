@@ -36,7 +36,6 @@ const BookCard = ({ books }) => {
       setLoading((prev) => ({ ...prev, [ebookId]: true }));
 
       const result = await dispatch(addToCart({ ebookId }));
-      console.log({ result });
       if (addToCart.fulfilled.match(result)) {
         showAlert("success", "Item added to the cart successfully!");
       } else {
@@ -112,7 +111,7 @@ const BookCard = ({ books }) => {
                 <img
                   src={images[book.id] || StaticImage}
                   alt={book.ebookTitle}
-                  className="w-full h-full object-cover rounded-md"
+                  className="w-full h-full object-fill rounded-md"
                 />
               </div>
             </Link>

@@ -25,11 +25,12 @@ const CartPage = () => {
   const [alert, setAlert] = useState(null);
   const authStatus = useSelector((state) => state.auth.status);
   const products = useSelector((state) => state.cart.products) || [];
-  const [cartProducts, setCartProducts] = useState([])
+  const [cartProducts, setCartProducts] = useState([]);
   const totalPrice = cartProducts.reduce(
     (acc, product) => acc + (product?.ebook?.amount || 0),
     0
   );
+
   const totalQuantity = cartProducts.length;
   const averageUnitPrice =
     totalQuantity > 0 ? (totalPrice / totalQuantity).toFixed(2) : 0;
@@ -45,7 +46,7 @@ const CartPage = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        setCartProducts(response.data)
+        setCartProducts(response.data);
         setLocalStorage("carts", response.data);
       } catch (error) {
         console.error("Error fetching cart items:", error);
@@ -66,10 +67,9 @@ const CartPage = () => {
               console.error("Invalid book response:", bookRes);
               return null;
             }
-  
             const file = bookRes.data.thumbnailFileName;
             const fileURL = await service.getFileByName(file);
-  
+
             return {
               ...book,
               fileURL,
@@ -80,6 +80,7 @@ const CartPage = () => {
               cartID: book.id, // Keep this for removing items
               title: bookRes.data.ebookTitle,
               price: bookRes.data.amount,
+              rating: bookRes.data.rating
             };
           } catch (err) {
             console.error(`Failed to fetch book ${book.ebookId}:`, err);
@@ -87,11 +88,11 @@ const CartPage = () => {
           }
         })
       );
-  
+
       // ✅ Only update if books are valid
       setCartBooks(updatedBooks.filter((book) => book !== null));
     };
-  
+
     if (products.length > 0) {
       setTimeout(fetchBookDetails, 500); // Small delay to allow Redux update
     }
@@ -168,7 +169,7 @@ const CartPage = () => {
                       </div>
                       <div className="md:hidden">
                         <h3 className="text-xl font-medium text-[#203949]">
-                          {book?.title}
+                          {book?.title.split(' ').slice(0, 5).join(' ')}
                         </h3>
                         <div className="flex items-center gap-2 mt-2">
                           <p className="text-[#7C7C7C] text-sm font-normal">
@@ -182,7 +183,7 @@ const CartPage = () => {
                     <div className="w-full p-2 flex flex-wrap items-center justify-between">
                       <div className="hidden md:block">
                         <h3 className="text-xl font-medium text-[#203949]">
-                          {book.name}
+                          {book.title.split(' ').slice(0, 5).join(' ')}
                         </h3>
                         <div className="flex items-center gap-2 mt-2">
                           <p className="text-[#7C7C7C] text-sm font-normal">
@@ -223,7 +224,7 @@ const CartPage = () => {
                       </button>
                       <div>
                         <p className="text-[#7C7C7C] text-sm font-normal">
-                          {book.date || "N/A"}
+                          {book.date}
                         </p>
                       </div>
                     </div>
@@ -268,7 +269,7 @@ const CartPage = () => {
             <Button
               onClick={handleCheckout}
               classNames="cursor-pointer text-white rounded-3xl bg-[#01447E] mt-10 w-full py-3 text-xl font-medium"
-              disabled={cartProducts.length === 0} 
+              disabled={cartProducts.length === 0}
             >
               Checkout
             </Button>
