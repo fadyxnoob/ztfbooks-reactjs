@@ -3,7 +3,7 @@ import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import Button from "../../components/Button/Button";
 import BookCard from "../../components/BookCard/BookCard";
 import ReviewCard from "../../components/ReviewCard/ReviewCard";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import service from "../../API/DBService";
 import Alert from "../../components/Alert/Alert";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,7 +12,8 @@ import Loader from "../../components/Loader/Loader";
 import ShareButton from "../../components/share/share";
 import BookReview from "../../components/add-review/addReview";
 import Description from "../../components/Description/Description";
-import store from "../../Store/Store";
+import SeriesCategoryCard from "../../components/Categories/SeriesCategoryCard";
+import Carousel from "../../components/Carousel/Carousel";
 
 const BookDetail = () => {
   const { bookID } = useParams();
@@ -23,8 +24,9 @@ const BookDetail = () => {
   const dispatch = useDispatch();
   const [alert, setAlert] = useState(null);
   const [loading, setLoading] = useState(true);
-  const authStatus = useSelector((state) => state.auth.status);
   const [reviews, setReviews] = useState([]);
+  const [dollarCurrency, setDollarCurrency] = useState('')
+  const [filteredBooks, setFilteredBooks] = useState([]);
 
   // fetching book detail from API using book ID
   const fetchBook = async () => {
@@ -50,8 +52,8 @@ const BookDetail = () => {
   const getApprovedBooks = async () => {
     try {
       const res = await service.getApprovedBooks(apiKey);
-      const booksResponse = res.content.slice(0, 4);
-      setApprovedEBooks(booksResponse);
+      // const booksResponse = res.content.slice(0, 4);
+      setApprovedEBooks(res.content);
       setLoading(false);
     } catch (err) {
       console.error("Failed to fetch approved books:", err);
@@ -86,7 +88,7 @@ const BookDetail = () => {
     } catch (error) {
       console.error("❌ Error adding to cart:", error);
       showAlert("error", error);
-    } 
+    }
   };
 
   const StarRating = ({ rating }) => {
@@ -103,26 +105,31 @@ const BookDetail = () => {
     );
   };
 
-  // const reviews = [
-  //   {
-  //     name: "Ahmed Khan",
-  //     image: ReviewImage, // Replace with actual image
-  //     rating: 4.0,
-  //     date: "02 June 2024",
-  //     text: "Lorem ipsum dolor sit amet consectetur. Sagittis suscipit amet diam eu magna tortor arcu dui. Dignissim elementum curabitur orci lobortis tortor.Lorem ipsum dolor sit amet consectetur. Sagittis suscipit amet diam eu ]r.  ",
-  //   },
-  //   {
-  //     name: "Sarah Ali",
-  //     image: ReviewImage,
-  //     rating: 5.0,
-  //     date: "10 July 2024",
-  //     text: "Lorem ipsum dolor sit amet consectetur. Sagittis suscipit amet diam eu magna tortor arcu dui. Dignissim elementum curabitur orci lobortis tortor.Lorem ipsum dolor sit amet consectetur. Sagittis suscipit amet diam eu ]r.  ",
-  //   },
-  // ];
+  useEffect(() => {
+    const getCurrencyByID = async () => {
+      const response = await service.getCurrencyByID(6)
+      setDollarCurrency(response.rateToDefault)
+    }
+    getCurrencyByID()
+  }, [])
 
-  if (loading) {
-    return <Loader />;
-  }
+  // Filter books that belong to the selected series
+  useEffect(() => {
+    if (approvedEBooks.length > 0 && bookDetail?.categories?.length > 0) {
+      const filtered = approvedEBooks.filter((book) =>
+        book.categories?.some((category) =>
+          bookDetail.categories.some(
+            (detailCategory) => detailCategory.name === category.name
+          )
+        )
+      );
+      setFilteredBooks(filtered);
+    } else {
+      console.log("❌ Skipping filter: Missing data.");
+    }
+  }, [approvedEBooks, bookDetail]);
+
+  if (loading) return <Loader />;
 
   return (
     <>
@@ -153,7 +160,7 @@ const BookDetail = () => {
               {bookDetail?.ebookTitle}
             </h2>
             <div className="my-3 flex items-center gap-2">
-              <StarRating rating={bookDetail?.rating || 0} />
+              <StarRating rating={bookDetail?.rating} />
 
               <p className="text-[#7C7C7C] text-lg">({bookDetail?.rating})</p>
             </div>
@@ -163,13 +170,22 @@ const BookDetail = () => {
                 {bookDetail?.author?.name}
               </p>
             </div>
+            <div className="my-5 flex">
+              <h2 className="text-[#203949] text-xl font-medium">Series: </h2>
+              <p className=" ml-1 text-lg text-blue-600 underline">
+                <Link
+                  to={`/series/${bookDetail?.categories[0]?.name}`}
+                >
+                  {bookDetail?.categories[0]?.name}
+                </Link>
+              </p>
+            </div>
             <Description description={bookDetail?.description} />
             <div className="my-5 flex gap-5">
               <div>
                 <p className="font-medium text-lg text-[#7C7C7C]">Price</p>
                 <p className="text-[#203949] text-lg font-medium">
-                  {bookDetail?.currency?.code}{" "}
-                  {bookDetail?.currency?.rateToDefault}
+                  {`$ ${bookDetail?.amount * dollarCurrency}`}
                 </p>
               </div>
               <div>
@@ -206,20 +222,26 @@ const BookDetail = () => {
         </div>
 
         {/* Also Bought Section */}
-        <section className="mt-20">
-          <h4 className="text-[#203949] text-xl text-center md:text-start font-semibold">
-            Also Bought Book
-          </h4>
-          <div className="mt-5 grid grid-cols-1 md:grid-cols-4 gap-5">
-            <BookCard books={approvedEBooks} />
-          </div>
-        </section>
+        {loading ? (
+          <Loader />
+        ) : filteredBooks.length > 0 ? (
+          <section className="my-10">
+            <h2 className="text-2xl text-black font-medium">Also Bought Books</h2>
+            <div>
+              <Carousel books={filteredBooks} pathTo={`/series/${bookDetail.categories[0].name}`} />
+            </div>
+          </section>
+        ) : (
+          <p className="text-gray-500 text-center md:text-start">
+            No books available in this series.
+          </p>
+        )}
 
         {/* More from Author */}
         <section className="mt-20">
           <h2 className="text-2xl text-black font-medium">More from Author</h2>
           <div className="mt-5 grid grid-cols-1 md:grid-cols-4 gap-5">
-            <BookCard books={approvedEBooks} />
+            <BookCard books={approvedEBooks.slice(0, 4)} />
           </div>
         </section>
 

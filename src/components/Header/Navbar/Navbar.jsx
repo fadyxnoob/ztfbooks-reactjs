@@ -56,6 +56,11 @@ const Navbar = () => {
           </Link>
         </li>
         <li>
+          <Link to={"/series"} className="font-medium text-[#333333]">
+            Series
+          </Link>
+        </li>
+        <li>
           <Link to={"/faqs"} className="font-medium text-[#333333]">
             Faq's
           </Link>
@@ -77,7 +82,6 @@ const Navbar = () => {
           <Link
             onClick={()=> setOpenMenu(false)}
           to={"/e-books"} className="font-medium text-[#333333]">
-            {" "}
             eBooks
           </Link>
         </li>
@@ -86,6 +90,13 @@ const Navbar = () => {
             onClick={()=> setOpenMenu(false)}
           to={"/audio-books"} className="font-medium text-[#333333]">
             AudioBooks
+          </Link>
+        </li>
+        <li>
+          <Link
+            onClick={()=> setOpenMenu(false)}
+          to={"/series"} className="font-medium text-[#333333]">
+            Series
           </Link>
         </li>
         <li>

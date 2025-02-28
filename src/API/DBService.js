@@ -136,6 +136,22 @@ export class DBService {
         }
     }
 
+    // get currency by id
+    async getCurrencyByID(id) {
+        try {
+            const response = await axios.get(`https://server.ztfbooks.com/cmn/v1/currencies/${id}`,
+                {
+                    headers: {
+                        "Content-Type": 'application/json',
+                        Authorization: `Bearer ${this.token.jwtToken}`,
+                    }
+                }
+            )
+            return response.data
+        } catch (error) {
+            console.log('Failed to get currency by ID ::', error)
+        }
+    }
     // get about us data
     async getAboutUs() {
         try {
@@ -233,6 +249,25 @@ export class DBService {
         } catch (error) {
             console.error("Payment Failed:", error.response?.data || error.message || "Unknown error");
             throw error;
+        }
+    }
+
+    // get all categories form APi
+    async getAllCategories () {
+        try {
+            const response = await axios.get('https://server.ztfbooks.com/opn/v1/categories/all')
+            return response.data
+        } catch (error) {
+            console.error('Failed to get all categories ::', error)
+        }
+    }
+    // get category by name 
+    async getSingleCategory(name){
+        try {
+            const res = await axios.get(`https://server.ztfbooks.com/opn/v1/categories/by-name/${name}`)
+            return res.data
+        } catch (error) {
+            console.log('Failed to get single category::', error)
         }
     }
 

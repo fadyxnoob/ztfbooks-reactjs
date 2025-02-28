@@ -6,19 +6,20 @@ import Carousel from "../../components/Carousel/Carousel";
 import sectionBg from "../../assets/images/read-bg.png";
 import PlayStore from "../../assets/images/android-app.png";
 import IOSApp from "../../assets/images/ios-app.png";
-import Loader from  '../../components/Loader/Loader'
+import Loader from '../../components/Loader/Loader'
+import HomeCategoryCard from "../../components/Categories/HomeCategoryCard";
+import SeriesCarousel from "../../components/Carousel/SeriesCarousel";
 
 const Home = () => {
   const [approvedEBooks, setApprovedEBooks] = useState([]);
   const [bestSalesBooks, setBestSalesBooks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [allSeries, setAllSeries] = useState([])
   const apiKey = import.meta.env.VITE_GET_ALL_APPROVED_BOOKS_API_KEY;
-
   // Fetch approved e-books
   const getApprovedBooks = async () => {
     try {
       const res = await service.getApprovedBooks(apiKey);
-      console.log({res})
       const approvedBooks = res.content.slice(0, 10);
       setApprovedEBooks(approvedBooks || []);
     } catch (err) {
@@ -84,24 +85,46 @@ const Home = () => {
     status: "APPROVED",
   });
 
-  if (loading) return <Loader />;
-
   const limitized = bestSalesBooks.slice(0, 10);
+  // series section 
+  const getSeries = async () => {
+    try {
+      const res = await service.getAllCategories();
+      setAllSeries(res.content || res || []); 
+    } catch (error) {
+      console.error("Error fetching series:", error);
+    }
+  };
+  
+  useEffect(() => {
+    getSeries();
+  }, []);
 
+  if (loading) return <Loader />;
   return (
     <div className="bg-[#f4f3f4]">
       <Banner />
 
+      {/* Series books  */}
+      <section className="my-10 px-5 md:px-20">
+        <h4 className="text-black text-lg text-center md:text-start font-medium mb-5">
+          Series
+        </h4>
+        <div className="">
+          <SeriesCarousel items={allSeries} />
+        </div>
+      </section>
       {/* Recent books section */}
       <section className="my-10 px-5 md:px-20">
         <h4 className="text-black text-lg text-center md:text-start font-medium">
           Recent Ebooks
         </h4>
-        <div className="flex mt-10 flex-wrap items-center justify-center md:justify-start gap-5">
+        <div className="flex flex-wrap items-center justify-center md:justify-start gap-5">
           {/* <BookCard books={approvedEBooks} /> */}
           <Carousel books={approvedEBooks} pathTo="/recent-books" />
         </div>
       </section>
+
 
       {/* Top Chart section */}
       <section className="my-10 py-2 mx-5 md:mx-20 md:ps-5">

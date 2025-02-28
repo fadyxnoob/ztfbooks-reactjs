@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaHeart, FaStar } from "react-icons/fa";
-import { IoMdHeadset } from "react-icons/io";
+import { IoBookSharp } from "react-icons/io5";
 import { MdOutlineAccessTime } from "react-icons/md";
 import Button from "../Button/Button";
 import { Link } from "react-router-dom";
@@ -145,7 +145,7 @@ const BookCard = ({ books }) => {
               <div className="flex items-center gap-1 text-yellow-500 bg-[#1D2C41] px-3 py-1 rounded-2xl">
                 <FaStar />
                 <span className="text-sm font-medium text-white">
-                  {book?.rating || book?.detailedInfo?.rating || "0.0"}
+                  {book?.rating || book?.detailedInfo?.rating || null}
                 </span>
               </div>
             </div>
@@ -155,7 +155,7 @@ const BookCard = ({ books }) => {
               Author:{" "}
               {book?.author?.name ||
                 book?.detailedInfo?.author?.name ||
-                "Unknown"}
+                null}
             </p>
 
             {/* Time & Category */}
@@ -164,13 +164,13 @@ const BookCard = ({ books }) => {
                 <MdOutlineAccessTime className="text-blue-500" />
                 {book.timeToRead || book?.detailedInfo?.timeToRead
                   ? `${book.timeToRead || book?.detailedInfo?.timeToRead} mins`
-                  : "N/A"}
+                  : null}
               </span>
               <span className="flex items-center gap-2">
-                <IoMdHeadset className="text-green-600" />
+                <IoBookSharp className="text-green-600" />
                 {book?.categories?.[0]?.name.split(" ").slice(0, 2).join(" ") ||
                   book?.detailedInfo?.categories?.[0]?.name ||
-                  "Uncategorized"}
+                  null}
               </span>
             </div>
           </div>

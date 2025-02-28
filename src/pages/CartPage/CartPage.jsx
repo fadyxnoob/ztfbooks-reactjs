@@ -23,6 +23,7 @@ const CartPage = () => {
   const [cartBooks, setCartBooks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(null);
+  const [dollarCurrency, setDollarCurrency] = useState('')
   const products = useSelector((state) => state.cart.products) || [];
   const [cartProducts, setCartProducts] = useState([]);
   const totalPrice = cartProducts.reduce(
@@ -72,11 +73,11 @@ const CartPage = () => {
             return {
               ...book,
               fileURL,
-              category: bookRes.data.categories?.[0]?.name || "Unknown",
-              author: bookRes.data.author?.name || "Unknown",
-              date: bookRes.data.publishDate || "N/A",
+              category: bookRes.data.categories?.[0]?.name,
+              author: bookRes.data.author?.name,
+              date: bookRes.data.publishDate,
               id: bookRes.data.id,
-              cartID: book.id, // Keep this for removing items
+              cartID: book.id, 
               title: bookRes.data.ebookTitle,
               price: bookRes.data.amount,
               rating: bookRes.data.rating
@@ -132,6 +133,14 @@ const CartPage = () => {
       }
     })();
   }, []);
+  
+  useEffect(() => {
+    const getCurrencyByID = async () => {
+      const response = await service.getCurrencyByID(6)
+      setDollarCurrency(response.rateToDefault)
+    }
+    getCurrencyByID()
+  }, [])
 
   if (loading) return <Loader />;
 
@@ -167,7 +176,7 @@ const CartPage = () => {
                       </div>
                       <div className="md:hidden">
                         <h3 className="text-xl font-medium text-[#203949]">
-                          {book?.title.split(' ').slice(0, 5).join(' ')}
+                          {book?.title.split(' ').slice(0, 3).join(' ')}
                         </h3>
                         <div className="flex items-center gap-2 mt-2">
                           <p className="text-[#7C7C7C] text-sm font-normal">
@@ -181,7 +190,7 @@ const CartPage = () => {
                     <div className="w-full p-2 flex flex-wrap items-center justify-between">
                       <div className="hidden md:block">
                         <h3 className="text-xl font-medium text-[#203949]">
-                          {book.title.split(' ').slice(0, 5).join(' ')}
+                          {book.title.split(' ').slice(0, 3).join(' ')}
                         </h3>
                         <div className="flex items-center gap-2 mt-2">
                           <p className="text-[#7C7C7C] text-sm font-normal">
@@ -203,7 +212,7 @@ const CartPage = () => {
                           Type
                         </h3>
                         <p className="mt-2 text-[#7C7C7C] text-sm font-normal">
-                          {book?.category}
+                          {book?.category.split(' ').slice(0, 3).join(' ')}
                         </p>
                       </div>
                       <div className="">
@@ -211,12 +220,12 @@ const CartPage = () => {
                           Price
                         </h3>
                         <p className="mt-2 text-[#7C7C7C] text-sm font-normal">
-                          ${book.price}
+                          ${book.price * dollarCurrency}
                         </p>
                       </div>
                       <button
                         onClick={() => handleRemoveFromCart(book.cartID)}
-                        className="text-red-500 text-xl hover:text-red-700 transition"
+                        className="text-red-500 text-xl hover:text-red-700 transition fixed right-5 cursor-pointer bottom-5 md:bottom-auto md:right-2"
                       >
                         <FaTrash />
                       </button>
@@ -251,13 +260,13 @@ const CartPage = () => {
                     Price/unit
                   </p>
                   <p className="text-[#203949] text-lg font-medium">
-                    ${averageUnitPrice}
+                    ${averageUnitPrice * dollarCurrency}
                   </p>
                 </div>
                 <div className="flex justify-between items-center mt-3 border-t border-[#EFEFEF] pt-3">
                   <p className="text-[#203949] text-lg font-medium">Total</p>
                   <p className="text-[#203949] text-lg font-medium">
-                    ${totalPrice}
+                    ${totalPrice * dollarCurrency}
                   </p>
                 </div>
               </div>

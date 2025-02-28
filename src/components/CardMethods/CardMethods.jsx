@@ -1,14 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsCreditCard } from "react-icons/bs";
 import { useNavigate, useParams } from "react-router-dom";
 import PreferenceButton from "../../components/PreferenceButton/PreferenceButton";
 import { useSelector } from "react-redux";
 import FlutterPayComponent from "../../Payments/FlutterPayComponent";
+import service from "../../API/DBService";
 
 const CardMethods = () => {
     const navigate = useNavigate();
     const { paymentMethod } = useParams();
     const [selectedPayment, setSelectedPayment] = useState("flutterwave");
+    const [dollarCurrency, setDollarCurrency] = useState('')
+    useEffect(() => {
+      const getCurrencyByID = async () => {
+        const response = await service.getCurrencyByID(6)
+        // console.log({response})
+        setDollarCurrency(response.rateToDefault)
+      }
+      getCurrencyByID()
+    }, [])
   
     const products = useSelector((state) => state?.cart?.products || []);
     const totalPrice = products.reduce(
@@ -56,7 +66,7 @@ const CardMethods = () => {
             {/* Payment Button */}
             {selectedPayment === "flutterwave" ? (
               <FlutterPayComponent
-                btnText={`Pay $${totalPrice}`}
+                btnText={`Pay $${totalPrice * dollarCurrency}`}
                 currency={"USD"}
                 options="card"
                 className="block w-full bg-[#014471] text-white py-3 px-4 rounded-3xl hover:bg-blue-900"

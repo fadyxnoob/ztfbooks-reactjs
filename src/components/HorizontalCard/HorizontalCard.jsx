@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { IoMdHeadset } from "react-icons/io";
+import { IoBookSharp } from "react-icons/io5";
 import { MdOutlineAccessTime } from "react-icons/md";
 import { FaHeart } from "react-icons/fa";
 import StaticImage from "../../assets/images/BookCoverImage.png";
@@ -63,7 +63,7 @@ const HorizontalCard = ({ books }) => {
                 <MdOutlineAccessTime /> {book.duration}
               </span>
               <span className="flex items-center gap-2">
-                <IoMdHeadset /> {book.detailedInfo?.categories?.[0].name}
+                <IoBookSharp /> {book.detailedInfo?.categories?.[0].name}
               </span>
             </div>
             <button

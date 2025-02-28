@@ -9,6 +9,7 @@ import Methods from "./components/Methods/Methods.jsx";
 import StripePayPage from "./Payments/StripePayComponent.jsx";
 import CheckRoute from "./components/CheckRoute/CheckRoute.jsx";
 
+
 // Lazy loading components
 const Home = React.lazy(() => import("./pages/Home/Home"));
 const BookDetail = React.lazy(() => import("./pages/BookDetail/BookDetail"));
@@ -52,6 +53,13 @@ const SpecialDiscount = React.lazy(() =>
   import("./pages/SpecialDiscount/SpecialDiscount.jsx")
 );
 
+const SeriesPage = React.lazy(() =>
+  import("./pages/SeriesPage/SeriesPage.jsx")
+);
+const SingleSeriesPage = React.lazy(() =>
+  import("./pages/SeriesPage/SingleSeriesPage.jsx")
+);
+
 const App = () => {
   return (
     <BrowserRouter>
@@ -88,7 +96,7 @@ const App = () => {
               path="myProfile"
               element={
                 <CheckRoute>
-                  <AccountInfo />{" "}
+                  <AccountInfo />
                 </CheckRoute>
               }
             />
@@ -98,7 +106,7 @@ const App = () => {
               path="payment-method"
               element={
                 <CheckRoute>
-                  <PaymentInformation />{" "}
+                  <PaymentInformation />
                 </CheckRoute>
               }
             />
@@ -106,7 +114,7 @@ const App = () => {
               path="stripe-payment"
               element={
                 <CheckRoute>
-                  <StripePayPage />{" "}
+                  <StripePayPage />
                 </CheckRoute>
               }
             />
@@ -114,15 +122,33 @@ const App = () => {
               path="methods/:paymentMethod"
               element={
                 <CheckRoute>
-                  <Methods />{" "}
+                  <Methods />
                 </CheckRoute>
+              }
+            />
+            <Route
+              path="series"
+              element={
+                <SeriesPage />
+              }
+            />
+            <Route
+              path="series/:seriesName"
+              element={
+                <SingleSeriesPage />
+              }
+            />
+            <Route
+             path="/series/:seriesName/book/:bookID"
+              element={
+                <BookDetail />
               }
             />
             <Route
               path="methods/:paymentMethod/:mobileMethod"
               element={
                 <CheckRoute>
-                  <ChooseByMobilePay />{" "}
+                  <ChooseByMobilePay />
                 </CheckRoute>
               }
             />
@@ -130,7 +156,7 @@ const App = () => {
               path="methods/:paymentMethod/:mobileMethod/:other"
               element={
                 <CheckRoute>
-                  <TelephonePay />{" "}
+                  <TelephonePay />
                 </CheckRoute>
               }
             />

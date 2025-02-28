@@ -127,7 +127,6 @@ const VoucherPay = () => {
                 <div>
                   <div className="relative w-[100%]">
                     <input
-                    value={'VAE266757'}
                       type="text"
                       {...register("voucherNumber", {
                         required: "Voucher number is required",
