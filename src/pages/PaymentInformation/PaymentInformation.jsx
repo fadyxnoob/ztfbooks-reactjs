@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PreferenceButton from "../../components/PreferenceButton/PreferenceButton";
 import { BsCreditCard } from "react-icons/bs";
+import { CiBank } from "react-icons/ci";
 import Button from "../../components/Button/Button";
 import { LuSmartphone } from "react-icons/lu";
 import { FaPaypal } from "react-icons/fa6";
@@ -41,7 +42,7 @@ const PaymentInformation = () => {
         <div className="w-[100%]">
           <PreferenceButton
             icon={
-              <BsCreditCard className="w-8 h-6 sm:w-9 sm:h-7 md:w-10 md:h-8 text-[#014471]" />
+              <CiBank className="w-8 h-6 sm:w-9 sm:h-7 md:w-10 md:h-8 text-[#014471]" />
             }
             label="Bank Transfer"
             selected={selectedPayment === "BANK"}
@@ -64,7 +65,7 @@ const PaymentInformation = () => {
             icon={
               <LuSmartphone className="w-8 h-6 sm:w-9 sm:h-7 md:w-10 md:h-8 text-[#014471]" />
             }
-            label="Local Mobile Pay"
+            label="Mobile Money"
             selected={selectedPayment === "MOBILE"}
             onClick={() => setSelectedPayment("MOBILE")}
           />
@@ -74,7 +75,7 @@ const PaymentInformation = () => {
             icon={
               <BsCreditCard className="w-8 h-6 sm:w-9 sm:h-7 md:w-10 md:h-8 text-[#014471]" />
             }
-            label="Card Payment"
+            label="Debit / Credit Card"
             selected={selectedPayment === "CARD"}
             onClick={() => setSelectedPayment("CARD")}
           />

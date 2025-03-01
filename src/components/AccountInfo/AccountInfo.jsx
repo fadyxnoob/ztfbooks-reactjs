@@ -7,6 +7,9 @@ import authService from "../../API/authService";
 import { useForm } from "react-hook-form";
 import service from "../../API/DBService";
 import Alert from "../Alert/Alert";
+import Button from '../Button/Button'
+import { removeLocalStorage } from "../../LocalStorage/LocalStorage";
+import { useNavigate } from "react-router-dom";
 
 const Input = ({
   name,
@@ -45,9 +48,8 @@ const PreferenceButton = ({ icon, label, selected, onClick }) => {
       <div className="flex items-center gap-3">{icon}</div>
       <span className="text-xl text-[#000] sm:text-lg">{label}</span>
       <div
-        className={`w-4 h-4 rounded-full border ${
-          selected ? "border-4 border-[#014471]-600" : "border-gray-300"
-        }`}
+        className={`w-4 h-4 rounded-full border ${selected ? "border-4 border-[#014471]-600" : "border-gray-300"
+          }`}
       />
     </button>
   );
@@ -134,7 +136,7 @@ const AccountInfo = () => {
     "Debit / Credit Card"
   );
 
-  
+
   const [userInfo, setUserInfo] = useState(null);
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
@@ -142,6 +144,7 @@ const AccountInfo = () => {
 
   const { register, handleSubmit, setValue } = useForm();
 
+  const navigate = useNavigate()
   useEffect(() => {
     const getUserInfo = async () => {
       const res = await authService.getCurrentLoggedIn();
@@ -181,7 +184,7 @@ const AccountInfo = () => {
   // Function to show alert
   const showAlert = (type, message) => {
     setAlert({ type, message });
-    setTimeout(() => setAlert(null), 2000); 
+    setTimeout(() => setAlert(null), 2000);
   };
 
   const onSubmit = async (data) => {
@@ -208,12 +211,18 @@ const AccountInfo = () => {
     }
   };
 
+  const handleLogout = () => {
+    removeLocalStorage('authUserStatus')
+    removeLocalStorage('userdata')
+    navigate('/login')
+
+  }
   const inputClass =
     "w-full p-4 rounded-lg border border-none bg-[#fff] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none";
 
   return (
     <>
-    {alert && (
+      {alert && (
         <Alert
           type={alert.type}
           message={alert.message}
@@ -298,9 +307,9 @@ const AccountInfo = () => {
               <h2 className="text-base sm:text-lg font-medium mb-3 sm:mb-4">
                 Language Preferences
               </h2>
-             <div>
-              <LanguageSelector />
-             </div>
+              <div>
+                <LanguageSelector />
+              </div>
             </div>
 
             <div className="mt-8 sm:mt-12 md:mt-[4rem]">
@@ -319,6 +328,17 @@ const AccountInfo = () => {
                 onClick={() => setSelectedPayment("Debit / Credit Card")}
               />
             </div>
+            <div
+              className="text-end"
+            >
+              <Button
+                classNames={`cursor-pointer mt-8 sm:mt-12 md:mt-[4rem] w-full bg-[#01447E] text-white py-2.5 sm:py-3 px-3 sm:px-4 rounded-md hover:bg-blue-900 transition-colors`}
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
+            </div>
+
           </div>
         </div>
       </div>

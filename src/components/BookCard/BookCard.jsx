@@ -23,29 +23,31 @@ const BookCard = ({ books }) => {
   // Function to show alert
   const showAlert = (type, message) => {
     setAlert({ type, message });
-    setTimeout(() => setAlert(null), 2000);
+    setTimeout(() => {
+      setAlert(null);
+    }, 2000);
   };
 
   const handleAddToCart = async (book) => {
-    if (!book) { 
-        console.error("❌ Error: Book ID is missing!", book);
-        return showAlert("error", "Book ID is missing!");
+    if (!book) {
+      console.error("❌ Error: Book ID is missing!", book);
+      return showAlert("error", "Book ID is missing!");
     }
 
     try {
-        const result = await dispatch(addToCart(book));
+      const result = await dispatch(addToCart(book));
 
-        if (addToCart.fulfilled.match(result)) {
-            showAlert("success", "Book added to cart!"); 
-        } else {
-            console.warn("⚠️ Add to Cart Failed!", result);
-            showAlert("error", `Failed to add book: ${result.payload?.message || "Unknown error"}`);
-        }
+      if (addToCart.fulfilled.match(result)) {
+        showAlert("success", "Book added to cart!");
+      } else {
+        console.warn("⚠️ Add to Cart Failed!", result);
+        showAlert("error", `Failed to add book: ${result.payload?.message || "Unknown error"}`);
+      }
     } catch (error) {
-        console.error("❌ Unexpected Error:", error);
-        showAlert("error", "Something went wrong while adding to cart!");
+      console.error("❌ Unexpected Error:", error);
+      showAlert("error", "Something went wrong while adding to cart!");
     }
-};
+  };
 
 
 
@@ -92,11 +94,13 @@ const BookCard = ({ books }) => {
   return (
     <>
       {alert && (
-        <Alert
-          type={alert.type}
-          message={alert.message}
-          onClose={() => setAlert(null)}
-        />
+        <div className="fixed top-5 left-1/2 transform -translate-x-1/2 z-50">
+          <Alert
+            type={alert.type}
+            message={alert.message}
+            onClose={() => setAlert(null)}
+          />
+        </div>
       )}
 
       {/* Show Alert */}

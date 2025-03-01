@@ -73,7 +73,11 @@ const Login = () => {
             WELCOME TO
           </h1>
           <span className="text-[#01447E] mt-4 font-semibold text-4xl lg:text-5xl">
-            ZTF Books
+           <Link
+           to={'/'}
+           >
+           ZTF Books
+           </Link>
           </span>
 
           <form
