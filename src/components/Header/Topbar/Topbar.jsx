@@ -6,20 +6,23 @@ import { Link, useNavigate } from "react-router-dom";
 import Input from "../../Input/Input";
 import Button from "../../Button/Button";
 import UserLogin from "../../UserLogin/UserLogin";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { debounce } from "lodash";
 import service from "../../../API/DBService";
+import { getLocalStorage } from "../../../LocalStorage/LocalStorage";
 
 const Topbar = () => {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
   const [logo, setLogo] = useState("");
-
   const { register } = useForm();
   const isLogin = useSelector((state) => state.auth.status);
+  const products = useSelector((state) => state.cart.products, shallowEqual); 
+  const quantity = products.length;
 
-  const cart = useSelector((state) => state.cart.products);
-  const totalQuantity = cart.length
+
+
+
   // Debounced search function
   const debouncedSearch = debounce((value) => {
     setQuery(value);
@@ -49,6 +52,7 @@ const Topbar = () => {
   useEffect(() => {
     getSiteLogo();
   }, []);
+
   return (
     <div className="bg-[#f6f7f8] flex items-center justify-between px-5 md:px-[80px] py-4 border-b border-[#ded5d5]">
       <h1 className="text-3xl md:text-[36px] font-bold text-[#0B457F]">
@@ -85,9 +89,9 @@ const Topbar = () => {
         <Link to="my-cart">
           <div className="relative hidden md:block">
             <BsCart3 className="text-gray-600 text-3xl cursor-pointer" />
-            {authStatus && totalQuantity > 0 && (
+            {authStatus && quantity > 0 && (
               <div className="size-[23px] bg-[#BE5C5C] text-white text-sm font-normal text-center align-middle rounded-full absolute top-0 -right-2">
-                {totalQuantity}
+                {quantity}
               </div>
             )}
           </div>

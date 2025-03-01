@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FiEdit2, FiGlobe } from "react-icons/fi";
 import { BsCreditCard } from "react-icons/bs";
 import { TbPhotoPlus } from "react-icons/tb";
@@ -52,6 +52,81 @@ const PreferenceButton = ({ icon, label, selected, onClick }) => {
     </button>
   );
 };
+
+const languageOptions = [
+  {
+    label: "French",
+    value: "French",
+    icon: "https://flagpedia.net/data/flags/w580/pf.webp",
+  },
+  {
+    label: "USA",
+    value: "USA",
+    icon: "https://flagpedia.net/data/flags/w580/us.webp",
+  },
+  {
+    label: "Australia",
+    value: "Australia",
+    icon: "https://flagpedia.net/data/flags/w580/au.webp",
+  },
+];
+
+
+
+const LanguageSelector = () => {
+  const [selectedLanguage, setSelectedLanguage] = useState(languageOptions[0]);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const handleSelect = (language) => {
+    setSelectedLanguage(language);
+    setDropdownOpen(false);
+  };
+
+  return (
+    <div className="relative inline-block text-left w-full">
+      {/* Button to Open Dropdown */}
+      <button
+        className="bg-white mb-3 sm:mb-4 w-full flex items-center justify-between px-3 sm:px-4 py-3 sm:py-4 rounded-xl shadow border"
+        onClick={() => setDropdownOpen(!dropdownOpen)}
+      >
+        <div className="flex items-center gap-2">
+          <FiGlobe className="mr-1 sm:mr-2 w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+          <span className="text-sm sm:text-base">{selectedLanguage.label}</span>
+        </div>
+        <IoIosArrowDown className="ml-2 sm:ml-4 w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+      </button>
+
+      {/* Dropdown Menu */}
+      {dropdownOpen && (
+        <div
+          ref={dropdownRef}
+          className="absolute z-10 mt-2 w-full bg-white rounded-xl shadow-lg border"
+        >
+          {languageOptions.map((option) => (
+            <PreferenceButton
+              key={option.value}
+              icon={
+                <img
+                  src={option.icon}
+                  className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-full"
+                  alt={option.label}
+                />
+              }
+              label={option.label}
+              selected={selectedLanguage.value === option.value}
+              onClick={() => handleSelect(option)}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+
+
+
 
 const AccountInfo = () => {
   const [selectedLanguage, setSelectedLanguage] = React.useState("French");
@@ -223,50 +298,9 @@ const AccountInfo = () => {
               <h2 className="text-base sm:text-lg font-medium mb-3 sm:mb-4">
                 Language Preferences
               </h2>
-              <div className="mb-4">
-                <button className="bg-white mb-3 sm:mb-4 w-full flex items-center justify-start px-3 sm:px-4 py-3 sm:py-4 rounded-xl">
-                  <div className="flex items-center gap-2">
-                    <FiGlobe className="mr-1 sm:mr-2 w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
-                    <span className="text-sm sm:text-base">
-                      Select Language
-                    </span>
-                  </div>
-                  <IoIosArrowDown className="ml-2 sm:ml-4 w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
-                </button>
-                <PreferenceButton
-                  icon={
-                    <img
-                      src="https://flagpedia.net/data/flags/w580/pf.webp"
-                      className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-gray-500 rounded-full"
-                    />
-                  }
-                  label="French"
-                  selected={selectedLanguage === "French"}
-                  onClick={() => setSelectedLanguage("French")}
-                />
-                <PreferenceButton
-                  icon={
-                    <img
-                      src="https://flagpedia.net/data/flags/w580/us.webp"
-                      className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-gray-500 rounded-full"
-                    />
-                  }
-                  label="USA"
-                  selected={selectedLanguage === "USA"}
-                  onClick={() => setSelectedLanguage("USA")}
-                />
-                <PreferenceButton
-                  icon={
-                    <img
-                      src="https://flagpedia.net/data/flags/w580/au.webp"
-                      className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-gray-500 rounded-full"
-                    />
-                  }
-                  label="Australia"
-                  selected={selectedLanguage === "Australia"}
-                  onClick={() => setSelectedLanguage("Australia")}
-                />
-              </div>
+             <div>
+              <LanguageSelector />
+             </div>
             </div>
 
             <div className="mt-8 sm:mt-12 md:mt-[4rem]">

@@ -23,31 +23,32 @@ const BookCard = ({ books }) => {
   // Function to show alert
   const showAlert = (type, message) => {
     setAlert({ type, message });
-    setTimeout(() => setAlert(null), 2000); // Hide after 2 seconds
+    setTimeout(() => setAlert(null), 2000);
   };
 
-  const handleAddToCart = async (ebookId) => {
-    if (!ebookId) {
-      console.error("Invalid cart item:", { ebookId });
-      return showAlert("error", "Invalid book details!");
+  const handleAddToCart = async (book) => {
+    if (!book) { 
+        console.error("❌ Error: Book ID is missing!", book);
+        return showAlert("error", "Book ID is missing!");
     }
 
     try {
-      setLoading((prev) => ({ ...prev, [ebookId]: true }));
+        const result = await dispatch(addToCart(book));
 
-      const result = await dispatch(addToCart({ ebookId }));
-      if (addToCart.fulfilled.match(result)) {
-        showAlert("success", "Item added to the cart successfully!");
-      } else {
-        showAlert("error", result.payload || "Failed to add item to cart.");
-      }
+        if (addToCart.fulfilled.match(result)) {
+            showAlert("success", "Book added to cart!"); 
+        } else {
+            console.warn("⚠️ Add to Cart Failed!", result);
+            showAlert("error", `Failed to add book: ${result.payload?.message || "Unknown error"}`);
+        }
     } catch (error) {
-      console.error("❌ Error adding to cart:", error);
-      showAlert("error", "Something went wrong! Try again.");
-    } finally {
-      setLoading((prev) => ({ ...prev, [ebookId]: false }));
+        console.error("❌ Unexpected Error:", error);
+        showAlert("error", "Something went wrong while adding to cart!");
     }
-  };
+};
+
+
+
 
   // Fetch images for all books
   useEffect(() => {
@@ -178,13 +179,12 @@ const BookCard = ({ books }) => {
           {/* Add to Cart Button */}
           <div className="mt-4">
             <Button
-              classNames={`w-full py-2 cursor-pointer ${
-                loading[book.id]
-                  ? "bg-gray-400"
-                  : "bg-[#01447E] hover:bg-[#013366]"
-              } text-white`}
+              classNames={`w-full py-2 cursor-pointer ${loading[book.id]
+                ? "bg-gray-400"
+                : "bg-[#01447E] hover:bg-[#013366]"
+                } text-white`}
               onClick={() =>
-                handleAddToCart(book.id, 1, book.ebookTitle, book.amount)
+                handleAddToCart(book.id)
               }
               disabled={loading[book.id]}
             >

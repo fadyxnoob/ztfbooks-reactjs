@@ -112,7 +112,7 @@ export class DBService {
     // get single ebook by id
     async getBookByID(id) {
         try {
-            const res = await axios.get(`${import.meta.env.VITE_GET_SINGLE_EBOOK_BY_ID_API_KEY}${id}`)
+            const res = await axios.get(`https://server.ztfbooks.com/opn/v1/e-books/${id}`)
             return res;
         } catch (error) {
             console.log('DBService:: Failed to fetch Single book by ID', error)

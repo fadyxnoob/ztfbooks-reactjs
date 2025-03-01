@@ -25,7 +25,6 @@ export class AuthService {
 
     // let the user login using api
     async login(data) {
-        console.log({data})
         try {
             const response = await axios.post(
                 'https://server.ztfbooks.com/v1/authenticate/user',
