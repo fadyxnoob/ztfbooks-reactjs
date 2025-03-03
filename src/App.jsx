@@ -20,6 +20,7 @@ const MyFavourite = React.lazy(() => import("./pages/MyFavourite/MyFavourite"));
 const Faqs = React.lazy(() => import("./pages/Faqs/Faqs"));
 const Login = React.lazy(() => import("./pages/Login/Login"));
 const Signup = React.lazy(() => import("./pages/Signup/Signup"));
+const AuthorPage = React.lazy(() => import("./pages/AuthorPage/AuthorPage.jsx"));
 const ForgotPassword = React.lazy(() =>
   import("./pages/ForgotPassword/ForgotPassword")
 );
@@ -74,6 +75,7 @@ const App = () => {
 
             <Route path="/search" element={<SearchPage />} />
             <Route path="book-detail/:bookID" element={<BookDetail />} />
+            <Route path="author/:authorID" element={<AuthorPage />} />
             <Route path="e-books" element={<EBooks />} />
             <Route path="recommended-books" element={<RecommendedBooks />} />
             <Route path="best-selling-books" element={<BestSellingBooks />} />

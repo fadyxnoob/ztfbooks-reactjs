@@ -3,7 +3,6 @@ import { AlertCircle, CheckCircle } from "lucide-react";
 import { createPortal } from "react-dom";
 const Alert = ({ type, message, duration = 3000, onClose }) => {
   const [progress, setProgress] = useState(100);
-  console.log('I am hitted')
   useEffect(() => {
     let startTime = Date.now();
     let interval = setInterval(() => {

@@ -19,10 +19,10 @@ const GoogleButton = ({ onGoogleAuth, actionType = "Sign up" }) => {
   return (
     <button
       onClick={handleGoogleAuth}
-      className="flex items-center justify-start gap-4 w-full rounded-lg border border-gray-300 px-4 py-2 text-[#043133] font-medium text-gray-700 text-[18px] hover:bg-gray-50 transition-colors cursor-pointer"
+      className="flex items-center justify-start gap-4 w-full rounded-lg border border-gray-300 px-4 py-2 text-[#043133] font-medium text-lg hover:bg-gray-50 transition-colors cursor-pointer"
     >
       <FcGoogle size={55} />
-      <span className="text-[1.4rem]">{actionType} with Google</span>
+      <span>{actionType} with Google</span>
     </button>
   );
 };

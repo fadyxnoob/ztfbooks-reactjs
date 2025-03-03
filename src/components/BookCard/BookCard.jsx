@@ -41,7 +41,7 @@ const BookCard = ({ books }) => {
         showAlert("success", "Book added to cart!");
       } else {
         console.warn("⚠️ Add to Cart Failed!", result);
-        showAlert("error", `Failed to add book: ${result.payload?.message || "Unknown error"}`);
+        showAlert("error", `${result.payload || "Unknown error"}`);
       }
     } catch (error) {
       console.error("❌ Unexpected Error:", error);
@@ -156,11 +156,14 @@ const BookCard = ({ books }) => {
             </div>
 
             {/* Author */}
-            <p className="text-gray-700 text-sm">
-              Author:{" "}
-              {book?.author?.name ||
-                book?.detailedInfo?.author?.name ||
-                null}
+            <p className="text-blue-700 underline text-sm">
+              <Link
+              to={`/author/${book?.author?.id}`}
+              >
+                Author:{book?.author?.name ||
+                  book?.detailedInfo?.author?.name ||
+                  null}
+              </Link>
             </p>
 
             {/* Time & Category */}

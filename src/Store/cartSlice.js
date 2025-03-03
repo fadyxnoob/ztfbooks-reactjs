@@ -22,7 +22,7 @@ export const addToCart = createAsyncThunk(
         try {
             const token = getLocalStorage("userdata")?.jwtToken;
 
-            if (!token) return rejectWithValue("No token found");
+            if (!token) return rejectWithValue("Please login first");
 
             // ✅ Send `ebookId` as a query parameter
             const response = await axios.post(
@@ -70,7 +70,6 @@ const cartSlice = createSlice({
                 state.loading = true;
             })
             .addCase(fetchCartItems.fulfilled, (state, action) => {
-                console.log("✅ Cart Updated:", action.payload);
                 state.products = action.payload;
                 state.count = action.payload.length;
                 state.loading = false;

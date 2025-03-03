@@ -30,31 +30,36 @@ const Signup = () => {
   };
 
   return (
-    <div className="bg-[#F6F7F8F9] lg:px-[80px] md:px-8 px-4 flex items-start min-h-screen">
+    <div className="bg-[#F6F7F8F9] lg:px-[80px] md:px-8 px-4 flex items-start h-screen">
       <div className="hidden md:block md:w-[40%] h-screen sticky top-0">
-        <img src={image} alt="Signup" className="w-full h-full object-cover" />
+        <img src={image} alt="Signup" className="w-full h-screen object-fill" />
       </div>
 
-      <div className="bg-white px-4 py-8 md:px-8 lg:px-[130px] lg:py-[150px] w-full md:w-[60%] min-h-screen flex justify-center items-center flex-col">
-        <h1 className="text-[#01447E] text-2xl lg:text-3xl font-extralight text-center">
-          WELCOME TO
+      <div className="bg-white px-4 md:px-8 lg:px-[130px] py-2 w-full md:w-[60%] flex justify-center items-center flex-col">
+        <h1 className="text-[#01447E] text-xl text-center">
+          <Link
+          to={'/'}
+          >
+            WELCOME TO
+            <span className="text-[#01447E] mt-2 font-semibold text-3xl">
+              ZTF Books
+            </span>
+          </Link>
         </h1>
-        <span className="text-[#01447E] mt-4 font-semibold text-4xl lg:text-5xl">
-          ZTF Books
-        </span>
+
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="w-full max-w-[570px] mt-8 lg:mt-16"
+          className="w-full"
         >
-          <div className="mb-6 lg:mb-8">
-            <label className="text-[#4D5959] text-lg lg:text-[20px] font-medium">
+          <div className="mb-2">
+            <label className="text-[#4D5959] text-lg font-medium">
               Name
             </label>
             <Input
               type="text"
               placeholder="Enter your Fullname here"
-              classes="bg-[#EFF0F2] w-full mt-2 p-4 lg:p-[22px] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#01447E] placeholder:text-base lg:placeholder:text-xl"
+              classes="bg-[#EFF0F2] w-full p-3 rounded-lg focus:outline-none placeholder:text-base"
               inputRegister={register("name", {
                 required: "Name is required",
                 minLength: {
@@ -67,14 +72,14 @@ const Signup = () => {
               <p className="text-red-500 text-sm">{errors.name.message}</p>
             )}
           </div>
-          <div className="mb-6 lg:mb-8">
-            <label className="text-[#4D5959] text-lg lg:text-[20px] font-medium">
+          <div className="mb-2">
+            <label className="text-[#4D5959] text-lg font-medium">
               Email
             </label>
             <Input
               type="email"
               placeholder="Enter your Email here"
-              classes="bg-[#EFF0F2] w-full mt-2 p-4 lg:p-[22px] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#01447E] placeholder:text-base lg:placeholder:text-xl"
+              classes="bg-[#EFF0F2] w-full p-3 rounded-lg focus:outline-none placeholder:text-base"
               inputRegister={register("email", {
                 required: "Email is required",
                 pattern: {
@@ -88,14 +93,14 @@ const Signup = () => {
             )}
           </div>
 
-          <div className="mb-6 lg:mb-8">
+          <div className="mb-2">
             <label className="text-[#4D5959] text-lg lg:text-[20px] font-medium">
               Password
             </label>
             <Input
               type="password"
               placeholder="Enter your Password"
-              classes="bg-[#EFF0F2] w-full mt-2 p-4 lg:p-[22px] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#01447E] placeholder:text-base lg:placeholder:text-xl"
+              classes="bg-[#EFF0F2] w-full p-3 rounded-lg focus:outline-none placeholder:text-base"
               inputRegister={register("password", {
                 required: "Password is required",
                 minLength: {
@@ -109,14 +114,14 @@ const Signup = () => {
             )}
           </div>
 
-          <div className="mb-6 lg:mb-8">
+          <div className="mb-2">
             <label className="text-[#4D5959] text-lg lg:text-[20px] font-medium">
               Confirm Password
             </label>
             <Input
               type="password"
               placeholder="Enter your Password"
-              classes="bg-[#EFF0F2] w-full mt-2 p-4 lg:p-[22px] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#01447E] placeholder:text-base lg:placeholder:text-xl"
+              classes="bg-[#EFF0F2] w-full p-3 rounded-lg focus:outline-none placeholder:text-base"
               inputRegister={register("confirmPassword", {
                 required: "Please confirm your password",
                 validate: (val) => {
@@ -136,27 +141,23 @@ const Signup = () => {
           </p>
 
           <PrimaryButton
-            classes="border-2 mt-6 lg:mt-8 text-lg lg:text-[20px]"
+            classes="py-3 mt-2"
             type="submit"
           >
             Submit
           </PrimaryButton>
 
-          <div className="mt-4">
+          <div className="mt-2">
             <Link
-              className="text-base lg:text-[18px] text-[#01447E]"
+              className="text-base text-[#01447E] leading-relaxed"
               to={"/login"}
             >
               Already have an account?{" "}
-              <span className="font-medium leading-relaxed">Sign In</span>
+              <span className="font-medium leading-relaxed">Sign In </span> <span className="text-black text-xl">OR</span>
             </Link>
           </div>
         </form>
-
-        <div className="text-2xl lg:text-3xl text-[#043133] font-medium mt-6 lg:mt-8 mb-4">
-          OR
-        </div>
-        <div className="mt-6 lg:mt-8 w-full mb-2">
+        <div className="mt-3">
           <div className="flex flex-col md:flex-row sm:flex-col gap-4 md:gap-6 w-full mx-auto">
             <div className="flex-1">
               <GoogleButton

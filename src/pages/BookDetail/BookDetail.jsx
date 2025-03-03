@@ -70,24 +70,24 @@ const BookDetail = () => {
     getBookReviews(bookID);
   }, []);
 
-  const handleAddToCart = async (ebookId) => {
-    if (!ebookId) {
-      console.error("Invalid cart item:", { ebookId });
-      return showAlert("error", "Invalid book details!");
+  const handleAddToCart = async (book) => {
+    if (!book) {
+      console.error("❌ Error: Book ID is missing!", book);
+      return showAlert("error", "Book ID is missing!");
     }
 
     try {
-      setLoading((prev) => ({ ...prev, [ebookId]: true }));
+      const result = await dispatch(addToCart(book));
 
-      const result = await dispatch(addToCart({ ebookId }));
       if (addToCart.fulfilled.match(result)) {
-        showAlert("success", "Item added to the cart successfully!");
+        showAlert("success", "Book added to cart!");
       } else {
-        showAlert("error", result.payload);
+        console.warn("⚠️ Add to Cart Failed!", result);
+        showAlert("error", `${result.payload || "Unknown error"}`);
       }
     } catch (error) {
-      console.error("❌ Error adding to cart:", error);
-      showAlert("error", error);
+      console.error("❌ Unexpected Error:", error);
+      showAlert("error", "Something went wrong while adding to cart!");
     }
   };
 
@@ -166,8 +166,12 @@ const BookDetail = () => {
             </div>
             <div className="my-5 flex">
               <h2 className="text-[#203949] text-xl font-medium">Author: </h2>
-              <p className=" ml-1 text-[#203949] text-lg">
-                {bookDetail?.author?.name}
+              <p className=" ml-1 text-lg text-blue-600 underline">
+                <Link
+                  to={`/author/${bookDetail?.author?.id}`}
+                >
+                  {bookDetail?.author?.name}
+                </Link>
               </p>
             </div>
             <div className="my-5 flex">
@@ -226,7 +230,7 @@ const BookDetail = () => {
           <Loader />
         ) : filteredBooks.length > 0 ? (
           <section className="my-10">
-            <h2 className="text-2xl text-black font-medium">Also Bought Books</h2>
+            <h2 className="text-2xl text-black font-medium">Also in the same series</h2>
             <div>
               <Carousel books={filteredBooks} pathTo={`/series/${bookDetail.categories[0].name}`} />
             </div>
@@ -246,14 +250,22 @@ const BookDetail = () => {
         </section>
 
         {/* reviews section */}
-        <section className="my-10 bg-[#EBEBEB] pt-10 pb-3 px-3">
-          <h2 className="text-[#203949] text-sm md:text-2xl font-semibold">
-            Reviews on {bookDetail?.ebookTitle} Ebook
+        {
+          reviews.length > 0 ? (
+            <section className="my-10 bg-[#EBEBEB] pt-10 pb-3 px-3">
+              <h2 className="text-[#203949] text-sm md:text-2xl font-semibold">
+                Reviews on {bookDetail?.ebookTitle} Ebook
+              </h2>
+              <div className="mt-10 flex flex-col gap-5">
+                <ReviewCard reviews={reviews} />
+              </div>
+            </section>
+          ) : (
+            <h2 className="text-[#203949] text-sm md:text-2xl font-semibold my-10 bg-[#EBEBEB] p-3 rounded ">
+            No Reviews for {bookDetail?.ebookTitle} Ebook
           </h2>
-          <div className="mt-10 flex flex-col gap-5">
-            <ReviewCard reviews={reviews} />
-          </div>
-        </section>
+          )
+        }
       </div>
     </>
   );

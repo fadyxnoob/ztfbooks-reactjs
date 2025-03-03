@@ -29,7 +29,7 @@ const Topbar = () => {
     navigate(
       value.trim() ? `/search?q=${encodeURIComponent(value)}` : "/search"
     );
-  }, 500);
+}, 0);
 
   const handleSearch = (value) => {
     debouncedSearch(value);

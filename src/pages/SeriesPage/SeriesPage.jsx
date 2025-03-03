@@ -46,22 +46,21 @@ const SeriesPage = () => {
 
           return (
             <section className="my-10" key={series.id}>
-              <div className="flex items-center justify-between mb-5 mt-10">
-                <h4 className="text-[#203949] text-xl font-semibold">{series.name}</h4>
-                <Link to={`/series/${series.name}`} className="text-blue-600">
-                  See All
-                </Link>
-              </div>
-
+              {filteredBooks.length > 0 ? (
+                <div className="flex items-center justify-between mb-5 mt-10">
+                  <h4 className="text-[#203949] text-xl font-semibold">{series.name}</h4>
+                  <Link to={`/series/${series.name}`} className="text-blue-600">
+                    See All
+                  </Link>
+                </div>
+              ) : null}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-5 justify-items-center">
                 {filteredBooks.length > 0 ? (
                   filteredBooks.slice(0, 5).map((book) => (
                     <SeriesCategoryCard key={book.id} book={book} seriesName={series.name} />
                   ))
                 ) : (
-                  <p className="text-gray-500 text-center md:text-start">
-                    No books available in this series.
-                  </p>
+                  null
                 )}
               </div>
             </section>

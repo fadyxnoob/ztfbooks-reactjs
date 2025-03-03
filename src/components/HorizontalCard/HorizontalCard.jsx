@@ -9,7 +9,7 @@ import useFavorite from "../../Hooks/useFavorite";
 
 const HorizontalCard = ({ books }) => {
   const [images, setImages] = useState({});
-  const {handleAddToFavorite, handleRemoveFromFavorite, isFavorite} = useFavorite()
+  const { handleAddToFavorite, handleRemoveFromFavorite, isFavorite } = useFavorite()
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -57,7 +57,13 @@ const HorizontalCard = ({ books }) => {
             <Link to={`book-detail/${book.id}`}>
               <h3 className="text-lg font-semibold">{book.title.split(' ').slice(0, 2).join(' ')}</h3>
             </Link>
-            <p className="text-gray-600 text-sm">Author: {book?.author}</p>
+            <p className="text-blue-600 underline text-sm">
+              <Link
+              to={`/author/${book?.detailedInfo?.author?.id}`}
+              >
+                Author: {book?.author}
+              </Link>
+            </p>
             <div className="flex flex-wrap items-center gap-2 text-black text-sm mt-2 font-[300]">
               <span className="flex items-center gap-2">
                 <MdOutlineAccessTime /> {book.duration}
@@ -71,8 +77,8 @@ const HorizontalCard = ({ books }) => {
               onClick={() => isFavorite(book.id) ? handleRemoveFromFavorite(book.id) : handleAddToFavorite(book.id, true)}
             >
 
-               <FaHeart className={`text-lg ${isFavorite(book.id) ? "text-red-500" : "text-gray-400 "}`} />
-               {isFavorite(book.id) ? "Remove from Favourite" : "Add to Favourite"}
+              <FaHeart className={`text-lg ${isFavorite(book.id) ? "text-red-500" : "text-gray-400 "}`} />
+              {isFavorite(book.id) ? "Remove from Favourite" : "Add to Favourite"}
             </button>
           </div>
         </div>

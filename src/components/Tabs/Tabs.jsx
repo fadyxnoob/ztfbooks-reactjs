@@ -12,17 +12,16 @@ const Tabs = () => {
   const getBestSellingBooks = async () => {
     try {
       const res = await service.getBestSalesBooks(5);
-      //   console.log(res);
       if (res && res.length > 0) {
         const formattedBooks = await Promise.all(
           res.map(async (book) => {
-            const singleBook = await service.getBookByID(book.ebookId); // Await here
+            const singleBook = await service.getBookByID(book.ebookId); 
             return {
               title: book.ebookTitle,
               image: book.ebookThumbNail,
-              author: book.author?.name || "Unknown",
-              duration: book.timeToRead || "N/A",
-              category: book.categories?.[0]?.name || "N/A",
+              author: singleBook?.data?.author?.name ,
+              duration: singleBook?.data?.timeToRead,
+              category: book.categories?.[0]?.name,
               id: book.ebookId,
               detailedInfo: singleBook?.data,
             };
@@ -65,10 +64,11 @@ const Tabs = () => {
             return {
               title: book.ebookTitle,
               image: book.thumbnailFileName,
-              category: book.categories?.[0]?.name || "N/A",
+              category: book.categories?.[0]?.name,
               id: book.id,
               duration: book.duration,
               detailedInfo: singleBook?.data,
+              author: singleBook?.data?.author?.name
             };
           })
         );
@@ -115,7 +115,7 @@ const Tabs = () => {
 
   // Usage
   const specialDiscountBooks = filterBooks(approvedEBooks, filterDiscount);
-  const displayBooksOnly = specialDiscountBooks.slice(0, 8);
+  const displayBooksOnly = specialDiscountBooks.slice(0, 6);
 
   useEffect(() => {
     getBestSellingBooks();

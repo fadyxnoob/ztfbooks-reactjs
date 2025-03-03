@@ -10,6 +10,7 @@ import Alert from "../Alert/Alert";
 import Button from '../Button/Button'
 import { removeLocalStorage } from "../../LocalStorage/LocalStorage";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Input = ({
   name,
@@ -76,35 +77,75 @@ const languageOptions = [
 
 
 const LanguageSelector = () => {
-  const [selectedLanguage, setSelectedLanguage] = useState(languageOptions[0]);
+  const [languageOptions, setLanguageOptions] = useState([]);
+  const [selectedLanguage, setSelectedLanguage] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const { data: countryList } = await axios.get("https://server.ztfbooks.com/opn/v1/countries/all");
+        const { data: allCountries } = await axios.get("https://restcountries.com/v3.1/all");
+
+        const countryCodeMap = {};
+        allCountries.forEach((country) => {
+          if (country.name.common) {
+            countryCodeMap[country.name.common] = country.cca2.toLowerCase();
+          }
+        });
+
+        const formattedCountries = countryList.map((country) => {
+          const code = countryCodeMap[country.name] || "";
+          return {
+            label: country.name,
+            value: country.name,
+            icon: code ? `https://flagpedia.net/data/flags/w580/${code}.webp` : "",
+          };
+        });
+
+        setLanguageOptions(formattedCountries);
+
+        const savedLanguage = localStorage.getItem("selectedLanguage");
+        if (savedLanguage) {
+          setSelectedLanguage(JSON.parse(savedLanguage));
+        } else {
+          setSelectedLanguage(formattedCountries[0]);
+        }
+      } catch (error) {
+        console.error("Error fetching countries:", error);
+      }
+    };
+
+    fetchCountries();
+  }, []);
 
   const handleSelect = (language) => {
     setSelectedLanguage(language);
     setDropdownOpen(false);
+    localStorage.setItem("selectedLanguage", JSON.stringify(language));
   };
+
 
   return (
     <div className="relative inline-block text-left w-full">
       {/* Button to Open Dropdown */}
       <button
-        className="bg-white mb-3 sm:mb-4 w-full flex items-center justify-between px-3 sm:px-4 py-3 sm:py-4 rounded-xl shadow border"
+        className="bg-white mb-3 sm:mb-4 w-full flex items-center justify-between px-3 sm:px-4 py-3 sm:py-4 rounded-xl shadow"
         onClick={() => setDropdownOpen(!dropdownOpen)}
       >
         <div className="flex items-center gap-2">
-          <FiGlobe className="mr-1 sm:mr-2 w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
-          <span className="text-sm sm:text-base">{selectedLanguage.label}</span>
+          {selectedLanguage?.icon ? (
+            <img src={selectedLanguage.icon} className="w-6 h-6 sm:w-7 sm:h-7 rounded-full" alt={selectedLanguage.label} />
+          ) : null}
+          <span className="text-sm sm:text-base">{selectedLanguage?.label || "Select Language"}</span>
         </div>
         <IoIosArrowDown className="ml-2 sm:ml-4 w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
       </button>
 
       {/* Dropdown Menu */}
       {dropdownOpen && (
-        <div
-          ref={dropdownRef}
-          className="absolute z-10 mt-2 w-full bg-white rounded-xl shadow-lg border"
-        >
+        <div ref={dropdownRef} className="absolute z-10 mt-2 w-full bg-white rounded-xl shadow-lg max-h-56 overflow-y-auto">
           {languageOptions.map((option) => (
             <PreferenceButton
               key={option.value}
@@ -116,7 +157,7 @@ const LanguageSelector = () => {
                 />
               }
               label={option.label}
-              selected={selectedLanguage.value === option.value}
+              selected={selectedLanguage?.value === option.value}
               onClick={() => handleSelect(option)}
             />
           ))}
