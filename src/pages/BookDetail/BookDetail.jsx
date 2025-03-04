@@ -144,7 +144,7 @@ const BookDetail = () => {
       {/* Book Details */}
       <div className="px-5 md:px-20 py-5 bg-[#f4f3f4]">
         <h1 className="bg-[#F7F8F8] my-3 p-3 rounded-xl text-[#203949] text-3xl font-medium">
-          Ebook Details
+          Book Details – Book Preview: Summary & Reviews
         </h1>
         <div className="my-5 flex flex-col md:flex-row gap-5 items-start">
           {/* Product Image */}
@@ -262,8 +262,8 @@ const BookDetail = () => {
             </section>
           ) : (
             <h2 className="text-[#203949] text-sm md:text-2xl font-semibold my-10 bg-[#EBEBEB] p-3 rounded ">
-            No Reviews for {bookDetail?.ebookTitle} Ebook
-          </h2>
+              No Reviews for {bookDetail?.ebookTitle} Ebook
+            </h2>
           )
         }
       </div>

@@ -41,7 +41,7 @@ const Faqs = () => {
     <div className="px-5 md:px-20 py-5 bg-[#f4f3f4] min-h-screen">
       {/* Header */}
       <h1 className="bg-[#F7F8F8] my-3 p-3 rounded-xl text-[#203949] text-3xl font-medium">
-        FAQs
+        FAQs - Help Center: Frequently Asked Questions
       </h1>
       <h4 className="text-[#203949] text-2xl text-center md:text-start font-semibold">
         Customers Frequently Asked Questions

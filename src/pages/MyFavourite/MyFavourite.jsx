@@ -71,16 +71,16 @@ const MyFavourite = () => {
     <div className="px-5 md:px-20">
       <section className="my-10">
         <h4 className="text-[#203949] text-3xl text-center md:text-start font-medium">
-          My Favourite
+          Favorites – Your Wishlist: Saved Books & Favorites
         </h4>
         <div className="grid mt-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-        <BookCard books={normalBooks} fav={true} />
+          <BookCard books={normalBooks} fav={true} />
         </div>
       </section>
 
       <section className=" bg-white p-5">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 ">
-      <HorizontalCard  books={horizontalBooks} fav={true} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 ">
+          <HorizontalCard books={horizontalBooks} fav={true} />
         </div>
       </section>
     </div>

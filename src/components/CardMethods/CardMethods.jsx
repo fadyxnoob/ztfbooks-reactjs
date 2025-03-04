@@ -25,7 +25,6 @@ const CardMethods = () => {
       (acc, product) => acc + (product?.ebook?.amount || 0),
       0
     );
-  
     const handleStripePayment = () => {
       navigate("/stripe-payment", { state: { amount: totalPrice } }); // 🔄 Redirects to StripePayment page
     };

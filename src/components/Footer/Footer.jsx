@@ -3,6 +3,7 @@ import androidApp from "../../assets/images/android-app.png";
 import iosApp from "../../assets/images/ios-app.png";
 import { Link } from "react-router-dom";
 import { FaFacebook, FaLinkedin, FaTwitter, FaInstagram } from "react-icons/fa";
+
 const Footer = () => {
   return (
     <div className="text-white bg-[#01447e] w-full px-5 md:px-[80px] mt-22">
@@ -21,9 +22,9 @@ const Footer = () => {
           <h3 className="leading-[36px] text-[24px] font-medium">Sitemap</h3>
           <ul className="mt-2 leading-[23px] font-medium list-none flex flex-col gap-3">
             <li>
-             <Link to='/about-us'>
-             <p className="font-medium">About Us</p>
-             </Link>
+              <Link to='/about-us'>
+                <p className="font-medium">About Us</p>
+              </Link>
             </li>
             <li>
               <p className="font-medium">What We Do</p>
@@ -39,7 +40,9 @@ const Footer = () => {
           </h3>
           <ul className="mt-10 leading-[23px] font-medium list-none flex gap-3 flex-col md:flex-row">
             <li className="h-[80px] w-[240px]">
-              <a href="https://play.google.com/store/apps/details?id=com.ztfbooks.ztfbooks">
+              <a
+                target="_blank"
+                href="https://play.google.com/store/apps/details?id=com.ztfbooks.ztfbooks">
                 <img
                   src={androidApp}
                   alt="Android App"
@@ -48,7 +51,9 @@ const Footer = () => {
               </a>
             </li>
             <li className="h-[80px] w-[240px]">
-              <a href="#">
+              <a
+                target="_blank"
+                href="#">
                 <img
                   src={iosApp}
                   alt="Ios App"

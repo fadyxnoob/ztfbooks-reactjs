@@ -19,16 +19,14 @@ const CartPage = () => {
   const [dollarCurrency, setDollarCurrency] = useState('');
   const [cartProducts, setCartProducts] = useState([])
   const isLoading = useSelector((state) => state.cart.loading);
-  // ✅ Redux State for Cart
   const products = useSelector((state) => state.cart.products) || [];
-  // ✅ Calculate Total Price & Quantity
   const totalPrice = products.reduce((acc, product) => acc + (product?.ebook?.amount || 0), 0);
   const totalQuantity = products.length;
   const averageUnitPrice = totalQuantity > 0 ? (totalPrice / totalQuantity).toFixed(2) : 0;
 
-  useEffect(() => {
-    dispatch(fetchCartItems()); // ✅ Fetch Cart Items from API on Load
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(fetchCartItems());
+  // }, [dispatch]);
 
 
   // Fetch book details
@@ -144,7 +142,7 @@ const CartPage = () => {
       )}
       <div className="px-5 md:px-20 py-5 bg-[#f4f3f4]">
         <h1 className="bg-[#F7F8F8] my-3 p-3 rounded-xl text-[#203949] text-3xl font-medium">
-          Cart
+        Cart – Your Cart: Ready to Checkout?
         </h1>
         <div className="my-10 flex flex-col md:flex-row items-start gap-5 md:gap-[30px]">
           <div className="w-full md:w-[70%]">

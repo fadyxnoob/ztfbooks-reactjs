@@ -172,7 +172,7 @@ const LanguageSelector = () => {
 
 
 const AccountInfo = () => {
-  const [selectedLanguage, setSelectedLanguage] = React.useState("French");
+  // const [selectedLanguage, setSelectedLanguage] = React.useState("French");
   const [selectedPayment, setSelectedPayment] = React.useState(
     "Debit / Credit Card"
   );
@@ -255,7 +255,7 @@ const AccountInfo = () => {
   const handleLogout = () => {
     removeLocalStorage('authUserStatus')
     removeLocalStorage('userdata')
-    navigate('/login')
+    navigate('/')
 
   }
   const inputClass =
@@ -272,7 +272,7 @@ const AccountInfo = () => {
       )}
       <div className="bg-[#F6F7F8] mx-auto px-4 sm:px-6 md:px-[80px] pt-[40px] sm:pt-[60px] md:pt-[80px]">
         <h1 className="text-2xl sm:text-3xl md:text-4xl text-center font-semibold mb-8 sm:mb-10 md:mb-12 text-[#203949]">
-          Account Information
+          Account Information  – Manage Your Profile & Preferences
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 md:gap-16 pb-[3rem] sm:pb-[4rem] md:pb-[6rem] p-4 sm:p-[16px]">
@@ -346,7 +346,7 @@ const AccountInfo = () => {
           <div className="space-y-4 sm:space-y-5 md:space-y-6 mt-8 md:mt-0">
             <div>
               <h2 className="text-base sm:text-lg font-medium mb-3 sm:mb-4">
-                Language Preferences
+                Language Preferences - Choose Your Preferred Reading Language
               </h2>
               <div>
                 <LanguageSelector />
@@ -355,10 +355,10 @@ const AccountInfo = () => {
 
             <div className="mt-8 sm:mt-12 md:mt-[4rem]">
               <h2 className="text-base sm:text-lg font-medium mb-2 text-bold text-[#333333]">
-                Manage Payments
+                Manage Payments 
               </h2>
               <p className="text-base sm:text-[1.1rem] text-[#333333] mb-4 sm:mb-6">
-                Manage your saved payment options
+              Secure Payment Options & Billing
               </p>
               <PreferenceButton
                 icon={

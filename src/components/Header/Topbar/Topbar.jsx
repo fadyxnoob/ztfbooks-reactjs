@@ -6,20 +6,25 @@ import { Link, useNavigate } from "react-router-dom";
 import Input from "../../Input/Input";
 import Button from "../../Button/Button";
 import UserLogin from "../../UserLogin/UserLogin";
-import { shallowEqual, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { debounce } from "lodash";
 import service from "../../../API/DBService";
-import { getLocalStorage } from "../../../LocalStorage/LocalStorage";
+import { fetchCartItems } from "../../../Store/cartSlice";
 
 const Topbar = () => {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
   const [logo, setLogo] = useState("");
   const { register } = useForm();
+
+  // const dispatch = useDispatch()
   const isLogin = useSelector((state) => state.auth.status);
-  const products = useSelector((state) => state.cart.products, shallowEqual); 
+  const products = useSelector((state) => state.cart.products); 
   const quantity = products.length;
 
+  // useEffect(() => {
+  //   dispatch(fetchCartItems());
+  // }, [dispatch]);
 
 
 
