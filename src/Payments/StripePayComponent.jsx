@@ -8,7 +8,7 @@ import CheckoutForm from "./CheckoutForm";
 const StripePayPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { amount } = location.state || {}; // Get amount from navigation state
+  const { amount } = location.state || {}; 
   const [stripePromise, setStripePromise] = useState(null);
   const [clientSecret, setClientSecret] = useState("");
 

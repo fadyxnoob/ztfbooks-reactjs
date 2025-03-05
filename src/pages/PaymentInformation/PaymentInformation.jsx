@@ -86,7 +86,6 @@ const PaymentInformation = () => {
           {selectedPayment === "BANK" ? (
             <FlutterPayComponent
             btnText={'Continue'}
-              currency="NGN"
               className="cursor-pointer mt-8 sm:mt-12 md:mt-[4rem] w-full bg-[#014471] text-[#ffffff] py-3 sm:py-3 px-3 sm:px-4 rounded-2xl hover:bg-blue-900 transition-colors"
             />
           ) : (

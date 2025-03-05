@@ -67,7 +67,7 @@ const MobilePay = () => {
             </div>
 
             {selectedPayment === "flutterwave" ? (
-              <FlutterPayComponent currency={'GHS'} options={'mobilemoney'}
+              <FlutterPayComponent 
               btnText={`Pay $${totalPrice}`} className='text-center block cursor-pointer w-full bg-[#014471] text-white py-3 px-4 rounded-3xl hover:bg-blue-900 transition-colors'/>
             ) : (
               <Button

@@ -121,7 +121,7 @@ const Tabs = () => {
     getBestSellingBooks();
     getApprovedBooks();
   }, []);
-  const limitized = bestSalesBooks.slice(0, 10);
+  const limitized = bestSalesBooks.slice(0, 6);
   return (
     <div className="w-full mx-auto">
       <div className="flex md:w-1/2 justify-between gap-2 md:gap-10">

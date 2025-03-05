@@ -177,7 +177,7 @@ const BookCard = ({ books }) => {
               <span className="flex items-center gap-2">
                 <IoBookSharp className="text-green-600" />
                 {book?.categories?.[0]?.name.split(" ").slice(0, 2).join(" ") ||
-                  book?.detailedInfo?.categories?.[0]?.name ||
+                  book?.detailedInfo?.categories?.[0]?.name.split(" ").slice(0, 2).join(" ") ||
                   null}
               </span>
             </div>
