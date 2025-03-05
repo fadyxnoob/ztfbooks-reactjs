@@ -61,6 +61,7 @@ const SingleSeriesPage = React.lazy(() =>
   import("./pages/SeriesPage/SingleSeriesPage.jsx")
 );
 
+
 const App = () => {
   return (
     <BrowserRouter>

@@ -43,7 +43,8 @@ const Navbar = () => {
   const authStatus = localStorage.getItem("authUserStatus");
   return (
     <nav className="drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] bg-[#f6f7f8] md:pt-2 h-full md:h-12 px-5 md:pl-16 flex justify-between items-start relative">
-      <ul className="list-none hidden md:flex items-center gap-10 w-1/2 md:mx-auto overflow-hidden">
+      <ul
+      className="list-none hidden md:flex items-center gap-10 w-1/2 md:mx-auto overflow-hidden">
         <li>
           <Link to={"/e-books"} className="font-medium text-[#333333]">
             {" "}

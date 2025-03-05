@@ -18,7 +18,7 @@ const Footer = () => {
             our priority.{" "}
           </p>
         </div>
-        <div className="">
+        <div className="footer">
           <h3 className="leading-[36px] text-[24px] font-medium">Sitemap</h3>
           <ul className="mt-2 leading-[23px] font-medium list-none flex flex-col gap-3">
             <li>
@@ -34,7 +34,7 @@ const Footer = () => {
             </li>
           </ul>
         </div>
-        <div className="">
+        <div className="footer">
           <h3 className="leading-[36px] text-[24px] font-medium">
             Get Our Apps
           </h3>
@@ -63,10 +63,10 @@ const Footer = () => {
             </li>
           </ul>
         </div>
-        <div className="">
+        <div className="footer">
           <h3 className="leading-[36px] text-[24px] font-medium">Follow Us</h3>
           <p className="font-medium">Social Media</p>
-          <ul className="mt-2 leading-[23px] font-medium list-none flex items-center gap-3 text-white">
+          <ul className="mt-2 leading-[23px] font-medium list-none flex items-center gap-5 text-white">
             <li className="size-[16px]">
               <FaFacebook className="text-lg" />
             </li>

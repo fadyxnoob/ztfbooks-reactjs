@@ -33,7 +33,7 @@ const SeriesPage = () => {
   return (
     <div className="px-5 md:px-20 py-5 bg-[#f4f3f4]">
       <h1 className="bg-[#F7F8F8] my-3 p-3 rounded-xl text-[#203949] text-3xl font-medium">
-        Series
+        Series  – Curated Collections: Explore Book Series
       </h1>
 
       {loading ? (

@@ -161,7 +161,6 @@ const Login = () => {
                   onGoogleAuth={authService.loginWithGoogle}
                   actionType="Log in"
                 />
-                ;
               </div>
               <div className="flex-1">
                 <Link>

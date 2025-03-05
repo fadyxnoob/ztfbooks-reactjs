@@ -14,7 +14,7 @@ const Faqs = () => {
     const fetchFaqs = async () => {
       try {
         const res = await service.getAllFaqs(apiKey);
-        // console.log("API Response for FAQs:", res); 
+        console.log(res.data)
         if (Array.isArray(res.data)) {
           setAllFaqs(res.data);
         } else {

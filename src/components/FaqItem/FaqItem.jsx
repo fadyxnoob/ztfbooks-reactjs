@@ -4,7 +4,7 @@ import DOMPurify from 'dompurify'; // For sanitizing HTML
 
 const FaqItem = ({ faq, isOpen, onToggle }) => {
     const { id, question, answer } = faq;
-
+    const safeHtml = DOMPurify.sanitize(answer);
     return (
         <div className="divide-y divide-gray-100 border-b border-[#DFDFDF]">
             <details
@@ -20,8 +20,8 @@ const FaqItem = ({ faq, isOpen, onToggle }) => {
                     <ToggleIcon isOpen={isOpen} />
                 </summary>
                 <div
-                    className="pb-4 text-[#7C7C7C] text-lg font-normal"
-                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(answer) }} // Render HTML content
+                    className="px-2 pb-4 text-[#7C7C7C] text-lg font-normal"
+                    dangerouslySetInnerHTML={{ __html:safeHtml  }} // Render HTML content
                 />
             </details>
         </div>

@@ -55,7 +55,7 @@ const HorizontalCard = ({ books }) => {
           </div>
           <div className="p-2 md:p-0 md:w-1/2">
             <Link to={`book-detail/${book.id}`}>
-              <h3 className="text-lg font-semibold">{book.title.split(' ').slice(0, 2).join(' ')}</h3>
+              <h3 className="text-lg font-semibold">{book.title}</h3>
             </Link>
             <p className="text-blue-600 underline text-sm">
               <Link

@@ -114,7 +114,7 @@ const Home = () => {
       {/* Series books  */}
       <section className="my-10 px-5 md:px-20">
         <h4 className="text-black text-lg text-center md:text-start font-medium mb-5">
-        Series – Curated Collections: Explore Book Series
+        Series
         </h4>
         <div className="">
           <SeriesCarousel items={allSeries} />

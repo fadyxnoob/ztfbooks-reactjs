@@ -1,2 +1,20 @@
 @import "tailwindcss";
 
+ol,
+ul {
+    padding-left: 20px;
+    /* Ensures proper indentation */
+}
+
+ol {
+    list-style-type: decimal;
+    /* Ensures numbers are shown */
+}
+
+ul {
+    list-style-type: disc;
+    /* Ensures bullet points are shown */
+}
+nav>ul, .footer ul{
+    list-style: none !important;
+}
